@@ -1,21 +1,29 @@
-﻿using ECommons.DalamudServices;
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using ECommons.DalamudServices;
 using XIVSlothCombo.Combos.JobHelpers.Enums;
+using XIVSlothCombo.Combos.PvE;
 using XIVSlothCombo.CustomComboNS.Functions;
 using XIVSlothCombo.Data;
 
 namespace XIVSlothCombo.Combos.JobHelpers
 {
-    internal class RPROpenerLogic : PvE.RPR
+    internal class DRKOpenerLogic : PvE.DRK
     {
         private static bool HasCooldowns()
         {
-            if (CustomComboFunctions.GetRemainingCharges(SoulSlice) < 2)
+            if (CustomComboFunctions.GetRemainingCharges(Plunge) < 2)
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(ArcaneCircle))
+            if (CustomComboFunctions.GetRemainingCharges(Shadowbringer) < 2)
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(Gluttony))
+            if (!CustomComboFunctions.ActionReady(Delirium))
+                return false;
+
+            if (!CustomComboFunctions.ActionReady(LivingShadow))
+                return false;
+
+            if (!CustomComboFunctions.ActionReady(CarveAndSpit))
                 return false;
 
             return true;
@@ -27,44 +35,29 @@ namespace XIVSlothCombo.Combos.JobHelpers
 
         public uint OpenerStep = 0;
 
-        private static uint[] EarlyEnshroudOpener = [
-            ShadowOfDeath,
-            ArcaneCircle,
-            SoulSlice,
-            PlentifulHarvest,
-            Enshroud,
-            VoidReaping,
-            CrossReaping,
-            LemuresSlice,
-            VoidReaping,
-            CrossReaping,
-            LemuresSlice,
-            Communio,
-            Gluttony,
-            Gallows,
-            Gibbet,
-            UnveiledGallows,
-            Gallows];
-
-        private static uint[] EarlyGluttonyOpener = [
-            ShadowOfDeath,
-            SoulSlice,
-            ArcaneCircle,
-            Gluttony,
-            Gallows,
-            Gibbet,
-            PlentifulHarvest,
-            Enshroud,
-            VoidReaping,
-            CrossReaping,
-            LemuresSlice,
-            VoidReaping,
-            CrossReaping,
-            LemuresSlice,
-            Communio,
-            SoulSlice,
-            UnveiledGallows,
-            Gallows];
+        private static uint[] StandardOpener = [
+            HardSlash,
+            EdgeOfShadow,
+            Delirium,
+            SyphonStrike,
+            Souleater,
+            LivingShadow,
+            HardSlash,
+            SaltedEarth,
+            EdgeOfShadow,
+            Bloodspiller,
+            Shadowbringer,
+            EdgeOfShadow,
+            Bloodspiller,
+            CarveAndSpit,
+            Plunge,
+            Bloodspiller,
+            Shadowbringer,
+            EdgeOfShadow,
+            SyphonStrike,
+            Souleater,
+            Plunge,
+            HardSlash];
 
         public static bool LevelChecked => CustomComboFunctions.LocalPlayer.Level >= OpenerLevel;
 
@@ -103,7 +96,8 @@ namespace XIVSlothCombo.Combos.JobHelpers
 
         private bool DoPrePullSteps(ref uint actionID)
         {
-            if (!LevelChecked) return false;
+            if (!LevelChecked)
+                return false;
 
             if (CanOpener && PrePullStep == 0)
                 PrePullStep = 1;
@@ -113,14 +107,17 @@ namespace XIVSlothCombo.Combos.JobHelpers
 
             if (CurrentState == OpenerState.PrePull && PrePullStep > 0)
             {
-                if (CustomComboFunctions.HasEffect(Buffs.Soulsow) && PrePullStep == 1) PrePullStep++;
-                else if (PrePullStep == 1) actionID = Soulsow;
+                if (CustomComboFunctions.HasEffect(Buffs.BloodWeapon) && PrePullStep == 1)
+                    PrePullStep++;
 
-                if (CustomComboFunctions.LocalPlayer.CastActionId == Harpe && CustomComboFunctions.HasEffect(Buffs.Soulsow) && PrePullStep == 2) CurrentState = OpenerState.InOpener;
-                else if (PrePullStep == 2) actionID = Harpe;
+                else if (PrePullStep == 1)
+                    actionID = BloodWeapon;
 
-                if (PrePullStep == 2 && !CustomComboFunctions.HasEffect(Buffs.Soulsow))
-                    CurrentState = OpenerState.FailedOpener;
+                if (CustomComboFunctions.WasLastAction(TheBlackestNight) && PrePullStep == 2)
+                    currentState = OpenerState.InOpener;
+
+                else if (PrePullStep == 2)
+                    actionID = TheBlackestNight;
 
                 if (ActionWatching.CombatActions.Count > 2 && CustomComboFunctions.InCombat())
                     CurrentState = OpenerState.FailedOpener;
@@ -132,17 +129,18 @@ namespace XIVSlothCombo.Combos.JobHelpers
             return false;
         }
 
-        private bool DoOpener(uint[] OpenerActions, ref uint actionID)
+    private bool DoOpener(uint[] OpenerActions, ref uint actionID)
         {
-            if (!LevelChecked) return false;
+            if (!LevelChecked)
+                return false;
 
             if (currentState == OpenerState.InOpener)
             {
                 if (CustomComboFunctions.WasLastAction(OpenerActions[OpenerStep]))
                     OpenerStep++;
 
-                if (OpenerStep == 3 && CustomComboFunctions.HasCharges(SoulSlice))
-                    actionID = SoulSlice;
+                if (OpenerStep > 19 && CustomComboFunctions.HasEffect(Buffs.Darkside))
+                    actionID = EdgeOfShadow;
 
                 else if (OpenerStep == OpenerActions.Length)
                     CurrentState = OpenerState.OpenerFinished;
@@ -152,20 +150,24 @@ namespace XIVSlothCombo.Combos.JobHelpers
                 if (CustomComboFunctions.InCombat() && ActionWatching.TimeSinceLastAction.TotalSeconds >= 5)
                     CurrentState = OpenerState.FailedOpener;
 
-                if (((actionID == SoulSlice && CustomComboFunctions.GetRemainingCharges(SoulSlice) == 0) ||
-                       (actionID == ArcaneCircle && CustomComboFunctions.IsOnCooldown(ArcaneCircle)) ||
-                       (actionID == Gluttony && CustomComboFunctions.IsOnCooldown(Gluttony))) && ActionWatching.TimeSinceLastAction.TotalSeconds >= 3)
+                if (((actionID == Plunge && CustomComboFunctions.GetRemainingCharges(Plunge) == 0) ||
+                                   (actionID == Delirium && CustomComboFunctions.IsOnCooldown(Delirium)) ||
+                                   (actionID == LivingShadow && CustomComboFunctions.IsOnCooldown(LivingShadow)) ||
+                                   (actionID == CarveAndSpit && CustomComboFunctions.IsOnCooldown(CarveAndSpit)) ||
+                                   (actionID == Shadowbringer && CustomComboFunctions.GetRemainingCharges(Shadowbringer) == 0)) && ActionWatching.TimeSinceLastAction.TotalSeconds >= 3)
                 {
                     CurrentState = OpenerState.FailedOpener;
                     return false;
                 }
 
+                if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5)
+                    CurrentState = OpenerState.FailedOpener;
+
                 return true;
             }
-
             return false;
         }
-
+       
         private void ResetOpener()
         {
             PrePullStep = 0;
@@ -183,17 +185,8 @@ namespace XIVSlothCombo.Combos.JobHelpers
 
             if (CurrentState == OpenerState.InOpener)
             {
-                if (Config.RPR_OpenerChoice == 0)
-                {
-                    if (DoOpener(EarlyEnshroudOpener, ref actionID))
-                        return true;
-                }
-
-                if (Config.RPR_OpenerChoice == 1)
-                {
-                    if (DoOpener(EarlyGluttonyOpener, ref actionID))
-                        return true;
-                }
+                if (DoOpener(StandardOpener, ref actionID))
+                    return true;
             }
 
             if (!CustomComboFunctions.InCombat())
@@ -201,7 +194,6 @@ namespace XIVSlothCombo.Combos.JobHelpers
                 ResetOpener();
                 CurrentState = OpenerState.PrePull;
             }
-
             return false;
         }
     }

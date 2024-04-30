@@ -356,26 +356,34 @@ namespace XIVSlothCombo.Combos
         BLM_Adv_UsePolyglotStacks = 2007,
 
         [ParentCombo(BLM_ST_AdvancedMode)]
+        [CustomComboInfo("Despair", "Adds Despair to the rotation.", BLM.JobID)]
+        BLM_Adv_UseDespair = 2008,
+
+        [ParentCombo(BLM_ST_AdvancedMode)]
+        [CustomComboInfo("Paradox", "Adds Paradox to the rotation.", BLM.JobID)]
+        BLM_Adv_UseParadox = 2009,
+
+        [ParentCombo(BLM_ST_AdvancedMode)]
         [CustomComboInfo("Cooldown Options", "Select which cooldowns to add to the rotation.", BLM.JobID)]
-        BLM_Adv_Cooldowns = 2008,
+        BLM_Adv_Cooldowns = 2010,
 
         [ParentCombo(BLM_ST_AdvancedMode)]
         [CustomComboInfo("Triplecast/Swiftcast Option", "Adds Triplecast/Swiftcast to the rotation.", BLM.JobID)]
-        BLM_Adv_Casts = 2009,
+        BLM_Adv_Casts = 2011,
 
         [ParentCombo(BLM_Adv_Casts)]
         [CustomComboInfo("Pool Triplecast Option", "Keep one Triplecast charge for movement.", BLM.JobID)]
-        BLM_Adv_Triplecast_Pooling = 2010,
+        BLM_Adv_Triplecast_Pooling = 2012,
 
         [ParentCombo(BLM_ST_AdvancedMode)]
         [CustomComboInfo("Movement Options", "Choose options to be used during movement.", BLM.JobID)]
-        BLM_Adv_Movement = 2011,
+        BLM_Adv_Movement = 2013,
 
         [ParentCombo(BLM_ST_AdvancedMode)]
         [CustomComboInfo("Umbral Soul Option", "Uses Transpose/Umbral Soul when no target is selected.", BLM.JobID)]
-        BLM_Adv_UmbralSoul = 2012,
+        BLM_Adv_UmbralSoul = 2014,
 
-        // Last value = 2012
+        // Last value = 2014
 
         #endregion
 
@@ -1031,29 +1039,29 @@ namespace XIVSlothCombo.Combos
 
         #region DARK KNIGHT
 
-        [ParentCombo(DRK_SouleaterCombo)]
+        [ParentCombo(DRK_ST_AdvancedMode)]
         [CustomComboInfo("Buffs on Main Combo", "Collection of buffs to add to the main combo", DRK.JobID)]
         DRK_MainComboBuffs_Group = 5098,
 
         [ConflictingCombos(DRK_oGCD)]
-        [ParentCombo(DRK_SouleaterCombo)]
+        [ParentCombo(DRK_ST_AdvancedMode)]
         [CustomComboInfo("Cooldowns on Main Combo", "Collection of cooldowns to add to the main combo", DRK.JobID)]
         DRK_MainComboCDs_Group = 5099,
 
-        [ReplaceSkill(DRK.Souleater)]
-        [CustomComboInfo("Souleater Combo", "Replace Souleater with its combo chain. \nIf all sub options are selected will turn into a full one button rotation (Advanced Dark Knight)", DRK.JobID)]
-        DRK_SouleaterCombo = 5000,
+        [ReplaceSkill(DRK.HardSlash)]
+        [CustomComboInfo("Advanced Mode - Single Target", "Replaces Hard Slash with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", DRK.JobID, -2)]
+        DRK_ST_AdvancedMode = 5000,
 
-        [ReplaceSkill(DRK.StalwartSoul)]
-        [CustomComboInfo("Stalwart Soul Combo", "Replace Stalwart Soul with its combo chain.", DRK.JobID)]
-        DRK_StalwartSoulCombo = 5001,
+        [ReplaceSkill(DRK.Unleash)]
+        [CustomComboInfo("Advanced Mode - AoE", "Replaces Unleash with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", DRK.JobID)]
+        DRK_AoE_AdvancedMode = 5001,
 
         [ParentCombo(DRK_MainComboCDs_Group)]
         [CustomComboInfo("Bloodspiller Feature", "Adds Bloodspiller when Delirium is active.", DRK.JobID)]
         DRK_Bloodspiller = 5002,
 
         [ReplaceSkill(DRK.StalwartSoul)]
-        [ParentCombo(DRK_StalwartSoulCombo)]
+        [ParentCombo(DRK_AoE_AdvancedMode)]
         [CustomComboInfo("Dark Knight Gauge Overcap Feature", "Replace AoE combo with gauge spender if you are about to overcap.", DRK.JobID)]
         DRK_Overcap = 5003,
 
@@ -1061,7 +1069,7 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Living Shadow Feature", "Living Shadow will now be on main combo if its not on cooldown and you have gauge for it.", DRK.JobID)]
         DRK_LivingShadow = 5004,
 
-        [ParentCombo(DRK_SouleaterCombo)]
+        [ParentCombo(DRK_ST_AdvancedMode)]
         [CustomComboInfo("Edge of Shadow Overcap Feature", "Uses Edge of Shadow if you are above 8,500 mana or Darkside is about to expire (10sec or less)", DRK.JobID)]
         DRK_ManaOvercap = 5005,
 
@@ -1082,23 +1090,23 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Delayed Bloodspiller Feature", "Delays Bloodspiller by 2 GCDs when Delirium is used during even windows, uses it regularly during odd windows. Useful for feeding into raid buffs at level 90.", DRK.JobID)]
         DRK_DelayedBloodspiller = 5010,
 
-        [ParentCombo(DRK_SouleaterCombo)]
+        [ParentCombo(DRK_ST_AdvancedMode)]
         [CustomComboInfo("Unmend Uptime Feature", "Replace Souleater Combo Feature with Unmend when you are out of range.", DRK.JobID)]
         DRK_RangedUptime = 5011,
 
-        [ParentCombo(DRK_StalwartSoulCombo)]
+        [ParentCombo(DRK_AoE_AdvancedMode)]
         [CustomComboInfo("Abyssal Drain Feature", "Adds abyssal drain to the AoE combo when you fall below 60 percent hp.", DRK.JobID)]
         DRK_AoE_AbyssalDrain = 5013,
 
-        [ParentCombo(DRK_StalwartSoulCombo)]
+        [ParentCombo(DRK_AoE_AdvancedMode)]
         [CustomComboInfo("AoE Shadowbringer Feature", "Adds Shadowbringer to the AoE combo.", DRK.JobID)]
         DRK_AoE_Shadowbringer = 5014,
 
-        [ParentCombo(DRK_StalwartSoulCombo)]
+        [ParentCombo(DRK_AoE_AdvancedMode)]
         [CustomComboInfo("Flood of Shadow Overcap Feature", "Uses Flood of Shadow if you are above 8.5k mana or Darkside is about to expire (10sec or less)", DRK.JobID)]
         DRK_AoE_ManaOvercap = 5015,
 
-        [ParentCombo(DRK_SouleaterCombo)]
+        [ParentCombo(DRK_ST_AdvancedMode)]
         [CustomComboInfo("Blood Gauge Overcap Feature", "Adds Bloodspiller onto main combo when at 80 blood gauge or higher", DRK.JobID)]
         DRK_BloodGaugeOvercap = 5016,
 
@@ -1134,38 +1142,42 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Blood Weapon on Cooldown", "Adds Blood Weapon to main combo on cooldown and when Darkside is up.", DRK.JobID)]
         DRK_BloodWeapon = 5026,
 
-        [ParentCombo(DRK_StalwartSoulCombo)]
+        [ParentCombo(DRK_AoE_AdvancedMode)]
         [CustomComboInfo("Blood Weapon Option", "Adds Blood Weapon to AoE combo on cooldown and when Darkside is up.", DRK.JobID)]
         DRK_AoE_BloodWeapon = 5027,
 
-        [ParentCombo(DRK_StalwartSoulCombo)]
+        [ParentCombo(DRK_AoE_AdvancedMode)]
         [CustomComboInfo("Delirium Option", "Adds Deliriun to AoE combo on cooldown and when Darkside is up.", DRK.JobID)]
         DRK_AoE_Delirium = 5028,
 
-        [ParentCombo(DRK_StalwartSoulCombo)]
+        [ParentCombo(DRK_AoE_AdvancedMode)]
         [CustomComboInfo("Salted Earth Option", "Adds Salted Earth and Salt and Darkness to AoE on cooldown and when Darkside is up.", DRK.JobID)]
         DRK_AoE_SaltedEarth = 5029,
 
-        [ParentCombo(DRK_StalwartSoulCombo)]
+        [ParentCombo(DRK_AoE_AdvancedMode)]
         [CustomComboInfo("Living Shadow Option", "Adds Living Shadow to AoE on cooldown and when Darkside is up.", DRK.JobID)]
         DRK_AoE_LivingShadow = 5030,
 
+        [ParentCombo(DRK_ST_AdvancedMode)]
+        [CustomComboInfo("Opener", "Adds the Balance opener to the rotation.", DRK.JobID, -2)]
+        DRK_ST_Opener = 5034,
+
         [Variant]
-        [VariantParent(DRK_SouleaterCombo, DRK_StalwartSoulCombo)]
+        [VariantParent(DRK_ST_AdvancedMode, DRK_AoE_AdvancedMode)]
         [CustomComboInfo("Spirit Dart Option", "Use Variant Spirit Dart whenever the debuff is not present or less than 3s.", DRK.JobID)]
         DRK_Variant_SpiritDart = 5031,
 
         [Variant]
-        [VariantParent(DRK_SouleaterCombo, DRK_StalwartSoulCombo)]
+        [VariantParent(DRK_ST_AdvancedMode, DRK_AoE_AdvancedMode)]
         [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", DRK.JobID)]
         DRK_Variant_Cure = 5032,
 
         [Variant]
-        [VariantParent(DRK_SouleaterCombo, DRK_StalwartSoulCombo)]
+        [VariantParent(DRK_ST_AdvancedMode, DRK_AoE_AdvancedMode)]
         [CustomComboInfo("Ultimatum Option", "Use Variant Ultimatum on cooldown.", DRK.JobID)]
         DRK_Variant_Ultimatum = 5033,
 
-        // Last value = 5033
+        // Last value = 5034
 
         #endregion
 
@@ -2381,234 +2393,249 @@ namespace XIVSlothCombo.Combos
 
         #region REAPER
 
-        #region Single Target (Slice) Combo Section
-        [ReplaceSkill(RPR.Slice, RPR.Harpe)]
-        [CustomComboInfo("Advanced Mode - Single Target", "Replace Slice with its combo chain.\nIf all sub options are toggled will turn into a full one button rotation (Advanced Reaper)", RPR.JobID, 0, "", "")]
+        [ReplaceSkill(RPR.ShadowOfDeath)]
+        [CustomComboInfo("Hold Burst Combo", "Replaces ShadowOfDeath with basic rotation \nUse to hold burst window", RPR.JobID)]
+        RPR_HoldBurstCombo = 12000,
+
+        #region  Advanced ST
+
+        [ReplaceSkill(RPR.Slice)]
+        [CustomComboInfo("Advanced Mode - Single Target", "Replaces Slice with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", RPR.JobID)]
         RPR_ST_AdvancedMode = 12001,
 
         [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Positional Preference", "Choose positional order for all positional related features.\nSupports turning Slice/Shadow of Death into all positionals or Slice and Shadow of Death being two separate positionals.", RPR.JobID)]
-        ReaperPositionalConfigST = 12000,
+        [CustomComboInfo("Level 90 Opener Option", "Adds the Level 90 Opener to the main combo. Choose which Opener to use below.", RPR.JobID)]
+        RPR_ST_SliceCombo_Opener = 12002,
 
         [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Soul Slice Option", "Adds Soul Slice to Slice Combo when Soul Gauge is 50 or less and when current target is afflicted with Death's Design.", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_SoulSlice = 12002,
-
-        [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Shadow Of Death Option", "Adds Shadow of Death to Slice Combo if Death's Design is not present on current target, or is about to expire.", RPR.JobID, 0, "", "")]
+        [CustomComboInfo("Shadow Of Death Option", "Adds Shadow of Death to the rotation.", RPR.JobID)]
         RPR_ST_SliceCombo_SoD = 12003,
 
-        [ParentCombo(RPR_ST_SliceCombo_SoD)]
-        [CustomComboInfo("Double SoD Enshroud Option", "Uses Shadow of Death twice during the first of the two Enshroud Bursts during the 2-minute windows (Double Enshroud Burst).", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_SoD_Double = 12004,
+        [ParentCombo(RPR_ST_AdvancedMode)]
+        [CustomComboInfo("Soul Slice Option", "Adds Soul Slice to the rotation.", RPR.JobID)]
+        RPR_ST_SliceCombo_SoulSlice = 12005,
+
+        #region Cooldowns ST
 
         [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Stun Option", "Adds Leg Sweep to main combo when target is performing an interruptible cast.", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_Stun = 12005,
+        [CustomComboInfo("Cooldowns Option", "Adds various cooldowns to the rotation.", RPR.JobID)]
+        RPR_ST_SliceCombo_CDs = 12006,
 
-        [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, , using them when below the HP Percentage threshold.", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_ComboHeals = 12006,
+        [ParentCombo(RPR_ST_SliceCombo_CDs)]
+        [CustomComboInfo("Arcane Circle Option", "Adds Arcane Circle to the rotation.", RPR.JobID)]
+        RPR_ST_SliceCombo_ArcaneCircle = 12007,
 
-        [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Ranged Filler Option", "Replaces the combo chain with Harpe (or Harvest Moon, if available) when outside of melee range. Will not override Communio.", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_RangedFiller = 12007,
+        [ParentCombo(RPR_ST_SliceCombo_ArcaneCircle)]
+        [CustomComboInfo("Plentiful Harvest Option", "Adds Plentiful Harvest to the rotation.", RPR.JobID)]
+        RPR_ST_SliceCombo_PlentifulHarvest = 12008,
 
-        [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Enshroud Option", "Adds Enshroud to the combo when at 50 Shroud or greater and when current target is afflicted with Death's Design.", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_Enshroud = 12008,
+        [ParentCombo(RPR_ST_SliceCombo_CDs)]
+        [CustomComboInfo("Bloodstalk Option", "Adds Bloodstalk to the combo when target is afflicted with Death's Design and at 50 soul or greater.", RPR.JobID)]
+        RPR_ST_SliceCombo_Bloodstalk = 12009,
+
+        [ParentCombo(RPR_ST_SliceCombo_CDs)]
+        [CustomComboInfo("Gluttony Option", "Adds Gluttony to the combo when target is afflicted with Death's Design, and the skills are off cooldown and at 50 soul or greater.", RPR.JobID)]
+        RPR_ST_SliceCombo_Gluttony = 12010,
+
+        [ParentCombo(RPR_ST_SliceCombo_CDs)]
+        [CustomComboInfo("Enshroud Option", "Adds Enshroud to the combo.", RPR.JobID)]
+        RPR_ST_SliceCombo_Enshroud = 12011,
 
         [ParentCombo(RPR_ST_SliceCombo_Enshroud)]
-        [CustomComboInfo("Enshroud Burst (Double Enshroud) Option", "Uses Enshroud at 50 Shroud during Arcane Circle (mimics the 2-minute Double Enshroud window) and will use Enshroud for odd minute bursts.\nBelow level 88, will use Enshroud at 50 gauge.", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_EnshroudPooling = 12009,
+        [CustomComboInfo("Double Enshroud Harvest moon", "Uses Harvest Moon in 2 minute burst.", RPR.JobID)]
+        RPR_ST_SliceCombo_EnshroudHarvestMoon = 12018,
 
-        [ParentCombo(RPR_ST_SliceCombo_GibbetGallows)]
-        [CustomComboInfo("Lemure's Slice Option", "Adds Lemure's Slice to the combo when there are 2 Void Shroud charges.", RPR.JobID, 1, "", "")]
-        RPR_ST_SliceCombo_GibbetGallows_Lemure = 12010,
-
-        [ParentCombo(RPR_ST_SliceCombo_GibbetGallows)]
-        [CustomComboInfo("Communio Finisher Option", "Adds Communio to the combo when there is 1 charge of Lemure Shroud left.", RPR.JobID, 1, "", "")]
-        RPR_ST_SliceCombo_GibbetGallows_Communio = 12011,
+        #endregion
 
         [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Arcane Circle Option", "Adds Arcane Circle to the combo when available and when current target is afflicted with Death's Design.", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_ArcaneCircle = 12012,
-
-        [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Plentiful Harvest Option", "Adds Plentiful Harvest to the combo when available.", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_PlentifulHarvest = 12013,
-
-        [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Gibbet and Gallows Option", "Adds Gibbet and Gallows to the combo when current target is afflicted with Death's Design.", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_GibbetGallows = 12014,
+        [CustomComboInfo("Gibbet and Gallows Option", "Adds Gibbet and Gallows to the combo when current target is afflicted with Death's Design.", RPR.JobID)]
+        RPR_ST_SliceCombo_GibbetGallows = 12013,
 
         [ParentCombo(RPR_ST_SliceCombo_GibbetGallows)]
         [CustomComboInfo("Void/Cross Reaping Option", "Adds Void Reaping and Cross Reaping to the to the the combo during Enshroud.\n(Disabling this may stop the one-button combo working during enshroud)", RPR.JobID)]
-        RPR_ST_SliceCombo_GibbetGallows_VoidCross = 12065,
+        RPR_ST_SliceCombo_GibbetGallows_VoidCross = 12014,
 
-        [ReplaceSkill(RPR.ShadowOfDeath)]
         [ParentCombo(RPR_ST_SliceCombo_GibbetGallows)]
-        [CustomComboInfo("Gibbet and Gallows on SoD Option", "Adds Gibbet and Gallows to Shadow of Death as well if chosen in positional preferences.", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_GibbetGallows_OnSoD = 12015,
+        [CustomComboInfo("Lemure's Slice Option", "Adds Lemure's Slice to the combo when there are 2 Void Shroud charges.", RPR.JobID)]
+        RPR_ST_SliceCombo_GibbetGallows_Lemure = 12015,
+
+        [ParentCombo(RPR_ST_SliceCombo_GibbetGallows)]
+        [CustomComboInfo("Communio Finisher Option", "Adds Communio to the combo when there is 1 charge of Lemure Shroud left.", RPR.JobID)]
+        RPR_ST_SliceCombo_GibbetGallows_Communio = 12016,
 
         [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Gluttony and Blood Stalk Option", "Adds Gluttony and Blood Stalk to the combo when target is afflicted with Death's Design, and the skills are off cooldown and < 50 soul.", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_GluttonyBloodStalk = 12016,
-
-        [ParentCombo(RPR_ST_SliceCombo_GibbetGallows_Communio)]
-        [CustomComboInfo("Communio Movement Option", "Uses Shadow of Death instead of Communio when moving.", RPR.JobID, 0, "", "")]
-        RPR_ST_SliceCombo_GibbetGallows_Communio_Movement = 12017,
+        [CustomComboInfo("Ranged Filler Option", "Replaces the combo chain with Harpe (or Harvest Moon, if available) when outside of melee range. Will not override Communio.", RPR.JobID)]
+        RPR_ST_SliceCombo_RangedFiller = 12096,
 
         [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Level 90 Opener Option", "Adds the Level 90 Opener to the main combo. Choose which Opener to use below.", RPR.JobID, -1, "", "")]
-        RPR_ST_SliceCombo_Opener = 12018,
+        [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
+        RPR_ST_SliceCombo_ComboHeals = 12097,
+
+        [ParentCombo(RPR_ST_AdvancedMode)]
+        [CustomComboInfo("Dynamic True North Feature", "Adds True North to Slice before Gibbet/Gallows when you are not in the correct position for the enhanced potency bonus.", RPR.JobID)]
+        RPR_ST_TrueNorthDynamic = 12098,
+
+        [ParentCombo(RPR_ST_TrueNorthDynamic)]
+        [CustomComboInfo("Hold True North for Gluttony Option", "Will hold the last charge of True North for use with Gluttony, even when out of position for Gibbet/Gallows potency bonuses.", RPR.JobID)]
+        RPR_ST_TrueNorthDynamic_HoldCharge = 12099,
+
+        //last value = 12017
         #endregion
 
-        #region AoE (Scythe) Combo Section
+        #region Advanced AoE 
+
         [ReplaceSkill(RPR.SpinningScythe)]
-        [CustomComboInfo("Advanced Mode - AoE", "Replace Spinning Scythe with its combo chain.\nIf all sub options are toggled will turn into a full one button rotation (Simple AoE)", RPR.JobID, 0, "", "")]
-        RPR_AoE_ScytheCombo = 12020,
+        [CustomComboInfo("Advanced Mode - AoE", "Replaces Spinning Scythe with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", RPR.JobID)]
+        RPR_AoE_AdvancedMode = 12100,
 
-        [ParentCombo(RPR_AoE_ScytheCombo)]
-        [CustomComboInfo("Positional Preference", "Choose positional order for all positional related features.\nSupports turning Slice/Shadow of Death into all positionals or Slice and Shadow of Death being two separate positionals.", RPR.JobID)]
-        ReaperPositionalConfigAoE = 12030,
+        [ParentCombo(RPR_AoE_AdvancedMode)]
+        [CustomComboInfo("Whorl Of Death Option", "Adds Whorl of Death to the rotation.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_WoD = 12101,
 
-        [ParentCombo(RPR_AoE_ScytheCombo)]
-        [CustomComboInfo("Soul Scythe Option", "Adds Soul Scythe to AoE combo when Soul Gauge is 50 or less and current target is afflicted with Death's Design.", RPR.JobID)]
-        RPR_AoE_ScytheCombo_SoulScythe = 12021,
+        [ParentCombo(RPR_AoE_AdvancedMode)]
+        [CustomComboInfo("Soul Scythe Option", "Adds Soul Scythe to the rotation.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_SoulScythe = 12102,
 
-        [ParentCombo(RPR_AoE_ScytheCombo)]
-        [CustomComboInfo("Whorl Of Death Option", "Adds Whorl of Death to AoE combo if Death's Design is not present on current target, or is about to expire.", RPR.JobID, 0, "", "")]
-        RPR_AoE_ScytheCombo_WoD = 12022,
+        #region Cooldowns
 
-        [ParentCombo(RPR_AoE_ScytheCombo)]
-        [CustomComboInfo("Guillotine Option", "Adds Guillotine to AoE combo when under Soul Reaver and when current target is afflicted with Death's Design.\nWill use Grim Reaping during Enshroud.", RPR.JobID, 0, "", "")]
-        RPR_AoE_ScytheCombo_Guillotine = 12023,
+        [ParentCombo(RPR_AoE_AdvancedMode)]
+        [CustomComboInfo("Cooldowns Option", "Adds various cooldowns to the rotation.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_CDs = 12103,
 
-        [ParentCombo(RPR_AoE_ScytheCombo_Guillotine)]
-        [CustomComboInfo("Grim Reaping Option", "Adds Grim Reaping to the to the AoE combo during Enshroud.", RPR.JobID, 0, "", "")]
-        RPR_AoE_ScytheCombo_Guillotine_GrimReaping = 12066,
-
-        [ParentCombo(RPR_AoE_ScytheCombo)]
-        [CustomComboInfo("Arcane Circle Option", "Adds Arcane Circle to AoE combo when off cooldown.", RPR.JobID)]
-        RPR_AoE_ScytheCombo_ArcaneCircle = 12024,
+        [ParentCombo(RPR_AoE_ScytheCombo_CDs)]
+        [CustomComboInfo("Arcane Circle Option", "Adds Arcane Circle to the rotation.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_ArcaneCircle = 12104,
 
         [ParentCombo(RPR_AoE_ScytheCombo_ArcaneCircle)]
-        [CustomComboInfo("Plentiful Harvest Option", "Adds Plentiful Harvest to AoE combo when off cooldown and ready.", RPR.JobID)]
-        RPR_AoE_ScytheCombo_PlentifulHarvest = 12025,
+        [CustomComboInfo("Plentiful Harvest Option", "Adds Plentiful Harvest to the rotation.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_PlentifulHarvest = 12105,
 
-        [ParentCombo(RPR_AoE_ScytheCombo)]
-        [CustomComboInfo("Enshroud Option", "Adds Enshroud to the AoE combo when at 50 Shroud and greater and when current target is afflicted with Death's Design.", RPR.JobID)]
-        RPR_AoE_ScytheCombo_Enshroud = 12026,
+        [ParentCombo(RPR_AoE_ScytheCombo_CDs)]
+        [CustomComboInfo("Grim Swathe Option", "Adds Grim Swathe to the rotation.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_GrimSwathe = 12106,
+
+        [ParentCombo(RPR_AoE_ScytheCombo_CDs)]
+        [CustomComboInfo("Gluttony Option", "Adds Gluttony to the rotation.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_Gluttony = 12107,
+
+        [ParentCombo(RPR_AoE_ScytheCombo_CDs)]
+        [CustomComboInfo("Enshroud Option", "Adds Enshroud to the rotation.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_Enshroud = 12108,
+
+        #endregion
+
+        [ParentCombo(RPR_AoE_AdvancedMode)]
+        [CustomComboInfo("Guillotine Option", "Adds Guillotine to the rotation.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_Guillotine = 12109,
 
         [ParentCombo(RPR_AoE_ScytheCombo_Guillotine)]
-        [CustomComboInfo("Lemure's Scythe Option", "Adds Lemure's Scythe to the AoE combo when there are 2 Void Shrouds.", RPR.JobID, 1, "", "")]
-        RPR_AoE_ScytheCombo_Lemure = 12027,
+        [CustomComboInfo("Grim Reaping Option", "Adds Grim Reaping to the rotation.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_Guillotine_GrimReaping = 12110,
 
         [ParentCombo(RPR_AoE_ScytheCombo_Guillotine)]
-        [CustomComboInfo("Communio Finisher Option", "Adds Communio to the AoE combo when there is 1 Lemure Shroud left.", RPR.JobID, 2, "", "")]
-        RPR_AoE_ScytheCombo_Communio = 12028,
+        [CustomComboInfo("Lemure's Scythe Option", "Adds Lemure's Scythe to the rotation.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_Lemure = 12111,
 
-        [ParentCombo(RPR_AoE_ScytheCombo)]
-        [CustomComboInfo("Gluttony and Grim Swathe Option", "Adds Gluttony and Grim Swathe to the AoE combo when current target is afflicted with Death's Design and Soul Gauge < 50.", RPR.JobID)]
-        RPR_AoE_ScytheCombo_GluttonyGrimSwathe = 12029,
+        [ParentCombo(RPR_AoE_ScytheCombo_Guillotine)]
+        [CustomComboInfo("Communio Finisher Option", "Adds Communio to the rotation.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_Communio = 12112,
+
+        [ParentCombo(RPR_AoE_AdvancedMode)]
+        [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
+        RPR_AoE_ScytheCombo_ComboHeals = 12113,
+
+        // Last value = 12113
+
         #endregion
 
         #region Blood Stalk/Grim Swathe Combo Section
+
         [ReplaceSkill(RPR.BloodStalk, RPR.GrimSwathe)]
         [CustomComboInfo("Gluttony on Blood Stalk/Grim Swathe Feature", "Blood Stalk and Grim Swathe will turn into Gluttony when it is available.", RPR.JobID)]
-        RPR_GluttonyBloodSwathe = 12041,
+        RPR_GluttonyBloodSwathe = 12200,
 
         [ParentCombo(RPR_GluttonyBloodSwathe)]
         [CustomComboInfo("Gibbet and Gallows/Guillotine on Blood Stalk/Grim Swathe Feature", "Adds Gibbet and Gallows on Blood Stalk.\nAdds Guillotine on Grim Swathe.", RPR.JobID)]
-        RPR_GluttonyBloodSwathe_BloodSwatheCombo = 12040,
+        RPR_GluttonyBloodSwathe_BloodSwatheCombo = 12201,
 
         [ParentCombo(RPR_GluttonyBloodSwathe)]
         [CustomComboInfo("Enshroud Combo Option", "Adds Enshroud combo (Void/Cross Reaping, Communio, and Lemure's Slice) on Blood Stalk and Grim Swathe.", RPR.JobID)]
-        RPR_GluttonyBloodSwathe_Enshroud = 12042,
+        RPR_GluttonyBloodSwathe_Enshroud = 12202,
+
+        // Last value = 12202
+
         #endregion
 
         #region Miscellaneous
         [ReplaceSkill(RPR.ArcaneCircle)]
         [CustomComboInfo("Arcane Circle Harvest Feature", "Replaces Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
-        RPR_ArcaneCirclePlentifulHarvest = 12051,
+        RPR_ArcaneCirclePlentifulHarvest = 12300,
 
         [ReplaceSkill(RPR.HellsEgress, RPR.HellsIngress)]
         [CustomComboInfo("Regress Feature", "Changes both Hell's Ingress and Hell's Egress turn into Regress when Threshold is active.", RPR.JobID)]
-        RPR_Regress = 12052,
+        RPR_Regress = 12301,
 
         [ReplaceSkill(RPR.Slice, RPR.SpinningScythe, RPR.ShadowOfDeath, RPR.Harpe, RPR.BloodStalk)]
         [CustomComboInfo("Soulsow Reminder Feature", "Adds Soulsow to the skills selected below when out of combat. \nWill also add Soulsow to Harpe when in combat and no target is selected.", RPR.JobID)]
-        RPR_Soulsow = 12053,
+        RPR_Soulsow = 12302,
 
         [ReplaceSkill(RPR.Harpe)]
         [ParentCombo(RPR_Soulsow)]
         [CustomComboInfo("Harpe Harvest Moon Feature", "Replaces Harpe with Harvest Moon when you are in combat with Soulsow active.", RPR.JobID)]
-        RPR_Soulsow_HarpeHarvestMoon = 12054,
+        RPR_Soulsow_HarpeHarvestMoon = 12303,
 
         [ReplaceSkill(RPR.Harpe, RPR.Slice)]
         [ParentCombo(RPR_Soulsow)]
         [CustomComboInfo("Enhanced Harpe Option", "Prevent Harvest Moon replacing Harpe when Enhanced Harpe is active.", RPR.JobID)]
-        RPR_Soulsow_HarpeHarvestMoon_EnhancedHarpe = 12055,
+        RPR_Soulsow_HarpeHarvestMoon_EnhancedHarpe = 12304,
 
         [ReplaceSkill(RPR.Harpe, RPR.Slice)]
         [ParentCombo(RPR_Soulsow)]
         [CustomComboInfo("Combat Harpe Option", "Prevent Harvest Moon replacing Harpe when you are not in combat.", RPR.JobID)]
-        RPR_Soulsow_HarpeHarvestMoon_CombatHarpe = 12056,
+        RPR_Soulsow_HarpeHarvestMoon_CombatHarpe = 12305,
 
         [ReplaceSkill(RPR.Enshroud)]
         [CustomComboInfo("Enshroud Protection Feature", "Turns Enshroud into Gibbet/Gallows to protect Soul Reaver waste.", RPR.JobID)]
-        RPR_EnshroudProtection = 12057,
-
-        [ParentCombo(RPR_EnshroudProtection)]
-        [CustomComboInfo("Positional Preference", "Choose positional order for all positional related features.\nSupports turning Slice/Shadow of Death into all positionals or Slice and Shadow of Death being two separate positionals.", RPR.JobID)]
-        RPR_EnshroudProtection_Positional = 12059,
+        RPR_EnshroudProtection = 12306,
 
         [ReplaceSkill(RPR.Gibbet, RPR.Gallows, RPR.Guillotine)]
         [CustomComboInfo("Communio on Gibbet/Gallows and Guillotine Feature", "Adds Communio to Gibbet/Gallows and Guillotine.", RPR.JobID)]
-        RPR_CommunioOnGGG = 12058,
+        RPR_CommunioOnGGG = 12307,
 
         [ParentCombo(RPR_CommunioOnGGG)]
         [CustomComboInfo("Lemure's Slice/Scythe Option", "Adds Lemure's Slice to Gibbet/Gallows and Lemure's Scythe to Guillotine.", RPR.JobID)]
-        RPR_LemureOnGGG = 12060,
+        RPR_LemureOnGGG = 12308,
 
         [ReplaceSkill(RPR.Enshroud)]
         [CustomComboInfo("Enshroud to Communio Feature", "Turns Enshroud to Communio when available to use.", RPR.JobID)]
-        RPR_EnshroudCommunio = 12069,
+        RPR_EnshroudCommunio = 12309,
 
         [ParentCombo(RPR_EnshroudProtection)]
         [CustomComboInfo("True North Feature", "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.", RPR.JobID, 0)]
-        RPR_TrueNorthEnshroud = 12061,
+        RPR_TrueNorthEnshroud = 12310,
 
         [ReplaceSkill(RPR.Harpe)]
         [ParentCombo(RPR_Soulsow)]
         [CustomComboInfo("Soulsow Reminder during Combat", "Adds Soulsow to Harpe during combat when no target is selected.", RPR.JobID)]
-        RPR_Soulsow_Combat = 12062,
-
-        [ParentCombo(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Dynamic True North Feature", "Adds True North to Slice before Gibbet/Gallows when you are not in the correct position for the enhanced potency bonus.", RPR.JobID, 99, "", "")]
-        RPR_TrueNorthDynamic = 12063,
-
-        [ParentCombo(RPR_TrueNorthDynamic)]
-        [CustomComboInfo("Hold True North for Gluttony Option", "Will hold the last charge of True North for use with Gluttony, even when out of position for Gibbet/Gallows potency bonuses.", RPR.JobID)]
-        RPR_TrueNorthDynamic_HoldCharge = 12064,
+        RPR_Soulsow_Combat = 12311,
 
         [ParentCombo(RPR_GluttonyBloodSwathe)]
         [CustomComboInfo("True North Feature", "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.", RPR.JobID, 0)]
-        RPR_TrueNorthGluttony = 12070,
+        RPR_TrueNorthGluttony = 12312,
 
         [Variant]
-        [VariantParent(RPR_ST_AdvancedMode, RPR_AoE_ScytheCombo)]
+        [VariantParent(RPR_ST_AdvancedMode, RPR_AoE_AdvancedMode)]
         [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", RPR.JobID)]
-        RPR_Variant_Cure = 12067,
+        RPR_Variant_Cure = 12313,
 
         [Variant]
-        [VariantParent(RPR_ST_AdvancedMode, RPR_AoE_ScytheCombo)]
+        [VariantParent(RPR_ST_AdvancedMode, RPR_AoE_AdvancedMode)]
         [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", RPR.JobID)]
-        RPR_Variant_Rampart = 12068,
-        #endregion
+        RPR_Variant_Rampart = 12314,
 
-        // Last value = 12070
+        // Last value = 12314
+
+        #endregion
 
         #endregion
 
@@ -2977,45 +3004,40 @@ namespace XIVSlothCombo.Combos
 
         #region SAMURAI
 
-        #region Overcap Features
-        [ReplaceSkill(SAM.Kasha, SAM.Gekko, SAM.Yukikaze)]
-        [CustomComboInfo("Samurai Overcap Feature", "Adds Shinten onto main combo when Kenki is at the selected amount or more", SAM.JobID)]
-        SAM_ST_Overcap = 15001,
-
-        [ReplaceSkill(SAM.Mangetsu, SAM.Oka)]
-        [CustomComboInfo("Samurai AoE Overcap Feature", "Adds Kyuten onto main AoE combos when Kenki is at the selected amount or more", SAM.JobID)]
-        SAM_AoE_Overcap = 15002,
-        #endregion
-
         #region Main Combo (Gekko) Features
-        [ReplaceSkill(SAM.Gekko)]
-        [CustomComboInfo("Gekko Combo", "Replace Gekko with its combo chain.\nIf all sub options are selected will turn into a full one button rotation (Advanced Samurai)", SAM.JobID)]
-        SAM_ST_GekkoCombo = 15003,
 
-        [ParentCombo(SAM_ST_GekkoCombo)]
+        [ReplaceSkill(SAM.Hakaze)]
+        [CustomComboInfo("Advanced Mode - Single Target", "Replaces Hakaze with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", SAM.JobID)]
+        SAM_ST_AdvancedMode = 15003,
+
+        [ParentCombo(SAM_ST_AdvancedMode)]
         [CustomComboInfo("Enpi Uptime Feature", "Replace main combo with Enpi when you are out of range.", SAM.JobID)]
         SAM_ST_GekkoCombo_RangedUptime = 15004,
 
-        [ParentCombo(SAM_ST_GekkoCombo)]
+        [ParentCombo(SAM_ST_AdvancedMode)]
         [CustomComboInfo("Yukikaze Combo on Main Combo", "Adds Yukikaze combo to main combo. Will add Yukikaze during Meikyo Shisui as well", SAM.JobID)]
         SAM_ST_GekkoCombo_Yukikaze = 15005,
 
-        [ParentCombo(SAM_ST_GekkoCombo)]
+        [ParentCombo(SAM_ST_AdvancedMode)]
         [CustomComboInfo("Kasha Combo on Main Combo", "Adds Kasha combo to main combo. Will add Kasha during Meikyo Shisui as well.", SAM.JobID)]
         SAM_ST_GekkoCombo_Kasha = 15006,
 
         [ConflictingCombos(SAM_GyotenYaten)]
-        [ParentCombo(SAM_ST_GekkoCombo)]
-        [CustomComboInfo("Level 90 Samurai Opener", "Adds the Level 90 Opener to the main combo.\nOpener triggered by using Meikyo Shisui before combat. If you have any Sen, Hagakure will be used to clear them.\nWill work at any levels of Kenki, requires 2 charges of Meikyo Shisui and all CDs ready. If conditions aren't met it will skip into the regular rotation. \nIf the Opener is interrupted, it will exit the opener via a Goken and a Kaeshi: Goken at the end or via the last Yukikaze. If the latter, CDs will be used on cooldown regardless of burst options.", SAM.JobID)]
-        SAM_ST_GekkoCombo_Opener = 15007,
+        [ParentCombo(SAM_ST_AdvancedMode)]
+        [CustomComboInfo("Opener", "Adds the Balance opener to the rotation.", SAM.JobID)]
+        SAM_ST_Opener = 15007,
 
         [ConflictingCombos(SAM_GyotenYaten)]
-        [ParentCombo(SAM_ST_GekkoCombo)]
-        [CustomComboInfo("Filler Combo Feature", "Adds selected Filler combos to main combo at the appropriate time.\nChoose Skill Speed tier with Fuka buff below.\nWill disable if you die or if you don't activate the opener.", SAM.JobID)]
+        [ParentCombo(SAM_ST_AdvancedMode)]
+        [CustomComboInfo("Filler Combo Feature", "Adds selected Filler combos to main combo at the appropriate time.\nChoose Skill Speed tier with Fuka buff below.z", SAM.JobID)]
         SAM_ST_GekkoCombo_FillerCombos = 15008,
 
+        [ParentCombo(SAM_ST_AdvancedMode)]
+        [CustomComboInfo("Shinten on Main Combo", "Adds Shinteno to main combo", SAM.JobID)]
+        SAM_ST_GekkoCombo_Shinten = 15049,
+
         #region CDs on Main Combo
-        [ParentCombo(SAM_ST_GekkoCombo)]
+        [ParentCombo(SAM_ST_AdvancedMode)]
         [CustomComboInfo("CDs on Main Combo", "Collection of CD features on main combo.", SAM.JobID)]
         SAM_ST_GekkoCombo_CDs = 15099,
 
@@ -3027,25 +3049,13 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Iaijutsu on Main Combo", "Adds Midare: Setsugekka, Higanbana, and Kaeshi: Setsugekka when ready and when you're not moving to main combo.", SAM.JobID)]
         SAM_ST_GekkoCombo_CDs_Iaijutsu = 15010,
 
-        #region Ogi Namikiri on Main Combo
         [ParentCombo(SAM_ST_GekkoCombo_CDs)]
         [CustomComboInfo("Ogi Namikiri on Main Combo", "Ogi Namikiri and Kaeshi: Namikiri when ready and when you're not moving to main combo.", SAM.JobID)]
         SAM_ST_GekkoCombo_CDs_OgiNamikiri = 15011,
 
-        [ParentCombo(SAM_ST_GekkoCombo_CDs_OgiNamikiri)]
-        [CustomComboInfo("Ogi Namikiri Burst Feature", "Saves Ogi Namikiri for even minute burst windows.\nIf you don't activate the opener or die, Ogi Namikiri will instead be used on CD.", SAM.JobID)]
-        SAM_ST_GekkoCombo_CDs_OgiNamikiri_Burst = 15012,
-        #endregion
-
         [ParentCombo(SAM_ST_GekkoCombo_CDs)]
         [CustomComboInfo("Meikyo Shisui on Main Combo", "Adds Meikyo Shisui to main combo when off cooldown.", SAM.JobID)]
         SAM_ST_GekkoCombo_CDs_MeikyoShisui = 15013,
-
-        #region Meikyo Shisui on Main Combo
-        [ParentCombo(SAM_ST_GekkoCombo_CDs_MeikyoShisui)]
-        [CustomComboInfo("Meikyo Shisui Burst Feature", "Saves Meikyo Shisui for burst windows.\nIf you don't activate the opener or die, Meikyo Shisui will instead be used on CD.", SAM.JobID)]
-        SAM_ST_GekkoCombo_CDs_MeikyoShisui_Burst = 15014,
-        #endregion
 
         [ParentCombo(SAM_ST_GekkoCombo_CDs)]
         [CustomComboInfo("Shoha on Main Combo", "Adds Shoha to main combo when there are three meditation stacks.", SAM.JobID)]
@@ -3056,13 +3066,13 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Senei on Main Combo", "Adds Senei to main combo when off cooldown and above 25 Kenki.", SAM.JobID)]
         SAM_ST_GekkoCombo_CDs_Senei = 15016,
 
-        [ParentCombo(SAM_ST_GekkoCombo_CDs_Senei)]
-        [CustomComboInfo("Senei Burst Feature", "Saves Senei for even minute burst windows.\nIf you don't activate the opener or die, Senei will instead be used on CD.", SAM.JobID)]
-        SAM_ST_GekkoCombo_CDs_Senei_Burst = 15017,
-
-        [ParentCombo(SAM_ST_Overcap)]
+        [ParentCombo(SAM_ST_GekkoCombo_Shinten)]
         [CustomComboInfo("Execute Feature", "Adds Shinten to the main combo when Kenki > 25 and your current target is below the HP percentage threshold.", SAM.JobID)]
         SAM_ST_Execute = 15046,
+
+        [ParentCombo(SAM_ST_GekkoCombo_Shinten)]
+        [CustomComboInfo("Samurai Overcap Feature", "Adds Shinten onto main combo when Kenki is at the selected amount or more", SAM.JobID)]
+        SAM_ST_Overcap = 15001,
         #endregion
 
         #endregion
@@ -3078,43 +3088,43 @@ namespace XIVSlothCombo.Combos
         #endregion
 
         #region AoE Combos
-        [ReplaceSkill(SAM.Mangetsu)]
-        [CustomComboInfo("Mangetsu Combo", "Replace Mangetsu with its combo chain.\nIf all sub options are toggled will turn into a full one button AoE rotation.", SAM.JobID)]
-        SAM_AoE_MangetsuCombo = 15020,
+        [ReplaceSkill(SAM.Fuga)]
+        [CustomComboInfo("Advanced Mode - AoE", "Replaces Fuga with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", SAM.JobID)]
+        SAM_AOE_AdvancedMode = 15020,
 
-        [ParentCombo(SAM_AoE_MangetsuCombo)]
+        [ParentCombo(SAM_AOE_AdvancedMode)]
         [ConflictingCombos(SAM_AoE_OkaCombo_TwoTarget)]
         [CustomComboInfo("Oka to Mangetsu Combo", "Adds Oka combo after Mangetsu combo loop.\nWill add Oka if needed during Meikyo Shisui.", SAM.JobID)]
         SAM_AoE_MangetsuCombo_Oka = 15021,
 
-        [ParentCombo(SAM_AoE_MangetsuCombo)]
+        [ParentCombo(SAM_AOE_AdvancedMode)]
         [CustomComboInfo("Iaijutsu on Mangetsu Combo", "Adds Tenka Goken, Midare: Setsugekka, and Kaeshi: Goken when ready and when you're not moving to Mangetsu combo.", SAM.JobID)]
         SAM_AoE_MangetsuCombo_TenkaGoken = 15022,
 
-        [ParentCombo(SAM_AoE_MangetsuCombo)]
+        [ParentCombo(SAM_AOE_AdvancedMode)]
         [CustomComboInfo("Ogi Namikiri on Mangetsu Combo", "Adds Ogi Namikiri and Kaeshi: Namikiri when ready and when you're not moving to Mangetsu combo.", SAM.JobID)]
         SAM_AoE_MangetsuCombo_OgiNamikiri = 15023,
 
-        [ParentCombo(SAM_AoE_MangetsuCombo)]
+        [ParentCombo(SAM_AOE_AdvancedMode)]
         [CustomComboInfo("Shoha 2 on Mangetsu Combo", "Adds Shoha 2 when you have 3 meditation stacks to Mangetsu combo.", SAM.JobID)]
         SAM_AoE_MangetsuCombo_Shoha2 = 15024,
 
         [ConflictingCombos(SAM_Kyuten_Shoha2_Guren)]
-        [ParentCombo(SAM_AoE_MangetsuCombo)]
+        [ParentCombo(SAM_AOE_AdvancedMode)]
         [CustomComboInfo("Guren on Mangetsu Combo", "Adds Guren when it's off cooldown and you have 25 Kenki to Mangetsu combo.", SAM.JobID)]
         SAM_AoE_MangetsuCombo_Guren = 15025,
 
-        [ParentCombo(SAM_AoE_MangetsuCombo)]
+        [ParentCombo(SAM_AOE_AdvancedMode)]
+        [CustomComboInfo("Hagakure on Mangetsu Combo", "Adds Hagakure to Mangetsu combo when there are three Sen.", SAM.JobID)]
+        SAM_AoE_MangetsuCombo_Hagakure = 15041,
+
+        [ParentCombo(SAM_AOE_AdvancedMode)]
         [CustomComboInfo("Meikyo Shisui on Mangetsu Combo", "Adds Meikyo Shisui to Mangetsu combo.", SAM.JobID)]
         SAM_AoE_MangetsuCombo_MeikyoShisui = 15039,
 
-        [ParentCombo(SAM_AoE_MangetsuCombo)]
+        [ParentCombo(SAM_AOE_AdvancedMode)]
         [CustomComboInfo("Ikishoten on Mangetsu Combo", "Adds Ikishoten when at or below 50 Kenki.\nWill dump Kenki at 10 seconds left to allow Ikishoten to be used.", SAM.JobID)]
         SAM_AOE_GekkoCombo_CDs_Ikishoten = 15040,
-
-        [ParentCombo(SAM_AoE_MangetsuCombo)]
-        [CustomComboInfo("Hagakure on Mangetsu Combo", "Adds Hagakure to Mangetsu combo when there are three Sen.", SAM.JobID)]
-        SAM_AoE_MangetsuCombo_Hagakure = 15041,
 
         [ReplaceSkill(SAM.Oka)]
         [CustomComboInfo("Oka Combo", "Replace Oka with its combo chain.", SAM.JobID)]
@@ -3124,6 +3134,15 @@ namespace XIVSlothCombo.Combos
         [ConflictingCombos(SAM_AoE_MangetsuCombo_Oka)]
         [CustomComboInfo("Oka Two Target Rotation Feature", "Adds the Yukikaze combo, Mangetsu combo, Senei, Shinten, and Shoha to Oka combo.\nUsed for two targets only and when Lv86 and above.", SAM.JobID)]
         SAM_AoE_OkaCombo_TwoTarget = 150261,
+
+        [ParentCombo(SAM_AOE_AdvancedMode)]
+        [CustomComboInfo("Kyuten on Mangetsu Combo", "Adds Kyuten to Mangetsu combo.", SAM.JobID)]
+        SAM_AoE_MangetsuCombo_Kyuten = 15050,
+
+        [ParentCombo(SAM_AOE_AdvancedMode)]
+        [CustomComboInfo("Samurai AoE Overcap Feature", "Adds Kyuten onto main AoE combos when Kenki is at the selected amount or more", SAM.JobID)]
+        SAM_AoE_Overcap = 15002,
+
         #endregion
 
         #region Cooldown Features
@@ -3173,7 +3192,7 @@ namespace XIVSlothCombo.Combos
         #endregion
 
         #region Other
-        [ConflictingCombos(SAM_ST_GekkoCombo_Opener, SAM_ST_GekkoCombo_FillerCombos)]
+        [ConflictingCombos(SAM_ST_Opener, SAM_ST_GekkoCombo_FillerCombos)]
         [ReplaceSkill(SAM.Gyoten)]
         [CustomComboInfo("Gyoten Feature", "Hissatsu: Gyoten becomes Yaten/Gyoten depending on the distance from your target.", SAM.JobID)]
         SAM_GyotenYaten = 15036,
@@ -3182,30 +3201,30 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Ikishoten Namikiri Feature", "Replace Ikishoten with Ogi Namikiri and then Kaeshi Namikiri when available.\nIf you have full Meditation stacks, Ikishoten becomes Shoha while you have Ogi Namikiri ready.", SAM.JobID)]
         SAM_Ikishoten_OgiNamikiri = 15037,
 
-        [ReplaceSkill(SAM.Gekko, SAM.Yukikaze, SAM.Kasha)]
-        [CustomComboInfo("True North Feature", "Adds True North on all single target combos if Meikyo Shisui's buff is on you.", SAM.JobID)]
-        SAM_TrueNorth = 15038,
+        [ParentCombo(SAM_ST_AdvancedMode)]
+        [CustomComboInfo("True North Feature", "Adds True North if Meikyo Shisui's buff is on you.", SAM.JobID)]
+        SAM_TrueNorth = 15043,
 
-        [ParentCombo(SAM_ST_GekkoCombo)]
+        [ParentCombo(SAM_ST_AdvancedMode)]
         [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", SAM.JobID)]
-        SAM_ST_ComboHeals = 15043,
+        SAM_ST_ComboHeals = 15038,
 
-        [ParentCombo(SAM_AoE_MangetsuCombo)]
+        [ParentCombo(SAM_AOE_AdvancedMode)]
         [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", SAM.JobID)]
         SAM_AoE_ComboHeals = 15045,
 
         [Variant]
-        [VariantParent(SAM_ST_GekkoCombo, SAM_AoE_MangetsuCombo)]
+        [VariantParent(SAM_ST_AdvancedMode, SAM_AOE_AdvancedMode)]
         [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", SAM.JobID)]
         SAM_Variant_Cure = 15047,
 
         [Variant]
-        [VariantParent(SAM_ST_GekkoCombo, SAM_AoE_MangetsuCombo)]
+        [VariantParent(SAM_ST_AdvancedMode , SAM_AOE_AdvancedMode)]
         [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", SAM.JobID)]
         SAM_Variant_Rampart = 15048,
         #endregion
 
-        // Last value = 15048
+        // Last value = 15050
 
         #endregion
 
@@ -3528,8 +3547,8 @@ namespace XIVSlothCombo.Combos
 
         #region WARRIOR
 
-        [ReplaceSkill(WAR.StormsPath)]
-        [CustomComboInfo("Advanced Mode - Single Target", "Replaces Storm's Path with a one-button full single target rotation.\nThese features are ideal if you want to customize the rotation.", WAR.JobID, 1)]
+        [ReplaceSkill(WAR.HeavySwing)]
+        [CustomComboInfo("Advanced Mode - Single Target", "Replaces Heavy Swing with a one-button full single target rotation.\nThese features are ideal if you want to customize the rotation.", WAR.JobID, 1)]
         WAR_ST_StormsPath = 18000,
 
         [ParentCombo(WAR_ST_StormsPath)]
@@ -3623,7 +3642,11 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Steel Cyclone / Decimate Option", "Adds Steel Cyclone / Decimate to Advanced Mode.", WAR.JobID)]
         WAR_AoE_Overpower_Decimate = 18028,
 
-        // Last value = 18028
+        [ParentCombo(WAR_ST_StormsPath)]
+        [CustomComboInfo("Opener", "Adds the Balance opener to the rotation.", WAR.JobID, -2)]
+        WAR_ST_Opener = 18029,
+
+        // Last value = 18029
 
         #endregion
 

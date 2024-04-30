@@ -203,14 +203,18 @@ namespace XIVSlothCombo.Combos.PvE
                             return actionID;
                     }
 
-                    if (IsEnabled(CustomComboPreset.NIN_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.NIN_VariantCure))
+                    if (IsEnabled(CustomComboPreset.NIN_Variant_Cure) &&
+                        IsEnabled(Variant.VariantCure) && 
+                        PlayerHealthPercentageHp() <= GetOptionValue(Config.NIN_VariantCure))
                         return Variant.VariantCure;
 
                     if (InCombat() && !InMeleeRange())
                     {
                         if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bunshin_Phantom) &&
                             HasEffect(Buffs.PhantomReady) &&
-                            ((GetCooldownRemainingTime(TrickAttack) > GetBuffRemainingTime(Buffs.PhantomReady) && GetBuffRemainingTime(Buffs.PhantomReady) < 5) || TargetHasEffect(Debuffs.TrickAttack) || (HasEffect(Buffs.Bunshin) && TargetHasEffect(Debuffs.Mug))) &&
+                            ((GetCooldownRemainingTime(TrickAttack) > GetBuffRemainingTime(Buffs.PhantomReady) && GetBuffRemainingTime(Buffs.PhantomReady) < 5) ||
+                            TargetHasEffect(Debuffs.TrickAttack) || 
+                            (HasEffect(Buffs.Bunshin) && TargetHasEffect(Debuffs.Mug))) &&
                             PhantomKamaitachi.LevelChecked()
                             && phantomUptime)
                             return OriginalHook(PhantomKamaitachi);
@@ -232,7 +236,8 @@ namespace XIVSlothCombo.Combos.PvE
                             mudraState.CastRaiton(ref actionID))
                             return actionID;
 
-                        if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_RangedUptime) && ThrowingDaggers.LevelChecked() && HasTarget() && !HasEffect(Buffs.RaijuReady))
+                        if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_RangedUptime) && 
+                            ThrowingDaggers.LevelChecked() && HasTarget() && !HasEffect(Buffs.RaijuReady))
                             return OriginalHook(ThrowingDaggers);
                     }
 
@@ -259,29 +264,18 @@ namespace XIVSlothCombo.Combos.PvE
                             IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack_Delayed)))
                             return OriginalHook(TrickAttack);
 
-                        if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bunshin) && gauge.Ninki >= bunshinPool &&
+                        if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bunshin) && LevelChecked(Bunshin) && gauge.Ninki >= bunshinPool &&
                             (GetCooldownRemainingTime(Bunshin) <= GetCooldownRemainingTime(OriginalHook(SpinningEdge)) + 0.25 || ActionReady(Bunshin)))
                             return OriginalHook(Bunshin);
 
                         if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Kassatsu) && (TargetHasEffect(Debuffs.TrickAttack) || setupKassatsuWindow) && IsOffCooldown(Kassatsu) && Kassatsu.LevelChecked())
                             return OriginalHook(Kassatsu);
 
-                        //healing - please move if not appropriate priority
-                        if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_SecondWind) && ActionReady(All.SecondWind) && playerHP <= SecondWindThreshold)
-                            return All.SecondWind;
-
-                        if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_ShadeShift) && ShadeShift.LevelChecked() && playerHP <= ShadeShiftThreshold && IsOffCooldown(ShadeShift))
-                            return ShadeShift;
-
-                        if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bloodbath) && All.Bloodbath.LevelChecked() && playerHP <= BloodbathThreshold && IsOffCooldown(All.Bloodbath))
-                            return All.Bloodbath;
-
                         if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bhavacakra) &&
                             ((TargetHasEffect(Debuffs.TrickAttack) && gauge.Ninki >= 50) || (useBhakaBeforeTrickWindow && gauge.Ninki == 100)) &&
                             (IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) || (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) && IsOnCooldown(Mug))) &&
                             Bhavacakra.LevelChecked())
                             return OriginalHook(Bhavacakra);
-
 
                         if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bhavacakra) &&
                             ((TargetHasEffect(Debuffs.TrickAttack) && gauge.Ninki >= 50) || (useBhakaBeforeTrickWindow && gauge.Ninki >= 60)) &&
@@ -291,7 +285,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                         if (!inTrickBurstSaveWindow)
                         {
-                            if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) && IsOffCooldown(Mug) && Mug.LevelChecked())
+                            if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) && ActionReady(Mug))
                             {
                                 if (IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug_AlignAfter) || (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug_AlignAfter) && TargetHasEffect(Debuffs.TrickAttack)))
                                     return OriginalHook(Mug);
@@ -312,17 +306,7 @@ namespace XIVSlothCombo.Combos.PvE
                             if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TCJ) && IsOffCooldown(TenChiJin) && !IsMoving && TenChiJin.LevelChecked())
                                 return OriginalHook(TenChiJin);
                         }
-
-                        if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_SecondWind) && All.SecondWind.LevelChecked() && playerHP <= SecondWindThreshold && IsOffCooldown(All.SecondWind))
-                            return All.SecondWind;
-
-                        if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_ShadeShift) && ShadeShift.LevelChecked() && playerHP <= ShadeShiftThreshold && IsOffCooldown(ShadeShift))
-                            return ShadeShift;
-
-                        if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bloodbath) && All.Bloodbath.LevelChecked() && playerHP <= BloodbathThreshold && IsOffCooldown(All.Bloodbath))
-                            return All.Bloodbath;
                     }
-
 
                     if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Raiju) && HasEffect(Buffs.RaijuReady))
                     {
@@ -384,7 +368,6 @@ namespace XIVSlothCombo.Combos.PvE
                         }
                     }
 
-
                     if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_ArmorCrush) &&
                         !HasEffect(Buffs.RaijuReady) &&
                         lastComboMove == GustSlash &&
@@ -403,6 +386,19 @@ namespace XIVSlothCombo.Combos.PvE
 
                         return OriginalHook(ArmorCrush);
                     }
+
+                    //healing - please move if not appropriate priority
+                    if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_SecondWind) &&
+                        ActionReady(All.SecondWind) && playerHP <= SecondWindThreshold)
+                        return All.SecondWind;
+
+                    if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_ShadeShift) &&
+                        ActionReady(ShadeShift) && playerHP <= ShadeShiftThreshold)
+                        return ShadeShift;
+
+                    if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bloodbath) &&
+                        ActionReady(All.Bloodbath) && playerHP <= BloodbathThreshold)
+                        return All.Bloodbath;
 
                     if (comboTime > 1f)
                     {
@@ -598,7 +594,6 @@ namespace XIVSlothCombo.Combos.PvE
                 return actionID;
             }
         }
-
 
         internal class NIN_ST_SimpleMode : CustomCombo
         {

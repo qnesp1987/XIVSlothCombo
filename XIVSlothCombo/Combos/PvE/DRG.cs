@@ -323,7 +323,7 @@ namespace XIVSlothCombo.Combos.PvE
                         AnimationLock.CanDRGWeave(Variant.VariantRampart))
                         return Variant.VariantRampart;
 
-                    // Opener for BLM
+                    // Opener for DRG
                     if (IsEnabled(CustomComboPreset.DRG_ST_Opener))
                     {
                         if (DRGOpener.DoFullOpener(ref actionID, false))
@@ -364,7 +364,7 @@ namespace XIVSlothCombo.Combos.PvE
                             if (IsEnabled(CustomComboPreset.DRG_ST_LifeSurge) && ActionReady(LifeSurge) && AnimationLock.CanDRGWeave(LifeSurge) && !HasEffect(Buffs.LifeSurge) &&
                                 ((HasEffect(Buffs.RightEye) && HasEffect(Buffs.LanceCharge) && lastComboMove is VorpalThrust) ||
                                 (HasEffect(Buffs.LanceCharge) && lastComboMove is VorpalThrust) ||
-                                (HasEffect(Buffs.RightEye) && HasEffect(Buffs.LanceCharge) && (HasEffect(Buffs.EnhancedWheelingThrust) || HasEffect(Buffs.SharperFangAndClaw))) ||
+                                (HasEffect(Buffs.RightEye) && HasEffect(Buffs.LanceCharge) && ((HasEffect(Buffs.EnhancedWheelingThrust) && lastComboMove is FangAndClaw) || (HasEffect(Buffs.SharperFangAndClaw) && lastComboMove is WheelingThrust))) ||
                                 (IsOnCooldown(DragonSight) && IsOnCooldown(LanceCharge) && lastComboMove is VorpalThrust)))
                                 return LifeSurge;
 
@@ -383,7 +383,6 @@ namespace XIVSlothCombo.Combos.PvE
                                 {
                                     if (ActionReady(DragonfireDive) && AnimationLock.CanDRGWeave(DragonfireDive))
                                         return DragonfireDive;
-
                                 }
                             }
 
@@ -398,7 +397,6 @@ namespace XIVSlothCombo.Combos.PvE
                                         return SpineshatterDive;
                                 }
                             }
-
 
                             //(High) Jump Feature   
                             if (IsEnabled(CustomComboPreset.DRG_ST_HighJump) &&

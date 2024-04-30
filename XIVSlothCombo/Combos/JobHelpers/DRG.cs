@@ -13,12 +13,16 @@ namespace XIVSlothCombo.Combos.JobHelpers
         {
             if (CustomComboFunctions.GetRemainingCharges(SpineshatterDive) < 2)
                 return false;
+
             if (CustomComboFunctions.GetRemainingCharges(LifeSurge) < 2)
                 return false;
+
             if (!CustomComboFunctions.ActionReady(BattleLitany))
                 return false;
+
             if (!CustomComboFunctions.ActionReady(DragonSight))
                 return false;
+
             if (!CustomComboFunctions.ActionReady(DragonfireDive))
                 return false;
 

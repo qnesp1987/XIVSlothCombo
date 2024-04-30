@@ -587,8 +587,8 @@ namespace XIVSlothCombo.Combos.PvE
                             return Triplecast;
 
                         // Fire III proc or Swiftcast Fire III during Transpose lines(< 3 Astral Fire stacks)
-                        if (gauge.AstralFireStacks < 3 || 
-                            (IsEnabled(CustomComboPreset.BLM_Adv_UseFirestarter) && 
+                        if (gauge.AstralFireStacks < 3 ||
+                            (IsEnabled(CustomComboPreset.BLM_Adv_UseFirestarter) &&
                             HasEffect(Buffs.Firestarter) && GetBuffRemainingTime(Buffs.Firestarter) < 20))
                             return Fire3;
 
@@ -598,7 +598,9 @@ namespace XIVSlothCombo.Combos.PvE
 
                         // Use Paradox instead of hardcasting Fire if we can
                         if (gauge.ElementTimeRemaining <= astralFireRefresh && !HasEffect(Buffs.Firestarter) && currentMP >= MP.FireI)
-                            return OriginalHook(Fire);
+                            return (IsEnabled(CustomComboPreset.BLM_Adv_UseParadox) && LevelChecked(Paradox) && gauge.IsParadoxActive)
+                                ? Paradox
+                                : Fire;
 
                         if (IsEnabled(CustomComboPreset.BLM_Adv_Cooldowns) && Config.BLM_Adv_Cooldowns_Choice[0] &&
                             ActionReady(Manafont) && currentMP is 0 && (HasEffect(Buffs.Triplecast) || WasLastAction(Xenoglossy) || level < 80))
@@ -626,7 +628,8 @@ namespace XIVSlothCombo.Combos.PvE
                             if (currentMP >= MP.FireI)
                                 return OriginalHook(Fire);
 
-                            if (currentMP < MP.FireI && currentMP >= MP.AllMPSpells && LevelChecked(Despair))
+                            if (IsEnabled(CustomComboPreset.BLM_Adv_UseDespair) &&
+                                currentMP < MP.FireI && currentMP >= MP.AllMPSpells && LevelChecked(Despair))
                                 return Despair;
 
                             return Blizzard3;
@@ -660,7 +663,9 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         // Use Paradox when available
-                        if (LevelChecked(Paradox) && gauge.IsParadoxActive && gauge.UmbralHearts is 3 && (LocalPlayer.CastActionId == Blizzard4 || WasLastAction(Blizzard4)))
+                        if (IsEnabled(CustomComboPreset.BLM_Adv_UseParadox) &&
+                            LevelChecked(Paradox) && gauge.IsParadoxActive && gauge.UmbralHearts is 3 &&
+                            (LocalPlayer.CastActionId == Blizzard4 || WasLastAction(Blizzard4)))
                             return Paradox;
 
                         if (WasLastAction(Paradox) && gauge.UmbralHearts is 3)

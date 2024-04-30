@@ -250,7 +250,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (LevelChecked(Dyskrasia))
                     {
                         if ((NoPhlegmaDyskrasia && !HasCharges(phlegma)) ||
-                            (NoTargetDyskrasia && CurrentTarget is null))
+                            (NoTargetDyskrasia && !HasTarget()))
                             return OriginalHook(Dyskrasia);
                     }
                 }

@@ -7,21 +7,26 @@ using XIVSlothCombo.Data;
 
 namespace XIVSlothCombo.Combos.JobHelpers
 {
-    internal class BLMOpenerLogic : PvE.BLM
+    internal class BLMOpenerLogic : BLM
     {
         private static bool HasCooldowns()
         {
             if (CustomComboFunctions.GetRemainingCharges(Triplecast) < 2)
                 return false;
+
             if (!CustomComboFunctions.ActionReady(Manafont))
                 return false;
+
             if (!CustomComboFunctions.ActionReady(All.Swiftcast))
                 return false;
+
             if (!CustomComboFunctions.ActionReady(Amplifier))
                 return false;
+
             if (!CustomComboFunctions.ActionReady(All.LucidDreaming) &&
                 Config.BLM_Adv_Rotation_Options == 1)
                 return false;
+
             if (!CustomComboFunctions.ActionReady(LeyLines))
                 return false;
 
@@ -430,7 +435,6 @@ namespace XIVSlothCombo.Combos.JobHelpers
                 ResetOpener();
                 CurrentState = OpenerState.PrePull;
             }
-
 
             return false;
         }

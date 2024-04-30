@@ -13,14 +13,19 @@ namespace XIVSlothCombo.Combos.JobHelpers
         {
             if (CustomComboFunctions.GetRemainingCharges(PerfectBalance) < 2)
                 return false;
+
             if (!CustomComboFunctions.ActionReady(Brotherhood))
                 return false;
+
             if (!CustomComboFunctions.ActionReady(RiddleOfFire))
                 return false;
+
             if (!CustomComboFunctions.ActionReady(RiddleOfWind))
                 return false;
+
             if (Svc.Gauges.Get<MNKGauge>().Nadi.HasFlag(Nadi.LUNAR))
                 return false;
+
             if (Svc.Gauges.Get<MNKGauge>().Nadi.HasFlag(Nadi.SOLAR))
                 return false;
 
@@ -147,7 +152,8 @@ namespace XIVSlothCombo.Combos.JobHelpers
 
         private bool DoOpener(uint[] OpenerActions, ref uint actionID)
         {
-            if (!LevelChecked) return false;
+            if (!LevelChecked) 
+                return false;
 
             if (currentState == OpenerState.InOpener)
             {
