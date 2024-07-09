@@ -41,33 +41,34 @@ namespace XIVSlothCombo
         private readonly TextPayload starterMotd = new("[Sloth Message of the Day] ");
         private static uint? jobID;
 
-        public static readonly List<uint> DisabledJobsPVE = new List<uint>()
-        {
-            ADV.JobID,
-            AST.JobID,
-            BLM.JobID,
-            //BLU.JobID,
-            BRD.JobID,
-            DNC.JobID,
-            DOL.JobID,
-            DRG.JobID,
-            //DRK.JobID,
-            //GNB.JobID,
-            //MCH.JobID,
-            MNK.JobID,
-            NIN.JobID,
-            //PCT.JobID,
-            //PLD.JobID,
-            //RDM.JobID,
-            RPR.JobID,
-            SAM.JobID,
-            //SCH.JobID,
-            //SGE.JobID,
-            //SMN.JobID,
-            //VPR.JobID,
-            WAR.JobID,
-            WHM.JobID
-        };
+public static readonly List<uint> DisabledJobsPVE = new List<uint>()
+{
+    ADV.JobID,
+    AST.JobID,
+    BLM.JobID,
+    //BLU.JobID,
+    BRD.JobID,
+    DNC.JobID,
+    DOL.JobID,
+    DRG.JobID,  // Keeping DRG from main
+    DRK.JobID,  // Keeping DRK from qnesp
+    //GNB.JobID,
+    //MCH.JobID,
+    MNK.JobID,
+    NIN.JobID,
+    //PCT.JobID,
+    //PLD.JobID,
+    //RDM.JobID,
+    RPR.JobID,
+    SAM.JobID,
+    //SCH.JobID,
+    //SGE.JobID,
+    //SMN.JobID,
+    //VPR.JobID,
+    WAR.JobID,
+    WHM.JobID
+};
+
 
         public static readonly List<uint> DisabledJobsPVP = new List<uint>()
         {
