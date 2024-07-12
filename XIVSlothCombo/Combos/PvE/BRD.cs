@@ -319,95 +319,145 @@ namespace XIVSlothCombo.Combos.PvE
             }
         }
 
-        internal class BRD_AoE_SimpleMode : CustomCombo
+       internal class BRD_AoE_SimpleMode : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_AoE_SimpleMode;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        // Only target specific actions: Quick Nock and Ladonsbite
+        if (actionID != QuickNock && actionID != Ladonsbite)
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_AoE_SimpleMode;
+            return actionID;
+        }
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        BRDGauge? gauge = GetJobGauge<BRDGauge>();
+        bool canWeave = CanWeave(actionID);
+        bool canWeaveBuffs = CanWeave(actionID, 0.6);
+        bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9);
+        bool songWanderer = gauge?.Song == Song.WANDERER;
+        bool isOpenerPhase = !HasEffect(Buffs.RagingStrikes) && !HasEffect(Buffs.BattleVoice) && !HasEffect(Buffs.RadiantFinale) && !HasEffect(Buffs.RadiantEncoreReady);
+
+        // Starting with Wanderer's Minuet
+        if (IsEnabled(CustomComboPreset.BRD_AoE_Simple_Songs))
+        {
+            int songTimerInSeconds = gauge?.SongTimer / 1000 ?? 0;
+            bool songNone = gauge?.Song == Song.NONE;
+
+            if (songTimerInSeconds < 12 || songNone)
             {
-                if (actionID is Ladonsbite or QuickNock)
-                {
-                    BRDGauge? gauge = GetJobGauge<BRDGauge>();
-                    bool canWeave = CanWeave(actionID);
-
-                    if (IsEnabled(CustomComboPreset.BRD_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.BRD_VariantCure))
-                        return Variant.VariantCure;
-
-                    if (IsEnabled(CustomComboPreset.BRD_Variant_Rampart) &&
-                        IsEnabled(Variant.VariantRampart) &&
-                        IsOffCooldown(Variant.VariantRampart) &&
-                        canWeave)
-                        return Variant.VariantRampart;
-
-                    if (IsEnabled(CustomComboPreset.BRD_AoE_Simple_Songs) && canWeave)
-                    {
-                        int songTimerInSeconds = gauge.SongTimer / 1000;
-                        bool songNone = gauge.Song == Song.NONE;
-
-                        if (songTimerInSeconds < 12 || songNone)
-                        {
-                            if (LevelChecked(WanderersMinuet) && IsOffCooldown(WanderersMinuet) &&
-                                !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)) &&
-                                !IsEnabled(CustomComboPreset.BRD_AoE_Simple_SongsExcludeWM))
-                                return WanderersMinuet;
-
-                            if (LevelChecked(MagesBallad) && IsOffCooldown(MagesBallad) &&
-                                !(JustUsed(WanderersMinuet) || JustUsed(ArmysPaeon)))
-                                return MagesBallad;
-
-                            if (LevelChecked(ArmysPaeon) && IsOffCooldown(ArmysPaeon) &&
-                                !(JustUsed(MagesBallad) || JustUsed(WanderersMinuet)))
-                                return ArmysPaeon;
-                        }
-                    }
-
-                    if (canWeave)
-                    {
-                        bool songWanderer = gauge.Song == Song.WANDERER;
-                        bool empyrealReady = LevelChecked(EmpyrealArrow) && IsOffCooldown(EmpyrealArrow);
-                        bool rainOfDeathReady = LevelChecked(RainOfDeath) && GetRemainingCharges(RainOfDeath) > 0;
-                        bool sidewinderReady = LevelChecked(Sidewinder) && IsOffCooldown(Sidewinder);
-                        bool barrageReady = LevelChecked(Shadowbite) && IsOffCooldown(Barrage); // Adding Barrage to AoE, but only if we can use Shadowbite.
-
-                        if (LevelChecked(PitchPerfect) && songWanderer && gauge.Repertoire == 3)
-                            return OriginalHook(WanderersMinuet);
-                        if (empyrealReady)
-                            return EmpyrealArrow;
-                        if (rainOfDeathReady)
-                            return RainOfDeath;
-                        if (sidewinderReady)
-                            return Sidewinder;
-                        if (barrageReady)
-                            return Barrage;
-
-                        // healing - please move if not appropriate priority
-                        if (IsEnabled(CustomComboPreset.BRD_AoE_SecondWind))
-                        {
-                            if (PlayerHealthPercentageHp() <= PluginConfiguration.GetCustomIntValue(Config.BRD_AoESecondWindThreshold) && ActionReady(All.SecondWind))
-                                return All.SecondWind;
-                        }
-                    }
-
-                    bool wideVolleyReady = LevelChecked(WideVolley) && HasEffect(Buffs.HawksEye);
-                    bool blastArrowReady = LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady);
-                    bool resonantArrowReady = LevelChecked(ResonantArrow) && HasEffect(Buffs.ResonantArrowReady);
-
-                    if (wideVolleyReady)
-                        return OriginalHook(WideVolley);
-                    if (LevelChecked(ApexArrow) && gauge.SoulVoice == 100 && !IsEnabled(CustomComboPreset.BRD_RemoveApexArrow))
-                        return ApexArrow;
-                    if (blastArrowReady)
-                        return BlastArrow;
-                    if (resonantArrowReady)
-                        return ResonantArrow;
-                    if (HasEffect(Buffs.RadiantEncoreReady))
-                        return RadiantEncore;
-
-                }
-
-                return actionID;
+                if (LevelChecked(WanderersMinuet) && IsOffCooldown(WanderersMinuet) &&
+                    !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)) &&
+                    !IsEnabled(CustomComboPreset.BRD_AoE_Simple_SongsExcludeWM))
+                    return WanderersMinuet;
             }
         }
+
+        // Use Pitch Perfect if 3 stacks or less than 4 seconds remaining on Wanderer's Minuet
+        int songTimerInSecondsFinal = gauge?.SongTimer / 1000 ?? 0;
+        if (songWanderer && LevelChecked(PitchPerfect) && (gauge?.Repertoire == 3 || songTimerInSecondsFinal < 4))
+        {
+            return PitchPerfect;
+        }
+
+        if (songWanderer && isOpenerPhase)
+        {
+            if (LevelChecked(RagingStrikes) && IsOffCooldown(RagingStrikes))
+            {
+                return RagingStrikes;
+            }
+
+            if (canWeaveBuffs)
+            {
+                if (IsOffCooldown(RadiantFinale) && !HasEffect(Buffs.RadiantFinale))
+                {
+                    return RadiantFinale;
+                }
+                else if (IsOffCooldown(BattleVoice) && !HasEffect(Buffs.BattleVoice))
+                {
+                    return BattleVoice;
+                }
+            }
+
+            if (canWeaveDelayed && IsOffCooldown(Barrage) && !HasEffect(Buffs.Barrage))
+            {
+                return Barrage;
+            }
+
+            if (HasEffect(Buffs.RadiantEncoreReady))
+            {
+                return RadiantEncore;
+            }
+        }
+
+        // Handle AoE skills
+        bool wideVolleyReady = LevelChecked(WideVolley) && HasEffect(Buffs.HawksEye);
+        bool blastArrowReady = LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady);
+        bool resonantArrowReady = LevelChecked(ResonantArrow) && HasEffect(Buffs.ResonantArrowReady) && level >= 96;
+
+        if (resonantArrowReady)
+            return ResonantArrow;
+        if (wideVolleyReady)
+            return OriginalHook(WideVolley);
+        if (LevelChecked(ApexArrow) && gauge?.SoulVoice == 100 && !IsEnabled(CustomComboPreset.BRD_RemoveApexArrow))
+            return ApexArrow;
+        if (blastArrowReady)
+            return BlastArrow;
+        if (HasEffect(Buffs.RadiantEncoreReady))
+            return RadiantEncore;
+
+        if (IsEnabled(CustomComboPreset.BRD_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.BRD_VariantCure))
+            return Variant.VariantCure;
+
+        if (IsEnabled(CustomComboPreset.BRD_Variant_Rampart) &&
+            IsEnabled(Variant.VariantRampart) &&
+            IsOffCooldown(Variant.VariantRampart) &&
+            canWeave)
+            return Variant.VariantRampart;
+
+        if (canWeave)
+        {
+            bool empyrealReady = LevelChecked(EmpyrealArrow) && IsOffCooldown(EmpyrealArrow);
+            bool rainOfDeathReady = LevelChecked(RainOfDeath) && GetRemainingCharges(RainOfDeath) > 0;
+            bool sidewinderReady = LevelChecked(Sidewinder) && IsOffCooldown(Sidewinder);
+            bool barrageReady = LevelChecked(Shadowbite) && IsOffCooldown(Barrage);
+
+            if (LevelChecked(PitchPerfect) && songWanderer && (gauge?.Repertoire == 3 || songTimerInSecondsFinal < 4))
+                return PitchPerfect;
+            if (empyrealReady)
+                return EmpyrealArrow;
+            if (rainOfDeathReady)
+                return RainOfDeath;
+            if (sidewinderReady)
+                return Sidewinder;
+            if (barrageReady)
+                return Barrage;
+
+            if (IsEnabled(CustomComboPreset.BRD_AoE_SecondWind))
+            {
+                if (PlayerHealthPercentageHp() <= PluginConfiguration.GetCustomIntValue(Config.BRD_AoESecondWindThreshold) && ActionReady(All.SecondWind))
+                    return All.SecondWind;
+            }
+        }
+
+        bool wideVolleyReadyFinal = LevelChecked(WideVolley) && HasEffect(Buffs.HawksEye);
+        bool blastArrowReadyFinal = LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady);
+        bool resonantArrowReadyFinal = LevelChecked(ResonantArrow) && HasEffect(Buffs.ResonantArrowReady);
+
+        if (wideVolleyReadyFinal)
+            return OriginalHook(WideVolley);
+        if (LevelChecked(ApexArrow) && gauge?.SoulVoice == 100 && !IsEnabled(CustomComboPreset.BRD_RemoveApexArrow))
+            return ApexArrow;
+        if (blastArrowReadyFinal)
+            return BlastArrow;
+        if (resonantArrowReadyFinal)
+            return ResonantArrow;
+        if (HasEffect(Buffs.RadiantEncoreReady))
+            return RadiantEncore;
+
+        return actionID;
+    }
+}
 
         internal class BRD_ST_oGCD : CustomCombo
         {
