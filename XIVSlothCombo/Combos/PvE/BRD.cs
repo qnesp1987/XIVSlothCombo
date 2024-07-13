@@ -212,6 +212,8 @@ namespace XIVSlothCombo.Combos.PvE
         internal class BRD_AoE_SimpleMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_AoE_SimpleMode;
+            private bool radiantFinalePending = false;
+            private bool battleVoicePending = false;
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
@@ -246,6 +248,7 @@ namespace XIVSlothCombo.Combos.PvE
                     return PitchPerfect;
                 }
 
+                // Persistent checks for Radiant Finale and Battle Voice
                 if (songWanderer && isOpenerPhase)
                 {
                     if (LevelChecked(RagingStrikes) && IsOffCooldown(RagingStrikes))
@@ -253,14 +256,30 @@ namespace XIVSlothCombo.Combos.PvE
                         return RagingStrikes;
                     }
 
-                    if (canWeaveBuffs)
+                    if (canWeaveBuffs && !HasEffect(Buffs.RadiantFinale) && IsOffCooldown(RadiantFinale))
                     {
-                        if (IsOffCooldown(RadiantFinale) && !HasEffect(Buffs.RadiantFinale))
+                        radiantFinalePending = true;
+                    }
+
+                    if (canWeaveBuffs && !HasEffect(Buffs.BattleVoice) && IsOffCooldown(BattleVoice))
+                    {
+                        battleVoicePending = true;
+                    }
+
+                    if (radiantFinalePending && canWeaveBuffs)
+                    {
+                        if (IsOffCooldown(RadiantFinale))
                         {
+                            radiantFinalePending = false;
                             return RadiantFinale;
                         }
-                        else if (IsOffCooldown(BattleVoice) && !HasEffect(Buffs.BattleVoice))
+                    }
+
+                    if (battleVoicePending && canWeaveBuffs)
+                    {
+                        if (IsOffCooldown(BattleVoice))
                         {
+                            battleVoicePending = false;
                             return BattleVoice;
                         }
                     }
