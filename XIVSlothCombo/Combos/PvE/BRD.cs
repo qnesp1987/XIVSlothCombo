@@ -300,27 +300,7 @@ namespace XIVSlothCombo.Combos.PvE
                 bool blastArrowReady = LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady);
                 bool resonantArrowReady = LevelChecked(ResonantArrow) && HasEffect(Buffs.ResonantArrowReady) && level >= 96;
 
-                if (resonantArrowReady)
-                    return ResonantArrow;
-                if (wideVolleyReady)
-                    return OriginalHook(WideVolley);
-                if (LevelChecked(ApexArrow) && gauge?.SoulVoice == 100 && !IsEnabled(CustomComboPreset.BRD_RemoveApexArrow))
-                    return ApexArrow;
-                if (blastArrowReady)
-                    return BlastArrow;
-                if (HasEffect(Buffs.RadiantEncoreReady))
-                    return RadiantEncore;
-
-                if (IsEnabled(CustomComboPreset.BRD_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.BRD_VariantCure))
-                    return Variant.VariantCure;
-
-                if (IsEnabled(CustomComboPreset.BRD_Variant_Rampart) &&
-                    IsEnabled(Variant.VariantRampart) &&
-                    IsOffCooldown(Variant.VariantRampart) &&
-                    canWeave)
-                    return Variant.VariantRampart;
-
-                // Transition to the next song in the rotation
+                // Handle song transitions before other skills
                 if (songWanderer && songTimerInSecondsFinal < 3)
                 {
                     if (LevelChecked(MagesBallad) && IsOffCooldown(MagesBallad))
@@ -336,6 +316,30 @@ namespace XIVSlothCombo.Combos.PvE
                     if (LevelChecked(WanderersMinuet) && IsOffCooldown(WanderersMinuet))
                         return WanderersMinuet;
                 }
+
+                // Check for pending buffs again
+                if (radiantFinalePending || battleVoicePending)
+                {
+                    if (resonantArrowReady)
+                        return ResonantArrow;
+                    if (wideVolleyReady)
+                        return OriginalHook(WideVolley);
+                    if (LevelChecked(ApexArrow) && gauge?.SoulVoice == 100 && !IsEnabled(CustomComboPreset.BRD_RemoveApexArrow))
+                        return ApexArrow;
+                    if (blastArrowReady)
+                        return BlastArrow;
+                    if (HasEffect(Buffs.RadiantEncoreReady))
+                        return RadiantEncore;
+                }
+
+                if (IsEnabled(CustomComboPreset.BRD_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.BRD_VariantCure))
+                    return Variant.VariantCure;
+
+                if (IsEnabled(CustomComboPreset.BRD_Variant_Rampart) &&
+                    IsEnabled(Variant.VariantRampart) &&
+                    IsOffCooldown(Variant.VariantRampart) &&
+                    canWeave)
+                    return Variant.VariantRampart;
 
                 if (canWeave)
                 {
