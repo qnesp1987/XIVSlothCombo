@@ -232,41 +232,7 @@ namespace XIVSlothCombo.Combos.PvE
                 bool songArmy = gauge?.Song == Song.ARMY;
                 bool isOpenerPhase = !HasEffect(Buffs.RagingStrikes) && !HasEffect(Buffs.BattleVoice) && !HasEffect(Buffs.RadiantFinale) && !HasEffect(Buffs.RadiantEncoreReady);
 
-                // Persistent checks for Radiant Finale and Battle Voice
-                if (LevelChecked(RagingStrikes) && IsOffCooldown(RagingStrikes))
-                {
-                    return RagingStrikes;
-                }
-
-                if (canWeaveBuffs && !HasEffect(Buffs.RadiantFinale) && IsOffCooldown(RadiantFinale))
-                {
-                    radiantFinalePending = true;
-                }
-
-                if (canWeaveBuffs && !HasEffect(Buffs.BattleVoice) && IsOffCooldown(BattleVoice))
-                {
-                    battleVoicePending = true;
-                }
-
-                if (radiantFinalePending && canWeaveBuffs)
-                {
-                    if (IsOffCooldown(RadiantFinale))
-                    {
-                        radiantFinalePending = false;
-                        return RadiantFinale;
-                    }
-                }
-
-                if (battleVoicePending && canWeaveBuffs)
-                {
-                    if (IsOffCooldown(BattleVoice))
-                    {
-                        battleVoicePending = false;
-                        return BattleVoice;
-                    }
-                }
-
-                // Weave Wanderer's Minuet as the first action
+                // Weave Wanderer's Minuet as the first action if in the opener phase
                 if (isOpenerPhase && canWeave)
                 {
                     if (IsOffCooldown(WanderersMinuet) && !HasEffect(Buffs.WanderersMinuet))
@@ -282,14 +248,51 @@ namespace XIVSlothCombo.Combos.PvE
                     return PitchPerfect;
                 }
 
-                if (canWeaveDelayed && IsOffCooldown(Barrage) && !HasEffect(Buffs.Barrage))
+                // Persistent checks for Radiant Finale and Battle Voice
+                if (songWanderer)
                 {
-                    return Barrage;
-                }
+                    if (LevelChecked(RagingStrikes) && IsOffCooldown(RagingStrikes))
+                    {
+                        return RagingStrikes;
+                    }
 
-                if (HasEffect(Buffs.RadiantEncoreReady))
-                {
-                    return RadiantEncore;
+                    if (canWeaveBuffs && !HasEffect(Buffs.RadiantFinale) && IsOffCooldown(RadiantFinale))
+                    {
+                        radiantFinalePending = true;
+                    }
+
+                    if (canWeaveBuffs && !HasEffect(Buffs.BattleVoice) && IsOffCooldown(BattleVoice))
+                    {
+                        battleVoicePending = true;
+                    }
+
+                    if (radiantFinalePending && canWeaveBuffs)
+                    {
+                        if (IsOffCooldown(RadiantFinale))
+                        {
+                            radiantFinalePending = false;
+                            return RadiantFinale;
+                        }
+                    }
+
+                    if (battleVoicePending && canWeaveBuffs)
+                    {
+                        if (IsOffCooldown(BattleVoice))
+                        {
+                            battleVoicePending = false;
+                            return BattleVoice;
+                        }
+                    }
+
+                    if (canWeaveDelayed && IsOffCooldown(Barrage) && !HasEffect(Buffs.Barrage))
+                    {
+                        return Barrage;
+                    }
+
+                    if (HasEffect(Buffs.RadiantEncoreReady))
+                    {
+                        return RadiantEncore;
+                    }
                 }
 
                 // Handle AoE skills
