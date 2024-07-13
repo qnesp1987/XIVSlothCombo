@@ -232,7 +232,7 @@ namespace XIVSlothCombo.Combos.PvE
                 bool songArmy = gauge?.Song == Song.ARMY;
                 bool isOpenerPhase = !HasEffect(Buffs.RagingStrikes) && !HasEffect(Buffs.BattleVoice) && !HasEffect(Buffs.RadiantFinale) && !HasEffect(Buffs.RadiantEncoreReady);
 
-                // Weave Wanderer's Minuet as the first action if in the opener phase
+                // Weave Wanderer's Minuet as the first action
                 if (isOpenerPhase && canWeave)
                 {
                     if (IsOffCooldown(WanderersMinuet) && !HasEffect(Buffs.WanderersMinuet))
@@ -249,7 +249,7 @@ namespace XIVSlothCombo.Combos.PvE
                 }
 
                 // Persistent checks for Radiant Finale and Battle Voice
-                if (songWanderer)
+                if (songWanderer && isOpenerPhase)
                 {
                     if (LevelChecked(RagingStrikes) && IsOffCooldown(RagingStrikes))
                     {
