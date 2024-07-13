@@ -295,6 +295,29 @@ namespace XIVSlothCombo.Combos.PvE
                     }
                 }
 
+                // Transition to the next song in the rotation
+                if (songWanderer && songTimerInSecondsFinal < 3)
+                {
+                    if (LevelChecked(MagesBallad) && IsOffCooldown(MagesBallad))
+                    {
+                        return MagesBallad;
+                    }
+                }
+                else if (songMage && songTimerInSecondsFinal < 6)
+                {
+                    if (LevelChecked(ArmysPaeon) && IsOffCooldown(ArmysPaeon))
+                    {
+                        return ArmysPaeon;
+                    }
+                }
+                else if (songArmy && songTimerInSecondsFinal < 9)
+                {
+                    if (LevelChecked(WanderersMinuet) && IsOffCooldown(WanderersMinuet))
+                    {
+                        return WanderersMinuet;
+                    }
+                }
+
                 // Handle AoE skills
                 bool wideVolleyReady = LevelChecked(WideVolley) && HasEffect(Buffs.HawksEye);
                 bool blastArrowReady = LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady);
@@ -322,23 +345,6 @@ namespace XIVSlothCombo.Combos.PvE
                     IsOffCooldown(Variant.VariantRampart) &&
                     canWeave)
                     return Variant.VariantRampart;
-
-                // Transition to the next song in the rotation
-                if (songWanderer && songTimerInSecondsFinal < 3)
-                {
-                    if (LevelChecked(MagesBallad) && IsOffCooldown(MagesBallad))
-                        return MagesBallad;
-                }
-                else if (songMage && songTimerInSecondsFinal < 6)
-                {
-                    if (LevelChecked(ArmysPaeon) && IsOffCooldown(ArmysPaeon))
-                        return ArmysPaeon;
-                }
-                else if (songArmy && songTimerInSecondsFinal < 9)
-                {
-                    if (LevelChecked(WanderersMinuet) && IsOffCooldown(WanderersMinuet))
-                        return WanderersMinuet;
-                }
 
                 if (canWeave)
                 {
@@ -383,6 +389,7 @@ namespace XIVSlothCombo.Combos.PvE
                 return actionID;
             }
         }
+
 
 
 
