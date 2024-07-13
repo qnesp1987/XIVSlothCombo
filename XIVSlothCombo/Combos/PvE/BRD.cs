@@ -209,116 +209,6 @@ namespace XIVSlothCombo.Combos.PvE
             }
         }
 
-        internal class BRD_IronJaws_Alternate : CustomCombo
-        {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_IronJaws_Alternate;
-
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-            {
-                if (actionID is IronJaws)
-                {
-                    if (!LevelChecked(IronJaws))
-                    {
-                        Status? venomous = FindTargetEffect(Debuffs.VenomousBite);
-                        Status? windbite = FindTargetEffect(Debuffs.Windbite);
-
-                        if (venomous is not null && windbite is not null)
-                        {
-                            float venomRemaining = GetDebuffRemainingTime(Debuffs.VenomousBite);
-                            float windRemaining = GetDebuffRemainingTime(Debuffs.Windbite);
-
-                            if (LevelChecked(VenomousBite) && venomRemaining < windRemaining)
-                                return VenomousBite;
-                            if (LevelChecked(Windbite))
-                                return Windbite;
-                        }
-
-                        if (LevelChecked(VenomousBite) && (!LevelChecked(Windbite) || windbite is not null))
-                            return VenomousBite;
-                        if (LevelChecked(Windbite))
-                            return Windbite;
-                    }
-
-                    if (!LevelChecked(Stormbite))
-                    {
-                        bool venomous = TargetHasEffect(Debuffs.VenomousBite);
-                        bool windbite = TargetHasEffect(Debuffs.Windbite);
-                        float venomRemaining = GetDebuffRemainingTime(Debuffs.VenomousBite);
-                        float windRemaining = GetDebuffRemainingTime(Debuffs.Windbite);
-
-                        if (LevelChecked(IronJaws) && venomous && windbite &&
-                            (venomRemaining < 4 || windRemaining < 4))
-                            return IronJaws;
-                        if (LevelChecked(VenomousBite) && windbite)
-                            return VenomousBite;
-                        if (LevelChecked(Windbite))
-                            return Windbite;
-                    }
-
-                    bool caustic = TargetHasEffect(Debuffs.CausticBite);
-                    bool stormbite = TargetHasEffect(Debuffs.Stormbite);
-                    float causticRemaining = GetDebuffRemainingTime(Debuffs.CausticBite);
-                    float stormRemaining = GetDebuffRemainingTime(Debuffs.Stormbite);
-
-                    if (LevelChecked(IronJaws) && caustic && stormbite &&
-                        (causticRemaining < 4 || stormRemaining < 4))
-                        return IronJaws;
-                    if (LevelChecked(CausticBite) && stormbite)
-                        return CausticBite;
-                    if (LevelChecked(Stormbite))
-                        return Stormbite;
-                }
-
-                return actionID;
-            }
-        }
-
-        internal class BRD_Apex : CustomCombo
-        {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_Apex;
-
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-            {
-                if (actionID is QuickNock)
-                {
-                    BRDGauge? gauge = GetJobGauge<BRDGauge>();
-
-                    if (!IsEnabled(CustomComboPreset.BRD_RemoveApexArrow) && LevelChecked(ApexArrow) && gauge.SoulVoice == 100)
-                        return ApexArrow;
-                }
-
-                return actionID;
-            }
-        }
-
-        internal class BRD_AoE_oGCD : CustomCombo
-        {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_AoE_oGCD;
-
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-            {
-                if (actionID is RainOfDeath)
-                {
-                    BRDGauge? gauge = GetJobGauge<BRDGauge>();
-                    bool songWanderer = gauge.Song == Song.WANDERER;
-                    bool empyrealReady = LevelChecked(EmpyrealArrow) && IsOffCooldown(EmpyrealArrow);
-                    bool bloodletterReady = LevelChecked(Bloodletter) && IsOffCooldown(Bloodletter);
-                    bool sidewinderReady = LevelChecked(Sidewinder) && IsOffCooldown(Sidewinder);
-
-                    if (LevelChecked(WanderersMinuet) && songWanderer && gauge.Repertoire == 3)
-                        return OriginalHook(WanderersMinuet);
-                    if (empyrealReady)
-                        return EmpyrealArrow;
-                    if (bloodletterReady)
-                        return RainOfDeath;
-                    if (sidewinderReady)
-                        return Sidewinder;
-                }
-
-                return actionID;
-            }
-        }
-
         internal class BRD_AoE_SimpleMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_AoE_SimpleMode;
@@ -471,6 +361,7 @@ namespace XIVSlothCombo.Combos.PvE
                 return actionID;
             }
         }
+
 
 
         internal class BRD_ST_oGCD : CustomCombo
