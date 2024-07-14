@@ -141,7 +141,6 @@ namespace XIVSlothCombo.Combos.PvE
                 return actionID;
             }
         }
-
         internal class BRD_IronJaws : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_IronJaws;
@@ -391,9 +390,6 @@ namespace XIVSlothCombo.Combos.PvE
         }
 
 
-
-
-
         internal class BRD_ST_oGCD : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_ST_oGCD;
@@ -464,6 +460,7 @@ namespace XIVSlothCombo.Combos.PvE
                 return actionID;
             }
         }
+
         internal class BRD_ST_SimpleMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_ST_SimpleMode;
@@ -839,6 +836,7 @@ namespace XIVSlothCombo.Combos.PvE
                 return actionID;
             }
         }
+
         internal class BRD_OneButtonSongs : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_OneButtonSongs;
@@ -862,7 +860,6 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (armysPaeonReady || (gauge.Song == Song.ARMY && songTimerInSeconds > 2))
                         return ArmysPaeon;
-
                 }
 
                 return actionID;
