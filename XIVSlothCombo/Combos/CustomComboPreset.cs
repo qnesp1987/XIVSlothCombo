@@ -2059,10 +2059,6 @@ namespace XIVSlothCombo.Combos
         NIN_ST_AdvancedMode_ArmorCrush = 10020,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Huraijin Option", "Adds Huraijin to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Huraijin = 10021,
-
-        [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Bhavacakra Option", "Adds Bhavacakra to Advanced Mode.", NIN.JobID)] //Has Config
         NIN_ST_AdvancedMode_Bhavacakra = 10022,
 
@@ -2152,10 +2148,6 @@ namespace XIVSlothCombo.Combos
         [ParentCombo(NIN_AoE_AdvancedMode_Kassatsu)]
         [CustomComboInfo("Goka Mekkyaku Option", "Adds Goka Mekkyaku to Advanced Mode.", NIN.JobID)]
         NIN_AoE_AdvancedMode_GokaMekkyaku = 10043,
-
-        [ParentCombo(NIN_AoE_AdvancedMode)]
-        [CustomComboInfo("Huraijin Option", "Adds Huraijin to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_Huraijin = 10044,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Hellfrog Medium Option", "Adds Hellfrog Medium to Advanced Mode.", NIN.JobID)]
