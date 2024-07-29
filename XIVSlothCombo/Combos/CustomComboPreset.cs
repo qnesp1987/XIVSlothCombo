@@ -1992,18 +1992,18 @@ namespace XIVSlothCombo.Combos
         NIN_ST_AdvancedMode_RangedUptime = 10004,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Mug Option", "Adds Mug to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Mug = 10005,
+        [CustomComboInfo("Dokumori Option", "Adds Dokumori to Advanced Mode.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Dokumori = 10005,
 
-        [ConflictingCombos(NIN_ST_AdvancedMode_Mug_AlignBefore)]
-        [ParentCombo(NIN_ST_AdvancedMode_Mug)]
-        [CustomComboInfo("Align Mug with Trick Attack Option", "Only uses Mug whilst the target has Trick Attack, otherwise will use on cooldown.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Mug_AlignAfter = 10006,
+        [ConflictingCombos(NIN_ST_AdvancedMode_Dokumori_AlignBefore)]
+        [ParentCombo(NIN_ST_AdvancedMode_Dokumori)]
+        [CustomComboInfo("Align Dokumori with Trick Attack Option", "Only uses Dokumori whilst the target has Trick Attack, otherwise will use on cooldown.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Dokumori_AlignAfter = 10006,
 
-        [ConflictingCombos(NIN_ST_AdvancedMode_Mug_AlignAfter)]
-        [ParentCombo(NIN_ST_AdvancedMode_Mug)]
-        [CustomComboInfo("Use Mug before Trick Attack Option", "Aligns Mug with Trick Attack but weaves it at least 1 GCD before Trick Attack.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Mug_AlignBefore = 10007,
+        [ConflictingCombos(NIN_ST_AdvancedMode_Dokumori_AlignAfter)]
+        [ParentCombo(NIN_ST_AdvancedMode_Dokumori)]
+        [CustomComboInfo("Use Dokumori before Trick Attack Option", "Aligns Dokumori with Trick Attack but weaves it at least 1 GCD before Trick Attack.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Dokumori_AlignBefore = 10007,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Trick Attack Option", "Adds Trick Attack to Advanced Mode.", NIN.JobID)] //Has Config
@@ -2201,8 +2201,8 @@ namespace XIVSlothCombo.Combos
         NIN_KassatsuChiJin = 10056,
 
         [ReplaceSkill(NIN.Hide)]
-        [CustomComboInfo("Hide to Mug/Trick Attack Feature", "Replaces Hide with Mug while in combat and Trick Attack whilst Hidden.", NIN.JobID)]
-        NIN_HideMug = 10057,
+        [CustomComboInfo("Hide to Dokumori/Trick Attack Feature", "Replaces Hide with Dokumori while in combat and Trick Attack whilst Hidden.", NIN.JobID)]
+        NIN_DokumoriHide = 10057,
 
         [ReplaceSkill(NIN.Ten, NIN.Chi, NIN.Jin)]
         [CustomComboInfo("Simple Mudras Feature", "Simplify the mudra casting to avoid failing.", NIN.JobID)]
