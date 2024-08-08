@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using XIVSlothCombo.Combos.PvE;
-using XIVSlothCombo.Services;
 
 namespace XIVSlothCombo.Attributes
 {
@@ -51,7 +50,7 @@ namespace XIVSlothCombo.Attributes
 
         public uint ClassJobCategory => JobIDToClassJobCategory(JobID);
 
-        private int JobIDToRole(byte jobID)
+        private static int JobIDToRole(byte jobID)
         {
             if (Svc.Data.GetExcelSheet<ClassJob>().HasRow(jobID))
                 return Svc.Data.GetExcelSheet<ClassJob>().GetRow(jobID).Role;
@@ -59,7 +58,7 @@ namespace XIVSlothCombo.Attributes
             return 0;
         }
 
-        private uint JobIDToClassJobCategory(byte jobID)
+        private static uint JobIDToClassJobCategory(byte jobID)
         {
             if (Svc.Data.GetExcelSheet<ClassJob>().HasRow(jobID))
                 return Svc.Data.GetExcelSheet<ClassJob>().GetRow(jobID).ClassJobCategory.Row;
@@ -93,7 +92,7 @@ namespace XIVSlothCombo.Attributes
             }
         }
 
-        private static readonly Dictionary<uint, ClassJob> ClassJobs = Service.DataManager.GetExcelSheet<ClassJob>()!.ToDictionary(i => i.RowId, i => i);
+        private static readonly Dictionary<uint, ClassJob> ClassJobs = Svc.Data.GetExcelSheet<ClassJob>()!.ToDictionary(i => i.RowId, i => i);
 
         public static string JobIDToName(byte key)
         {
@@ -108,7 +107,7 @@ namespace XIVSlothCombo.Attributes
                 //Grab Category name for DOH/DOL, else the normal Name for the rest
                 string jobname = key is 08 or 16 ? job.ClassJobCategory.Value.Name : job.Name;
                 //Job names are all lowercase by default. This capitalizes based on regional rules
-                string cultureID = Service.ClientState.ClientLanguage switch
+                string cultureID = Svc.ClientState.ClientLanguage switch
                 {
                     Dalamud.Game.ClientLanguage.French => "fr-FR",
                     Dalamud.Game.ClientLanguage.Japanese => "ja-JP",

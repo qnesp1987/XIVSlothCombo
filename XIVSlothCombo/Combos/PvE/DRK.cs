@@ -1,13 +1,10 @@
-using System.Diagnostics.CodeAnalysis;
 using Dalamud.Game.ClientState.JobGauge.Types;
-using Dalamud.Game.ClientState.Statuses;
 using XIVSlothCombo.Combos.PvE.Content;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
 
 namespace XIVSlothCombo.Combos.PvE
 {
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     internal static class DRK
     {
         public const byte JobID = 32;
@@ -43,6 +40,7 @@ namespace XIVSlothCombo.Combos.PvE
             Impalement = 36931,       // Under Delirium
 
             // Buffing oGCDs
+            BloodWeapon = 3625,
             Delirium = 7390,
 
             // Burst Window
@@ -55,7 +53,6 @@ namespace XIVSlothCombo.Combos.PvE
 
         #endregion
 
-        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         public static class Buffs
         {
             public const ushort
@@ -78,7 +75,6 @@ namespace XIVSlothCombo.Combos.PvE
                 Placeholder = 1;
         }
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public static class Config
         {
             public const string
@@ -184,21 +180,24 @@ namespace XIVSlothCombo.Combos.PvE
 
                         // Delirium
                         if (IsEnabled(CustomComboPreset.DRK_ST_Delirium)
-                            && IsOffCooldown(Delirium)
-                            && LevelChecked(Delirium))
-                            return Delirium;
+                            && IsOffCooldown(BloodWeapon)
+                            && LevelChecked(BloodWeapon))
+                            return OriginalHook(Delirium);
 
                         if (IsEnabled(CustomComboPreset.DRK_ST_CDs))
                         {
                             // Salted Earth
-                            if (IsEnabled(CustomComboPreset.DRK_ST_CDs_SaltedEarth)
-                                && (ActionReady(SaltedEarth) || ActionReady(SaltAndDarkness)))
+                            if (IsEnabled(CustomComboPreset.DRK_ST_CDs_SaltedEarth))
                             {
-                                if (!HasEffect(Buffs.SaltedEarth) || // Cast Salted Earth
-                                    (HasEffect(Buffs.SaltedEarth)
-                                     && GetBuffRemainingTime(Buffs.SaltedEarth) < 9
-                                     && ActionReady(SaltAndDarkness))) //Cast Salt and Darkness
-                                    return OriginalHook(SaltedEarth);
+                                // Cast Salted Earth
+                                if (!HasEffect(Buffs.SaltedEarth)
+                                    && ActionReady(SaltedEarth))
+                                    return SaltedEarth;
+                                //Cast Salt and Darkness
+                                if (HasEffect(Buffs.SaltedEarth)
+                                 && GetBuffRemainingTime(Buffs.SaltedEarth) < 9
+                                 && ActionReady(SaltAndDarkness))
+                                    return OriginalHook(SaltAndDarkness);
                             }
 
                             // Shadowbringer
@@ -330,21 +329,24 @@ namespace XIVSlothCombo.Combos.PvE
 
                     // Delirium
                     if (IsEnabled(CustomComboPreset.DRK_AoE_Delirium)
-                        && IsOffCooldown(Delirium)
-                        && LevelChecked(Delirium))
-                        return Delirium;
+                        && IsOffCooldown(BloodWeapon)
+                        && LevelChecked(BloodWeapon))
+                        return OriginalHook(Delirium);
 
                     if (gauge.DarksideTimeRemaining > 1)
                     {
                         // Salted Earth
-                        if (IsEnabled(CustomComboPreset.DRK_AoE_CDs_SaltedEarth)
-                            && (ActionReady(SaltedEarth) || ActionReady(SaltAndDarkness)))
+                        if (IsEnabled(CustomComboPreset.DRK_AoE_CDs_SaltedEarth))
                         {
-                            if (!HasEffect(Buffs.SaltedEarth) || // Cast Salted Earth
-                                (HasEffect(Buffs.SaltedEarth)
-                                 && GetBuffRemainingTime(Buffs.SaltedEarth) < 9
-                                 && ActionReady(SaltAndDarkness))) //Cast Salt and Darkness
-                                return OriginalHook(SaltedEarth);
+                            // Cast Salted Earth
+                            if (!HasEffect(Buffs.SaltedEarth)
+                                && ActionReady(SaltedEarth))
+                                return SaltedEarth;
+                            //Cast Salt and Darkness
+                            if (HasEffect(Buffs.SaltedEarth)
+                                && GetBuffRemainingTime(Buffs.SaltedEarth) < 9
+                                && ActionReady(SaltAndDarkness))
+                                return OriginalHook(SaltAndDarkness);
                         }
 
                         // Shadowbringer
