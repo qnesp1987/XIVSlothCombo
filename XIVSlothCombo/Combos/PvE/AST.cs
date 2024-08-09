@@ -2,7 +2,7 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
-using ECommons.DalamudServices;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using XIVSlothCombo.Combos.PvE.Content;
@@ -150,6 +150,7 @@ namespace XIVSlothCombo.Combos.PvE
                 AST_AoE_SimpleHeals_WeaveLady = new("AST_AoE_SimpleHeals_WeaveLady"),
                 AST_AoE_SimpleHeals_Opposition = new("AST_AoE_SimpleHeals_Opposition"),
                 AST_AoE_SimpleHeals_Horoscope = new("AST_AoE_SimpleHeals_Horoscope"),
+                AST_ST_DPS_OverwriteCards = new("AST_ST_DPS_OverwriteCards"),
                 AST_ST_DPS_CombustUptime_Adv = new("AST_ST_DPS_CombustUptime_Adv");
             public static UserFloat
                 AST_ST_DPS_CombustUptime_Threshold = new("AST_ST_DPS_CombustUptime_Threshold");
@@ -211,8 +212,11 @@ namespace XIVSlothCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.AST_DPS_LightSpeed) &&
                         ActionReady(Lightspeed) &&
                         GetTargetHPPercent() > Config.AST_DPS_LightSpeedOption &&
-                        CanSpellWeave(actionID))
+                        IsMoving &&
+                        !HasEffect(Buffs.Lightspeed))
                         return Lightspeed;
+
+
 
                     if (IsEnabled(CustomComboPreset.AST_DPS_Lucid) &&
                         ActionReady(All.LucidDreaming) &&
@@ -232,7 +236,7 @@ namespace XIVSlothCombo.Combos.PvE
                     //Card Draw
                     if (IsEnabled(CustomComboPreset.AST_DPS_AutoDraw) &&
                         ActionReady(OriginalHook(AstralDraw)) &&
-                        Gauge.DrawnCards.All(x => x is CardType.NONE) &&
+                        (Gauge.DrawnCards.All(x => x is CardType.NONE) || (DrawnCard == CardType.NONE && Config.AST_ST_DPS_OverwriteCards)) &&
                         CanDelayedWeave(actionID))
                         return OriginalHook(AstralDraw);
 
@@ -248,7 +252,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.AST_DPS_Oracle) &&
                         HasEffect(Buffs.Divining) &&
                         CanSpellWeave(actionID))
-                        return Oracle; 
+                        return Oracle;
 
                     //Minor Arcana / Lord of Crowns
                     if (ActionReady(OriginalHook(MinorArcana)) &&
@@ -262,23 +266,19 @@ namespace XIVSlothCombo.Combos.PvE
                         //Combust
                         if (IsEnabled(CustomComboPreset.AST_ST_DPS_CombustUptime) &&
                             !GravityList.Contains(actionID) &&
-                            LevelChecked(Combust))
+                            LevelChecked(Combust) &&
+                            CombustList.TryGetValue(OriginalHook(Combust), out ushort dotDebuffID))
                         {
-                            //Grab current DoT via OriginalHook, grab it's fellow debuff ID from Dictionary, then check for the debuff
-                            uint dot = OriginalHook(Combust);
-                            Status? dotDebuff = FindTargetEffect(CombustList[dot]);
-                            float refreshtimer = Config.AST_ST_DPS_CombustUptime_Adv ? Config.AST_ST_DPS_CombustUptime_Threshold : 3;
-
                             if (IsEnabled(CustomComboPreset.AST_Variant_SpiritDart) &&
                                 IsEnabled(Variant.VariantSpiritDart) &&
-                                (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3) &&
+                                GetDebuffRemainingTime(Variant.Debuffs.SustainedDamage) <= 3 &&
                                 CanSpellWeave(actionID))
                                 return Variant.VariantSpiritDart;
-
-
-                            if ((dotDebuff is null || dotDebuff.RemainingTime <= refreshtimer) &&
+                            
+                            float refreshtimer = Config.AST_ST_DPS_CombustUptime_Adv ? Config.AST_ST_DPS_CombustUptime_Threshold : 3;
+                            if (GetDebuffRemainingTime(dotDebuffID) <= refreshtimer &&
                                 GetTargetHPPercent() > Config.AST_DPS_CombustOption)
-                                return dot;
+                                return OriginalHook(Combust);
 
                             //AlterateMode idles as Malefic
                             if (AlternateMode) return OriginalHook(Malefic);
@@ -336,8 +336,8 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if ((HasEffect(Buffs.AspectedHelios)
                          || HasEffect(Buffs.HeliosConjunction))
-                        && (FindEffect(Buffs.AspectedHelios).RemainingTime > 2
-                            || FindEffect(Buffs.HeliosConjunction).RemainingTime > 2))
+                        && (FindEffect(Buffs.AspectedHelios)?.RemainingTime > 2
+                            || FindEffect(Buffs.HeliosConjunction)?.RemainingTime > 2))
                         return Helios;
                 }
 
@@ -360,16 +360,6 @@ namespace XIVSlothCombo.Combos.PvE
                         GetTargetHPPercent(healTarget) >= Config.AST_ST_SimpleHeals_Esuna &&
                         HasCleansableDebuff(healTarget))
                         return All.Esuna;
-
-                    if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_AspectedBenefic) && ActionReady(AspectedBenefic))
-                    {
-                        Status? aspectedBeneficHoT = FindEffect(Buffs.AspectedBenefic, healTarget, LocalPlayer?.GameObjectId);
-                        Status? NeutralSectShield = FindEffect(Buffs.NeutralSectShield, healTarget, LocalPlayer?.GameObjectId);
-                        Status? NeutralSectBuff = FindEffect(Buffs.NeutralSect, healTarget, LocalPlayer?.GameObjectId);
-                        if ((aspectedBeneficHoT is null) || (aspectedBeneficHoT.RemainingTime <= 3)
-                            || ((NeutralSectShield is null) && (NeutralSectBuff is not null)))
-                            return AspectedBenefic;
-                    }
 
                     if ((IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Spire) &&
                         Gauge.DrawnCards[2] == CardType.SPIRE &&
@@ -398,6 +388,16 @@ namespace XIVSlothCombo.Combos.PvE
                         CanSpellWeave(actionID) &&
                         !(healTarget as IBattleChara)!.HasShield())
                         return CelestialIntersection;
+
+                    if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_AspectedBenefic) && ActionReady(AspectedBenefic))
+                    {
+                        Status? aspectedBeneficHoT = FindEffect(Buffs.AspectedBenefic, healTarget, LocalPlayer?.GameObjectId);
+                        Status? NeutralSectShield = FindEffect(Buffs.NeutralSectShield, healTarget, LocalPlayer?.GameObjectId);
+                        Status? NeutralSectBuff = FindEffect(Buffs.NeutralSect, healTarget, LocalPlayer?.GameObjectId);
+                        if ((aspectedBeneficHoT is null) || (aspectedBeneficHoT.RemainingTime <= 3)
+                            || ((NeutralSectShield is null) && (NeutralSectBuff is not null)))
+                            return AspectedBenefic;
+                    }
                 }
                 return actionID;
             }
