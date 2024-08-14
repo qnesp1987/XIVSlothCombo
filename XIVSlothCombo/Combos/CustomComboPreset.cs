@@ -639,6 +639,11 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Advanced Mode - AoE", "Weaves oGCDs onto Quick Nock/Ladonsbite.", BRD.JobID)]
         BRD_AoE_AdvMode = 3015,
 
+        [ReplaceSkill(BRD.Stormbite)]
+        [CustomComboInfo("Simple Burst-less Mode - Single Target", "The same as Simple Mode - Single Target, but without burst cooldowns or buffs, and on another action." +
+        "\nPerfect for using if you are trying to hold your burst. Does not conflict", BRD.JobID)]
+        BRD_ST_Holdmode = 3040,
+
         [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
         [ConflictingCombos(BRD_ST_AdvMode, BRD_ST_SimpleMode)]
         [CustomComboInfo("Heavy Shot into Straight Shot Feature", "Replaces Heavy Shot/Burst Shot with Straight Shot/Refulgent Arrow when procced.", BRD.JobID)]
@@ -781,7 +786,8 @@ namespace XIVSlothCombo.Combos
         [ParentCombo(BRD_AoE_AdvMode)]
         [CustomComboInfo("AoE No Waste Option", "Adds enemy health checking on targetted mob for songs.\nThey will not be reapplied if less than specified.", BRD.JobID)]
         BRD_AoE_Adv_NoWaste = 3033,
-        // Last value = 3038
+               
+        // Last value = 3040
 
         #endregion
 
