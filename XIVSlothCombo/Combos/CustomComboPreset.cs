@@ -350,17 +350,95 @@ namespace XIVSlothCombo.Combos
         #region BLACK MAGE
 
         [ReplaceSkill(BLM.Fire)]
+        [ConflictingCombos(BLM_Scathe_Xeno, BLM_ST_AdvancedMode)]
         [CustomComboInfo("Simple Mode - Single Target", "Replaces Fire with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", BLM.JobID, -10, "", "")]
         BLM_ST_SimpleMode = 2012,
 
+        #region Advanced ST
+
+        [ReplaceSkill(BLM.Fire)]
+        [ConflictingCombos(BLM_Scathe_Xeno, BLM_ST_SimpleMode)]
+        [CustomComboInfo("Advanced Mode - Single Target", "Replaces Fire with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", BLM.JobID, -9, "", "")]
+        BLM_ST_AdvancedMode = 2021,
+
+        [ParentCombo(BLM_ST_AdvancedMode)]
+        [CustomComboInfo("Thunder I/III Option", "Adds Thunder I/Thunder III when the debuff isn't present or is expiring.", BLM.JobID)]
+        BLM_ST_Adv_Thunder = 2029,
+
+        [ParentCombo(BLM_ST_Adv_Thunder)]
+        [CustomComboInfo("Thundercloud Spender Option", "Spends Thundercloud as soon as possible rather than waiting until Thunder is expiring.", BLM.JobID)]
+        BLM_ST_Adv_Thunder_ThunderCloud = 2030,
+
+        [ParentCombo(BLM_ST_AdvancedMode)]
+        [CustomComboInfo("Umbral Soul Option", "Uses Transpose/Umbral Soul when no target is selected.", BLM.JobID, 10, "", "")]
+        BLM_Adv_UmbralSoul = 2035,
+
+        [ParentCombo(BLM_ST_AdvancedMode)]
+        [CustomComboInfo("Movement Options", "Choose options to be used during movement.", BLM.JobID)]
+        BLM_Adv_Movement = 2036,
+
+        [ParentCombo(BLM_ST_AdvancedMode)]
+        [CustomComboInfo("Triplecast/Swiftcast Option", "Adds Triplecast/Swiftcast to the rotation.", BLM.JobID, -8, "", "")]
+        BLM_Adv_Casts = 2039,
+
+        [ParentCombo(BLM_Adv_Casts)]
+        [CustomComboInfo("Pool Triplecast Option", "Keep one Triplecast charge for movement.", BLM.JobID)]
+        BLM_Adv_Triplecast_Pooling = 2040,
+
+        [ParentCombo(BLM_ST_AdvancedMode)]
+        [CustomComboInfo("Cooldown Options", "Select which cooldowns to add to the rotation.", BLM.JobID, -8, "", "")]
+        BLM_Adv_Cooldowns = 2042,
+
+        [ParentCombo(BLM_ST_AdvancedMode)]
+        [CustomComboInfo("Opener Option", "Adds the Lv.90 opener." +
+            "\nWill default to the Standard opener when nothing is selected.", BLM.JobID, -10, "", "")]
+        BLM_Adv_Opener = 2043,
+
+        [ParentCombo(BLM_ST_AdvancedMode)]
+        [CustomComboInfo("Rotation Option", "Choose which rotation to use." +
+            "\nWill default to the Standard rotation when nothing is selected.", BLM.JobID, -9, "", "")]
+        BLM_Adv_Rotation = 2045,
+
+        #endregion
+
         [ReplaceSkill(BLM.Blizzard2, BLM.HighBlizzard2)]
+        [ConflictingCombos(BLM_AoE_AdvancedMode)]
         [CustomComboInfo("Simple Mode - AoE", "Replaces Blizzard II with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", BLM.JobID, -8, "", "")]
         BLM_AoE_SimpleMode = 2008,
+
+        #region Advanced AoE
+
+        [ReplaceSkill(BLM.Blizzard2, BLM.HighBlizzard2)]
+        [ConflictingCombos(BLM_AoE_SimpleMode)]
+        [CustomComboInfo("Advanced Mode - AoE", "Replaces Blizzard II with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", BLM.JobID, -8, "", "")]
+        BLM_AoE_AdvancedMode = 2054,
+
+        [ParentCombo(BLM_AoE_AdvancedMode)]
+        [CustomComboInfo("Thunder Uptime Option", "Adds Thunder II/Thunder IV during Umbral Ice.", BLM.JobID, 1, "", "")]
+        BLM_AoE_Adv_ThunderUptime = 2055,
+
+        [ParentCombo(BLM_AoE_Adv_ThunderUptime)]
+        [CustomComboInfo("Uptime in Astral Fire", "Maintains uptime during Astral Fire.", BLM.JobID, 1, "", "")]
+        BLM_AoE_Adv_ThunderUptime_AstralFire = 2056,
+
+        [ParentCombo(BLM_AoE_AdvancedMode)]
+        [CustomComboInfo("Foul Option", "Adds Foul when available during Astral Fire.", BLM.JobID, 2, "", "")]
+        BLM_AoE_Adv_Foul = 2044,
+
+        [ParentCombo(BLM_AoE_AdvancedMode)]
+        [CustomComboInfo("Umbral Soul Option", "Use Transpose/Umbral Soul when no target is selected.", BLM.JobID, 99, "", "")]
+        BLM_AoE_Adv_UmbralSoul = 2049,
+
+        [ParentCombo(BLM_AoE_AdvancedMode)]
+        [CustomComboInfo("Cooldown Options", "Select which cooldowns to add to the rotation.", BLM.JobID, 1, "", "")]
+        BLM_AoE_Adv_Cooldowns = 2052,
+
+        #endregion
 
         #region Variant
 
         [Variant]
-        [VariantParent(BLM_ST_SimpleMode, BLM_AoE_SimpleMode)]
+        [VariantParent(BLM_ST_SimpleMode, BLM_ST_AdvancedMode, BLM_AoE_SimpleMode)]
         [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", BLM.JobID)]
         BLM_Variant_Rampart = 2032,
 
@@ -369,7 +447,7 @@ namespace XIVSlothCombo.Combos
         BLM_Variant_Raise = 2033,
 
         [Variant]
-        [VariantParent(BLM_ST_SimpleMode, BLM_AoE_SimpleMode)]
+        [VariantParent(BLM_ST_SimpleMode, BLM_ST_AdvancedMode, BLM_AoE_SimpleMode)]
         [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", BLM.JobID)]
         BLM_Variant_Cure = 2034,
 
@@ -390,6 +468,7 @@ namespace XIVSlothCombo.Combos
         BLM_Blizzard_1to3 = 2003,
 
         [ReplaceSkill(BLM.Scathe)]
+        [ConflictingCombos(BLM_ST_SimpleMode, BLM_ST_AdvancedMode)]
         [CustomComboInfo("Xenoglossy Feature", "Replaces Scathe with Xenoglossy when available.", BLM.JobID)]
         BLM_Scathe_Xeno = 2004,
 
@@ -1970,12 +2049,12 @@ namespace XIVSlothCombo.Combos
         #region NINJA
 
         [ReplaceSkill(NIN.SpinningEdge)]
-        [ConflictingCombos(NIN_ArmorCrushCombo, NIN_ST_AdvancedMode, NIN_KassatsuChiJin, NIN_KassatsuTrick)]
+        [ConflictingCombos(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Simple Mode - Single Target", "Replaces Spinning Edge with a one-button full single target rotation.\nThis is the ideal option for newcomers to the job.", NIN.JobID)]
         NIN_ST_SimpleMode = 10000,
 
         [ParentCombo(NIN_ST_SimpleMode)]
-        [CustomComboInfo("Balance Opener Option", "Starts with the Balance opener.\nDoes pre-pull first, if you enter combat before hiding the opener will fail.\nLikewise, moving during TCJ will cause the opener to fail too.\nRequires you to be out of combat with majority of your cooldowns available for it to work.", NIN.JobID)]
+        [CustomComboInfo("Balance Opener Option", "Starts with the Balance opener.\nRequires level 100, with the following requirements:\n- 2 mudra charges ready\n- Dokumori off cooldown.\n- Kunai's Bane off cooldown.\n- TenChiJin off cooldown.\n- Phantom Kamaitachi off cooldown.\n- Bunshin off cooldown.\n- Dream Within a Dream off cooldown.\n- Kassatsu off cooldown.", NIN.JobID)]
         NIN_ST_SimpleMode_BalanceOpener = 10001,
 
         [ReplaceSkill(NIN.DeathBlossom)]
@@ -1983,557 +2062,289 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Simple Mode - AoE", "Turns Death Blossom into a one-button full AoE rotation.", NIN.JobID)]
         NIN_AoE_SimpleMode = 10002,
 
-        #region ST Advanced
-
         [ReplaceSkill(NIN.SpinningEdge)]
         [ConflictingCombos(NIN_ST_SimpleMode)]
         [CustomComboInfo("Advanced Mode - Single Target", "Replace Spinning Edge with a one-button full single target rotation.\nThese features are ideal if you want to customize the rotation.", NIN.JobID)]
         NIN_ST_AdvancedMode = 10003,
 
-        [ConflictingCombos(NIN_KassatsuChiJin, NIN_KassatsuTrick)]
-        [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Balance Opener Option", "Starts with the Balance opener.\nDoes pre-pull first, if you enter combat before hiding the opener will fail.\nLikewise, moving during TCJ will cause the opener to fail too.\nRequires you to be out of combat with majority of your cooldowns available for it to work.", NIN.JobID)]
-        NIN_ST_AdvancedMode_BalanceOpener = 10004,
-
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Throwing Dagger Uptime Option", "Adds Throwing Dagger to Advanced Mode if out of melee range.", NIN.JobID)]
-        NIN_ST_AdvancedMode_RangedUptime = 10005,
+        NIN_ST_AdvancedMode_RangedUptime = 10004,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Dokumori Option", "Adds Dokumori to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Dokumori = 10006,
+        [CustomComboInfo("Mug/Dokumori Option", "Adds Mug/Dokumori to Advanced Mode.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Mug = 10005,
 
-        [ConflictingCombos(NIN_ST_AdvancedMode_Dokumori_AlignBefore)]
-        [ParentCombo(NIN_ST_AdvancedMode_Dokumori)]
-        [CustomComboInfo("Align Dokumori with Trick Attack Option", "Only uses Dokumori whilst the target has Trick Attack, otherwise will use on cooldown.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Dokumori_AlignAfter = 10007,
+        [ConflictingCombos(NIN_ST_AdvancedMode_Mug_AlignBefore)]
+        [ParentCombo(NIN_ST_AdvancedMode_Mug)]
+        [CustomComboInfo("Align Mug with Trick Attack/Kunai's Bane Option", "Only uses Mug whilst the target has Trick Attack/Kunai's Bane, otherwise will use on cooldown.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Mug_AlignAfter = 10006,
 
-        [ConflictingCombos(NIN_ST_AdvancedMode_Dokumori_AlignAfter)]
-        [ParentCombo(NIN_ST_AdvancedMode_Dokumori)]
-        [CustomComboInfo("Use Dokumori before Trick Attack Option", "Aligns Dokumori with Trick Attack but weaves it at least 1 GCD before Trick Attack.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Dokumori_AlignBefore = 10008,
+        [ConflictingCombos(NIN_ST_AdvancedMode_Mug_AlignAfter)]
+        [ParentCombo(NIN_ST_AdvancedMode_Mug)]
+        [CustomComboInfo("Use Mug before Trick Attack/Kunai's Bane Option", "Aligns Mug with Trick Attack/Kunai's Bane but weaves it at least 1 GCD before Trick Attack/Kunai's Bane.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Mug_AlignBefore = 10007,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Trick Attack Option", "Adds Trick Attack to Advanced Mode.", NIN.JobID)] //Has Config
-        NIN_ST_AdvancedMode_TrickAttack = 10009,
+        [CustomComboInfo("Trick Attack/Kunai's Bane Option", "Adds Trick Attack/Kunai's Bane to Advanced Mode.", NIN.JobID)] //Has Config
+        NIN_ST_AdvancedMode_TrickAttack = 10008,
 
         [ParentCombo(NIN_ST_AdvancedMode_TrickAttack)]
-        [CustomComboInfo("Save Cooldowns Before Trick Attack Option", "Stops using abilities with longer cooldowns up to 15 seconds before Trick Attack comes off cooldown.", NIN.JobID)] //HasConfig
-        NIN_ST_AdvancedMode_TrickAttack_Cooldowns = 10010,
+        [CustomComboInfo("Save Cooldowns Before Trick Attack/Kunai's Bane Option", "Stops using abilities with longer cooldowns up to 15 seconds before Trick Attack/Kunai's Bane comes off cooldown.", NIN.JobID)] //HasConfig
+        NIN_ST_AdvancedMode_TrickAttack_Cooldowns = 10009,
 
         [ParentCombo(NIN_ST_AdvancedMode_TrickAttack)]
-        [CustomComboInfo("Delayed Trick Attack Option", "Waits at least 8 seconds into combat before using Trick Attack.", NIN.JobID)]
-        NIN_ST_AdvancedMode_TrickAttack_Delayed = 10011,
+        [CustomComboInfo("Delayed Trick Attack/Kunai's Bane Option", "Waits at least 8 seconds into combat before using Trick Attack/Kunai's Bane.", NIN.JobID)]
+        NIN_ST_AdvancedMode_TrickAttack_Delayed = 10010,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Ninjitsu Option", "Adds Ninjitsu to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Ninjitsus = 10012,
+        NIN_ST_AdvancedMode_Ninjitsus = 10011,
 
         [ParentCombo(NIN_ST_AdvancedMode_Ninjitsus)]
         [CustomComboInfo("Hold 1 Charge", "Prevent using both charges of Mudra.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Ninjitsus_ChargeHold = 10013,
+        NIN_ST_AdvancedMode_Ninjitsus_ChargeHold = 10012,
 
         [ParentCombo(NIN_ST_AdvancedMode_Ninjitsus)]
         [CustomComboInfo("Use Fuma Shuriken", "Spends Mudra charges on Fuma Shuriken (only before Raiton is available).", NIN.JobID)]
-        NIN_ST_AdvancedMode_Ninjitsus_FumaShuriken = 10014,
+        NIN_ST_AdvancedMode_Ninjitsus_FumaShuriken = 10013,
 
         [ParentCombo(NIN_ST_AdvancedMode_Ninjitsus)]
         [CustomComboInfo("Use Raiton", "Spends Mudra charges on Raiton.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Ninjitsus_Raiton = 10015,
-
-        [ParentCombo(NIN_ST_AdvancedMode_Ninjitsus_Raiton)]
-        [CustomComboInfo("Raiton Uptime Option", "Adds Raiton as an uptime feature.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Raiton_Uptime = 10016,
+        NIN_ST_AdvancedMode_Ninjitsus_Raiton = 10014,
 
         [ParentCombo(NIN_ST_AdvancedMode_Ninjitsus)]
         [CustomComboInfo("Use Suiton", "Spends Mudra charges on Suiton.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Ninjitsus_Suiton = 10017,
-
-        [ParentCombo(NIN_ST_AdvancedMode_Ninjitsus_Suiton)]
-        [CustomComboInfo("Suiton Uptime Option", "Adds Suiton as an uptime feature.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Suiton_Uptime = 10018,
-
-        [ParentCombo(NIN_ST_AdvancedMode_Ninjitsus)]
-        [CustomComboInfo("Use Huton", "Spends Mudra charges on Huton.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Ninjitsus_Huton = 10019,
+        NIN_ST_AdvancedMode_Ninjitsus_Suiton = 10015,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Assassinate/Dream Within a Dream Option", "Adds Assassinate and Dream Within a Dream to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_AssassinateDWAD = 10020,
+        NIN_ST_AdvancedMode_AssassinateDWAD = 10017,
 
-        [ConflictingCombos(NIN_KassatsuTrick, NIN_KassatsuChiJin)]
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Kassatsu Option", "Adds Kassatsu to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Kassatsu = 10021,
+        NIN_ST_AdvancedMode_Kassatsu = 10018,
 
         [ParentCombo(NIN_ST_AdvancedMode_Kassatsu)]
         [CustomComboInfo($"Use Hyosho Ranryu Option", "Spends Kassatsu on Hyosho Ranryu.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Kassatsu_HyoshoRaynryu = 10022,
-
-        [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Armor Crush Option", "Adds Armor Crush to Advanced Mode.", NIN.JobID)] //Has Config
-        NIN_ST_AdvancedMode_ArmorCrush = 10023,
+        NIN_ST_AdvancedMode_Kassatsu_HyoshoRaynryu = 10019,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Bhavacakra Option", "Adds Bhavacakra to Advanced Mode.", NIN.JobID)] //Has Config
-        NIN_ST_AdvancedMode_Bhavacakra = 10024,
+        NIN_ST_AdvancedMode_Bhavacakra = 10022,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Ten Chi Jin Option", "Adds Ten Chi Jin (the cooldown) to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_TCJ = 10025,
-
-        [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Meisui Option", "Adds Meisui to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Meisui = 10026,
-
-        [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Zesho Meppo Option", "Adds Zesho Meppo to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_ZeshoMeppo = 10027,
+        NIN_ST_AdvancedMode_TCJ = 10023,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Tenri Jindo Option", "Adds Tenri Jindo to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_TenriJindo = 10028,
+        NIN_ST_AdvancedMode_TenriJindo = 10071,
+
+        [ParentCombo(NIN_ST_AdvancedMode)]
+        [CustomComboInfo("Meisui Option", "Adds Meisui to Advanced Mode.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Meisui = 10024,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Bunshin Option", "Adds Bunshin to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Bunshin = 10029,
+        NIN_ST_AdvancedMode_Bunshin = 10025,
 
         [ParentCombo(NIN_ST_AdvancedMode_Bunshin)]
         [CustomComboInfo("Phantom Kamaitachi Option", "Adds Phantom Kamaitachi to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Bunshin_Phantom = 10030,
-
-        [ParentCombo(NIN_ST_AdvancedMode_Bunshin_Phantom)]
-        [CustomComboInfo("Phantom Kamaitachi Uptime Option", "Adds Phantom Kamaitachi as an uptime feature.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Phantom_Uptime = 10031,
+        NIN_ST_AdvancedMode_Bunshin_Phantom = 10026,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Raiju Option", "Adds Fleeting/Forked Raiju to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Raiju = 10032,
+        NIN_ST_AdvancedMode_Raiju = 10027,
 
         [ParentCombo(NIN_ST_AdvancedMode_Raiju)]
         [CustomComboInfo("Forked Raiju Gap-Closer Option", "Uses Forked Raiju when out of range.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Raiju_Forked = 10033,
+        NIN_ST_AdvancedMode_Raiju_Forked = 10028,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Second Wind Option", "Adds Second Wind to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_SecondWind = 10094,
-
-        [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Shade Shift Option", "Adds Shade Shift to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_ShadeShift = 10095,
-
-        [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Bloodbath Option", "Adds Bloodbath to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_Bloodbath = 10096,
+        [CustomComboInfo("Balance Opener Option", "Starts with the Balance opener.\nRequires level 100, with the following requirements:\n- 2 mudra charges ready\n- Dokumori off cooldown.\n- Kunai's Bane off cooldown.\n- TenChiJin off cooldown.\n- Phantom Kamaitachi off cooldown.\n- Bunshin off cooldown.\n- Dream Within a Dream off cooldown.\n- Kassatsu off cooldown.", NIN.JobID)]
+        NIN_ST_AdvancedMode_BalanceOpener = 10029,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("True North Option", "Adds True North to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_TrueNorth = 10097,
+        NIN_ST_AdvancedMode_TrueNorth = 10030,
 
         [ParentCombo(NIN_ST_AdvancedMode_TrueNorth)]
         [CustomComboInfo("Use Before Armor Crush Only Option", "Only triggers the use of True North before Armor Crush.", NIN.JobID)]
-        NIN_ST_AdvancedMode_TrueNorth_ArmorCrush = 10098,
+        NIN_ST_AdvancedMode_TrueNorth_ArmorCrush = 10031,
 
-        [ParentCombo(NIN_ST_AdvancedMode_TrueNorth_ArmorCrush)]
-        [CustomComboInfo("Dynamic True North Option", "Adds True North before Armor Crush when you are not in the correct position for the enhanced potency bonus.", NIN.JobID)]
-        NIN_ST_AdvancedMode_TrueNorth_ArmorCrush_Dynamic = 10099,
+        [ParentCombo(NIN_ST_AdvancedMode)]
+        [CustomComboInfo("Second Wind Option", "Adds Second Wind to Advanced Mode.", NIN.JobID)]
+        NIN_ST_AdvancedMode_SecondWind = 10032,
 
-        #endregion
+        [ParentCombo(NIN_ST_AdvancedMode)]
+        [CustomComboInfo("Shade Shift Option", "Adds Shade Shift to Advanced Mode.", NIN.JobID)]
+        NIN_ST_AdvancedMode_ShadeShift = 10033,
 
-        #region AoE Advanced
+        [ParentCombo(NIN_ST_AdvancedMode)]
+        [CustomComboInfo("Bloodbath Option", "Adds Bloodbath to Advanced Mode.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Bloodbath = 10034,
 
         [ReplaceSkill(NIN.DeathBlossom)]
         [ConflictingCombos(NIN_AoE_SimpleMode)]
         [CustomComboInfo("Advanced Mode - AoE", "Replace Death Blossom with a one-button full AoE rotation.\nThese features are ideal if you want to customize the rotation.", NIN.JobID)]
-        NIN_AoE_AdvancedMode = 10101,
+        NIN_AoE_AdvancedMode = 10035,
+
+        [ParentCombo(NIN_AoE_AdvancedMode)]
+        [CustomComboInfo("Kunai's Bane Option", "Adds Kunai's Bane to Advanced Mode. (Does not add Trick Attack)", NIN.JobID)]
+        NIN_AoE_AdvancedMode_KunaisBane = 10073,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Assassinate/Dream Within a Dream Option", "Adds Assassinate/Dream Within a Dream to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_AssassinateDWAD = 10102,
+        NIN_AoE_AdvancedMode_AssassinateDWAD = 10036,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Ninjitsu Option", "Adds Ninjitsu to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_Ninjitsus = 10103,
+        NIN_AoE_AdvancedMode_Ninjitsus = 10037,
 
         [ParentCombo(NIN_AoE_AdvancedMode_Ninjitsus)]
         [CustomComboInfo("Hold 1 Charge", "Prevent using both charges of Mudra.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_Ninjitsus_ChargeHold = 10104,
+        NIN_AoE_AdvancedMode_Ninjitsus_ChargeHold = 10038,
 
         [ParentCombo(NIN_AoE_AdvancedMode_Ninjitsus)]
         [CustomComboInfo("Use Katon", "Spends Mudra charges on Katon.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_Ninjitsus_Katon = 10105,
+        NIN_AoE_AdvancedMode_Ninjitsus_Katon = 10039,
 
         [ParentCombo(NIN_AoE_AdvancedMode_Ninjitsus)]
         [CustomComboInfo("Use Doton", "Spends Mudra charges on Doton.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_Ninjitsus_Doton = 10106,
+        NIN_AoE_AdvancedMode_Ninjitsus_Doton = 10040,
 
         [ParentCombo(NIN_AoE_AdvancedMode_Ninjitsus)]
         [CustomComboInfo("Use Huton", "Spends Mudra charges on Huton.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_Ninjitsus_Huton = 10107,
+        NIN_AoE_AdvancedMode_Ninjitsus_Huton = 10041,
 
-        [ConflictingCombos(NIN_KassatsuTrick, NIN_KassatsuChiJin)]
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Kassatsu Option", "Adds Kassatsu to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_Kassatsu = 10108,
+        NIN_AoE_AdvancedMode_Kassatsu = 10042,
 
         [ParentCombo(NIN_AoE_AdvancedMode_Kassatsu)]
         [CustomComboInfo("Goka Mekkyaku Option", "Adds Goka Mekkyaku to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_GokaMekkyaku = 10109,
+        NIN_AoE_AdvancedMode_GokaMekkyaku = 10043,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Hellfrog Medium Option", "Adds Hellfrog Medium to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_HellfrogMedium = 10110,
+        NIN_AoE_AdvancedMode_HellfrogMedium = 10045,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Ten Chi Jin Option", "Adds Ten Chi Jin (the cooldown) to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_TCJ = 10111,
-
-        [ParentCombo(NIN_AoE_AdvancedMode)]
-        [CustomComboInfo("Meisui Option", "Adds Meisui to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_Meisui = 10112,
-
-        [ParentCombo(NIN_AoE_AdvancedMode)]
-        [CustomComboInfo("Deathfrog Medium Option", "Adds Deathfrog Medium to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_DeathfrogMedium = 10113,
+        NIN_AoE_AdvancedMode_TCJ = 10046,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Tenri Jindo Option", "Adds Tenri Jindo to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_TenriJindo = 10114,
+        NIN_AoE_AdvancedMode_TenriJindo = 10072,
+
+        [ParentCombo(NIN_AoE_AdvancedMode)]
+        [CustomComboInfo("Meisui Option", "Adds Meisui to Advanced Mode.", NIN.JobID)]
+        NIN_AoE_AdvancedMode_Meisui = 10047,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Bunshin Option", "Adds Bunshin to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_Bunshin = 10115,
+        NIN_AoE_AdvancedMode_Bunshin = 10048,
 
         [ParentCombo(NIN_AoE_AdvancedMode_Bunshin)]
         [CustomComboInfo("Phantom Kamaitachi Option", "Adds Phantom Kamaitachi to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_Bunshin_Phantom = 10116,
+        NIN_AoE_AdvancedMode_Bunshin_Phantom = 10049,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Second Wind Option", "Adds Second Wind to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_SecondWind = 10197,
+        NIN_AoE_AdvancedMode_SecondWind = 10050,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Shade Shift Option", "Adds Shade Shift to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_ShadeShift = 10198,
+        NIN_AoE_AdvancedMode_ShadeShift = 10051,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Bloodbath Option", "Adds Bloodbath to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_Bloodbath = 10199,
-
-        #endregion
-
-        #region Misc
+        NIN_AoE_AdvancedMode_Bloodbath = 10052,
 
         [ReplaceSkill(NIN.ArmorCrush)]
-        [ConflictingCombos(NIN_ST_SimpleMode)]
         [CustomComboInfo("Armor Crush Combo Feature", "Replace Armor Crush with its combo chain.", NIN.JobID)]
-        NIN_ArmorCrushCombo = 10200,
+        NIN_ArmorCrushCombo = 10053,
 
-        [ConflictingCombos(NIN_ST_AdvancedMode_BalanceOpener, NIN_ST_AdvancedMode_BalanceOpener, NIN_ST_AdvancedMode_Kassatsu, NIN_AoE_AdvancedMode_Kassatsu, NIN_KassatsuChiJin)]
         [ReplaceSkill(NIN.Kassatsu)]
-        [CustomComboInfo("Kassatsu to Trick Feature", "Replaces Kassatsu with Trick Attack while Suiton or Hidden is up.\nCooldown tracking plugin recommended.", NIN.JobID)]
-        NIN_KassatsuTrick = 10201,
+        [CustomComboInfo("Kassatsu to Trick Feature", "Replaces Kassatsu with Trick Attack/Kunai's Bane while Suiton or Hidden is up.\nCooldown tracking plugin recommended.", NIN.JobID)]
+        NIN_KassatsuTrick = 10054,
 
         [ReplaceSkill(NIN.TenChiJin)]
         [CustomComboInfo("Ten Chi Jin to Meisui Feature", "Replaces Ten Chi Jin (the move) with Meisui while Suiton is up.\nCooldown tracking plugin recommended.", NIN.JobID)]
-        NIN_TCJMeisui = 10202,
+        NIN_TCJMeisui = 10055,
 
-        [ConflictingCombos(NIN_ST_AdvancedMode_BalanceOpener, NIN_ST_AdvancedMode_BalanceOpener, NIN_KassatsuTrick, NIN_ST_AdvancedMode_Kassatsu, NIN_AoE_AdvancedMode_Kassatsu)]
         [ReplaceSkill(NIN.Chi)]
         [CustomComboInfo("Kassatsu Chi/Jin Feature", "Replaces Chi with Jin while Kassatsu is up if you have Enhanced Kassatsu.", NIN.JobID)]
-        NIN_KassatsuChiJin = 10203,
+        NIN_KassatsuChiJin = 10056,
 
         [ReplaceSkill(NIN.Hide)]
-        [CustomComboInfo("Hide to Dokumori/Trick Attack Feature", "Replaces Hide with Dokumori while in combat and Trick Attack whilst Hidden.", NIN.JobID)]
-        NIN_DokumoriHide = 10204,
+        [CustomComboInfo("Hide to Mug/Trick Attack/Kunai's Bane Feature", "Replaces Hide with Mug while in combat and Trick Attack/Kunai's Bane whilst Hidden.", NIN.JobID)]
+        NIN_HideMug = 10057,
 
         [ReplaceSkill(NIN.Ten, NIN.Chi, NIN.Jin)]
         [CustomComboInfo("Simple Mudras Feature", "Simplify the mudra casting to avoid failing.", NIN.JobID)]
-        NIN_Simple_Mudras = 10205,
+        NIN_Simple_Mudras = 10062,
 
         [ReplaceSkill(NIN.TenChiJin)]
         [ParentCombo(NIN_TCJMeisui)]
         [CustomComboInfo("Ten Chi Jin Feature", "Turns Ten Chi Jin (the move) into Ten, Chi, and Jin.", NIN.JobID)]
-        NIN_TCJ = 10206,
+        NIN_TCJ = 10063,
 
-        #endregion
+        [ParentCombo(NIN_ST_AdvancedMode_Ninjitsus_Raiton)]
+        [CustomComboInfo("Raiton Uptime Option", "Adds Raiton as an uptime feature.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Raiton_Uptime = 10065,
 
-        #region Variant
+        [ParentCombo(NIN_ST_AdvancedMode_Bunshin_Phantom)]
+        [CustomComboInfo("Phantom Kamaitachi Uptime Option", "Adds Phantom Kamaitachi as an uptime feature.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Phantom_Uptime = 10066,
+
+        [ParentCombo(NIN_ST_AdvancedMode_Ninjitsus_Suiton)]
+        [CustomComboInfo("Suiton Uptime Option", "Adds Suiton as an uptime feature.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Suiton_Uptime = 10067,
+
+        [ParentCombo(NIN_ST_AdvancedMode_TrueNorth_ArmorCrush)]
+        [CustomComboInfo("Dynamic True North Option", "Adds True North before Armor Crush when you are not in the correct position for the enhanced potency bonus.", NIN.JobID)]
+        NIN_ST_AdvancedMode_TrueNorth_ArmorCrush_Dynamic = 10068,
 
         [Variant]
         [VariantParent(NIN_ST_SimpleMode, NIN_ST_AdvancedMode, NIN_AoE_SimpleMode, NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", NIN.JobID)]
-        NIN_Variant_Cure = 10210,
+        NIN_Variant_Cure = 10069,
 
         [Variant]
         [VariantParent(NIN_ST_SimpleMode, NIN_ST_AdvancedMode, NIN_AoE_SimpleMode, NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", NIN.JobID)]
-        NIN_Variant_Rampart = 10211,
-
-        #endregion
+        NIN_Variant_Rampart = 10070,
 
         // Last value = 10070
 
         #endregion
 
         #region PICTOMANCER
-
-        #region Single Target
         [ReplaceSkill(PCT.FireInRed)]
         [ConflictingCombos(CombinedAetherhues)]
-        [CustomComboInfo("Simple Mode - Single Target", "Consolidates the single target rotation into one button, ideal for newcomers.", PCT.JobID)]
+        [CustomComboInfo("Simple Mode - Single Target", $"Replaces Fire in Red with a one-button full single target rotation.\nThis is ideal for newcomers to the job.", PCT.JobID)]
         PCT_ST_SimpleMode = 20000,
 
         [ReplaceSkill(PCT.FireIIinRed)]
         [ConflictingCombos(CombinedAetherhues)]
-        [CustomComboInfo("Simple Mode - AoE", "Consolidates the AoE rotation into one button, ideal for newcomers.", PCT.JobID)]
+        [CustomComboInfo("Simple Mode - AoE", $"Replaces Fire II in Red with a one-button full single target rotation.\nThis is ideal for newcomers to the job.", PCT.JobID)]
         PCT_AoE_SimpleMode = 20001,
 
         [ReplaceSkill(PCT.FireInRed, PCT.FireIIinRed)]
         [ConflictingCombos(PCT_ST_SimpleMode, PCT_AoE_SimpleMode)]
-        [CustomComboInfo("Combined Aetherhues Feature", "Merges aetherhue actions for specific target types into a single button.", PCT.JobID)]
+        [CustomComboInfo("Combined Aetherhues Feature", "Combines aetherhue actions onto one button for their respective target types.", PCT.JobID)]
         CombinedAetherhues = 20002,
 
         [ReplaceSkill(PCT.CreatureMotif, PCT.WeaponMotif, PCT.LandscapeMotif)]
-        [CustomComboInfo("One Button Motifs", "Merges Motifs and Muses into a single button.", PCT.JobID)]
+        [CustomComboInfo("One Button Motifs", "Combine Motifs and Muses into one button.", PCT.JobID)]
         CombinedMotifs = 20003,
 
         [ReplaceSkill(PCT.HolyInWhite)]
-        [CustomComboInfo("One Button Paint", "Consolidates paint-consuming actions into one button.", PCT.JobID)]
+        [CustomComboInfo("One Button Paint", "Combines paint consuming actions into one button.", PCT.JobID)]
         CombinedPaint = 20004,
 
-        [ReplaceSkill(PCT.FireInRed)]
-        [ConflictingCombos(CombinedAetherhues, PCT_ST_SimpleMode)]
-        [CustomComboInfo("Advanced Mode - Single Target", $"Replaces Fire in Red with a one-button full single target rotation.\nThese features are ideal if you want to customize the rotation.", PCT.JobID)]
-        PCT_ST_AdvancedMode = 20005,
-
-        [ParentCombo(PCT_ST_AdvancedMode)]
-        [CustomComboInfo("Lvl 100 Opener Option", $"Uses the Balance Opener.", PCT.JobID)]
-        PCT_ST_Advanced_Openers = 20006,
-
-        [ParentCombo(PCT_ST_AdvancedMode)]
-        [ReplaceSkill(PCT.FireInRed, PCT.AeroInGreen, PCT.WaterinBlue)]
-        [CustomComboInfo("Prepull Motifs", "Adds missing Motifs to the combo while out of combat or while no target is present in combat.", PCT.JobID)]
-        PCT_ST_AdvancedMode_PrePullMotifs = 20007,
-
-        [ParentCombo(PCT_ST_AdvancedMode)]
-        [CustomComboInfo("Starry Muse Burst Feature", $"Adds selected spells below to the burst phase.", PCT.JobID)]
-        PCT_ST_AdvancedMode_Burst_Phase = 20008,
-
-        [ParentCombo(PCT_ST_AdvancedMode_Burst_Phase)]
-        [CustomComboInfo("Comet in Black Option", $"Adds Comet in Black to the burst phase.", PCT.JobID)]
-        PCT_ST_AdvancedMode_Burst_CometInBlack = 20009,
-
-        [ParentCombo(PCT_ST_AdvancedMode_Burst_Phase)]
-        [CustomComboInfo("Star Prism Option", $"Adds Star Prism to the burst phase.", PCT.JobID)]
-        PCT_ST_AdvancedMode_Burst_StarPrism = 20010,
-
-        [ParentCombo(PCT_ST_AdvancedMode_Burst_Phase)]
-        [CustomComboInfo("Rainbow Drip Option", $"Adds Rainbow Drip to the burst phase.", PCT.JobID)]
-        PCT_ST_AdvancedMode_Burst_RainbowDrip = 20011,
-
-        [ParentCombo(PCT_ST_AdvancedMode_Burst_Phase)]
-        [CustomComboInfo("Hammer Stamp Combo Option", $"Adds Hammer Stamp Combo to the burst phase.", PCT.JobID)]
-        PCT_ST_AdvancedMode_Burst_HammerCombo = 20012,
-
-        [ParentCombo(PCT_ST_AdvancedMode_Burst_Phase)]
-        [CustomComboInfo("Blizzard in Cyan Option", $"Adds Blizzard in Cyan to the burst phase.", PCT.JobID)]
-        PCT_ST_AdvancedMode_Burst_BlizzardInCyan = 20013,
-
-        [ParentCombo(PCT_ST_AdvancedMode)]
-        [CustomComboInfo("Motif Selection Feature", $"Add Selected Motifs to the combo.", PCT.JobID)]
-        PCT_ST_AdvancedMode_MotifFeature = 20014,
-
-        [ParentCombo(PCT_ST_AdvancedMode_MotifFeature)]
-        [CustomComboInfo("Landscape Motif Option", $"Adds Landscape Motif.", PCT.JobID)]
-        PCT_ST_AdvancedMode_LandscapeMotif = 20015,
-
-        [ParentCombo(PCT_ST_AdvancedMode_MotifFeature)]
-        [CustomComboInfo("Creature Motif Option", $"Adds Landscape Motif.", PCT.JobID)]
-        PCT_ST_AdvancedMode_CreatureMotif = 20016,
-
-        [ParentCombo(PCT_ST_AdvancedMode_MotifFeature)]
-        [CustomComboInfo("Weapon Motif Option", $"Adds Weapon Motif.", PCT.JobID)]
-        PCT_ST_AdvancedMode_WeaponMotif = 20017,
-
-        [ParentCombo(PCT_ST_AdvancedMode)]
-        [CustomComboInfo("Muse Selection Feature", $"Adds Selected Muses to the combo.", PCT.JobID)]
-        PCT_ST_AdvancedMode_MuseFeature = 20018,
-
-        [ParentCombo(PCT_ST_AdvancedMode_MuseFeature)]
-        [CustomComboInfo("Scenic Muse Option", $"Adds Scenic Muse.", PCT.JobID)]
-        PCT_ST_AdvancedMode_ScenicMuse = 20019,
-
-        [ParentCombo(PCT_ST_AdvancedMode_MuseFeature)]
-        [CustomComboInfo("Living Muse Option", $"Adds Living Muse.", PCT.JobID)]
-        PCT_ST_AdvancedMode_LivingMuse = 20020,
-
-        [ParentCombo(PCT_ST_AdvancedMode_MuseFeature)]
-        [CustomComboInfo("Steel Muse Option", $"Adds Steel Muse.", PCT.JobID)]
-        PCT_ST_AdvancedMode_SteelMuse = 20021,
-
-        [ParentCombo(PCT_ST_AdvancedMode)]
-        [CustomComboInfo("Mog/Madeen Feature", $"Adds Mog/Madeen to the combo.", PCT.JobID)]
-        PCT_ST_AdvancedMode_MogOfTheAges = 20022,
-
-        [ParentCombo(PCT_ST_AdvancedMode)]
-        [CustomComboInfo("Subtractive Palette Feature", $"Adds Subtractive Palette to the combo.", PCT.JobID)]
-        PCT_ST_AdvancedMode_SubtractivePalette = 20023,
-
-        //Pooling option to be added - 20024
-
-        [ParentCombo(PCT_ST_AdvancedMode)]
-        [CustomComboInfo("Comet in Black Option", $"Adds Comet in Black to the combo.", PCT.JobID)]
-        PCT_ST_AdvancedMode_CometinBlack = 20025,
-
-        [ParentCombo(PCT_ST_AdvancedMode)]
-        [CustomComboInfo("Hammer Stamp Combo Option", $"Adds Hammer Stamp combo.", PCT.JobID)]
-        PCT_ST_AdvancedMode_HammerStampCombo = 20026,
-
-        [ParentCombo(PCT_ST_AdvancedMode)]
-        [CustomComboInfo("Movement Features", $"Adds selected features to the combo while moving.", PCT.JobID)]
-        PCT_ST_AdvancedMode_MovementFeature = 20027,
-
-        [ParentCombo(PCT_ST_AdvancedMode_MovementFeature)]
-        [CustomComboInfo("Hammer Stamp Combo Option", $"Adds Hammer Stamp Combo to the combo while moving.", PCT.JobID)]
-        PCT_ST_AdvancedMode_MovementOption_HammerStampCombo = 20028,
-
-        [ParentCombo(PCT_ST_AdvancedMode_MovementFeature)]
-        [CustomComboInfo("Holy in White Option", $"Adds Holy in White to the combo while moving.", PCT.JobID)]
-        PCT_ST_AdvancedMode_MovementOption_HolyInWhite = 20029,
-
-        [ParentCombo(PCT_ST_AdvancedMode_MovementFeature)]
-        [CustomComboInfo("Comet in Black Option", $"Adds Comet in Black to the combo while moving.", PCT.JobID)]
-        PCT_ST_AdvancedMode_MovementOption_CometinBlack = 20030,
-
-        [ParentCombo(PCT_ST_AdvancedMode_MovementFeature)]
-        [CustomComboInfo("Swiftcast Option ", $"Adds Swiftcast to the combo while moving.", PCT.JobID)]
-        PCT_ST_AdvancedMode_SwitfcastOption = 20031,
-
-        [ParentCombo(PCT_ST_AdvancedMode)]
-        [CustomComboInfo("Blizzard in Cyan Option", $"Adds Blizzard in Cyan to the combo.", PCT.JobID)]
-        PCT_ST_AdvancedMode_BlizzardInCyan = 20032,
-
-        [ParentCombo(PCT_ST_AdvancedMode)]
-        [CustomComboInfo("Lucid Dreaming Option", $"Adds Lucid Dreaming to the combo.", PCT.JobID)]
-        PCT_ST_AdvancedMode_LucidDreaming = 20033,
-
-        // Last value for ST = 20033 
-        #endregion
-
-        [ReplaceSkill(PCT.FireIIinRed)]
-        [ConflictingCombos(CombinedAetherhues, PCT_AoE_SimpleMode)]
-        [CustomComboInfo("Advanced Mode - AoE", $"Replaces Fire II in Red with a one-button full single target rotation.\nThese features are ideal if you want to customize the rotation.", PCT.JobID)]
-        PCT_AoE_AdvancedMode = 20040,
-
-        [ParentCombo(PCT_AoE_AdvancedMode)]
-        [ReplaceSkill(PCT.FireIIinRed)]
-        [CustomComboInfo("Prepull Motifs", "Adds missing Motifs to the combo while out of combat or while no target is present in combat.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_PrePullMotifs = 20041,
-
-        [ParentCombo(PCT_AoE_AdvancedMode)]
-        [CustomComboInfo("Starry Muse Burst Feature", $"Adds selected spells below to the burst phase.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_Burst_Phase = 20042,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_Burst_Phase)]
-        [CustomComboInfo("Comet in Black Option", $"Adds Comet in Black to the burst phase.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_Burst_CometInBlack = 20043,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_Burst_Phase)]
-        [CustomComboInfo("Star Prism Option", $"Adds Star Prism to the burst phase.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_Burst_StarPrism = 20044,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_Burst_Phase)]
-        [CustomComboInfo("Rainbow Drip Option", $"Adds Rainbow Drip to the burst phase.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_Burst_RainbowDrip = 20045,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_Burst_Phase)]
-        [CustomComboInfo("Hammer Stamp Combo Option", $"Adds Hammer Stamp Combo to the burst phase.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_Burst_HammerCombo = 20046,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_Burst_Phase)]
-        [CustomComboInfo("Blizzard in Cyan Option", $"Adds Blizzard in Cyan to the burst phase.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_Burst_BlizzardInCyan = 20047,
-
-        [ParentCombo(PCT_AoE_AdvancedMode)]
-        [CustomComboInfo("Motif Selection Feature", $"Add Selected Motifs to the combo.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_MotifFeature = 20048,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_MotifFeature)]
-        [CustomComboInfo("Landscape Motif Option", $"Adds Landscape Motif.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_LandscapeMotif = 20049,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_MotifFeature)]
-        [CustomComboInfo("Creature Motif Option", $"Adds Landscape Motif.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_CreatureMotif = 20050,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_MotifFeature)]
-        [CustomComboInfo("Weapon Motif Option", $"Adds Weapon Motif.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_WeaponMotif = 20051,
-
-        [ParentCombo(PCT_AoE_AdvancedMode)]
-        [CustomComboInfo("Muse Selection Feature", $"Adds Selected Muses to the combo.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_MuseFeature = 20052,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_MuseFeature)]
-        [CustomComboInfo("Scenic Muse Option", $"Adds Scenic Muse.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_ScenicMuse = 20053,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_MuseFeature)]
-        [CustomComboInfo("Living Muse Option", $"Adds Living Muse.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_LivingMuse = 20054,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_MuseFeature)]
-        [CustomComboInfo("Steel Muse Option", $"Adds Steel Muse.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_SteelMuse = 20055,
-
-        [ParentCombo(PCT_AoE_AdvancedMode)]
-        [CustomComboInfo("Mog/Madeen Feature", $"Adds Mog/Madeen to the combo.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_MogOfTheAges = 20056,
-
-        [ParentCombo(PCT_AoE_AdvancedMode)]
-        [CustomComboInfo("Subtractive Palette Feature", $"Adds Subtractive Palette to the combo.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_SubtractivePalette = 20057,
-
-        // Pooling Option to be added - 20058
-
-        [ParentCombo(PCT_AoE_AdvancedMode)]
-        [CustomComboInfo("Comet in Black Feature", $"Adds Comet in Black to the combo.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_CometinBlack = 20059,
-
-        [ParentCombo(PCT_AoE_AdvancedMode)]
-        [CustomComboInfo("Hammer Stamp Combo Feature", $"Adds Hammer Stamp combo.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_HammerStampCombo = 20060,
-
-        [ParentCombo(PCT_AoE_AdvancedMode)]
-        [CustomComboInfo("Movement Features", $"Adds selected features to the combo while moving.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_MovementFeature = 20061,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_MovementFeature)]
-        [CustomComboInfo("Hammer Stamp Combo Option", $"Adds Hammer Stamp Combo to the combo while moving.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_MovementOption_HammerStampCombo = 20062,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_MovementFeature)]
-        [CustomComboInfo("Holy in White Option", $"Adds Holy in White to the combo while moving.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_MovementOption_HolyInWhite = 20063,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_MovementFeature)]
-        [CustomComboInfo("Comet in Black Option", $"Adds Comet in Black to the combo while moving.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_MovementOption_CometinBlack = 20064,
-
-        [ParentCombo(PCT_AoE_AdvancedMode_MovementFeature)]
-        [CustomComboInfo("Swiftcast Option ", $"Adds Swiftcast to the combo while moving.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_SwitfcastOption = 20065,
-
-        [ParentCombo(PCT_AoE_AdvancedMode)]
-        [CustomComboInfo("Blizzard in Cyan Option", $"Adds Blizzard in Cyan to the combo.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_BlizzardInCyan = 20066,
-
-        [ParentCombo(PCT_AoE_AdvancedMode)]
-        [CustomComboInfo("Lucid Dreaming Option", $"Adds Lucid Dreaming to the combo.", PCT.JobID)]
-        PCT_AoE_AdvancedMode_LucidDreaming = 20067,
-
-        // Last value for AoE = 20067
         #endregion
 
         #region PALADIN
