@@ -332,7 +332,7 @@ namespace XIVSlothCombo.Combos.PvE
                                 return Flare;
                         }
 
-                        // Polyglot usage 
+                        // Polyglot usage
                         if (LevelChecked(Foul) && gauge.HasPolyglotStacks() && WasLastAction(OriginalHook(Flare)))
                             return Foul;
 
@@ -342,14 +342,15 @@ namespace XIVSlothCombo.Combos.PvE
                             return OriginalHook(Blizzard2);
 
                         if (currentMP >= MP.AllMPSpells)
+                        {
                             if (!ThunderList.ContainsKey(lastComboMove) && currentMP >= MP.ThunderAoE)
                             {
                                 // Check for High Thunder II if level is 92 or above
-                                if (LevelChecked(HighThunder2) && PlayerLevel >= 92 && GetDebuffRemainingTime(Debuffs.HighThunder2) <= 4)
+                                if (LevelChecked(HighThunder2) && Svc.ClientState.LocalPlayer.Level >= 92 && GetDebuffRemainingTime(Debuffs.HighThunder2) <= 4)
                                     return HighThunder2;
 
                                 // Fallback to Thunder IV if under level 92
-                                if (LevelChecked(Thunder4) && PlayerLevel < 92 && GetDebuffRemainingTime(Debuffs.Thunder4) <= 4)
+                                if (LevelChecked(Thunder4) && Svc.ClientState.LocalPlayer.Level < 92 && GetDebuffRemainingTime(Debuffs.Thunder4) <= 4)
                                     return Thunder4;
 
                                 // Fallback to Thunder II if Thunder IV is unavailable and the debuff needs refreshing
@@ -357,7 +358,7 @@ namespace XIVSlothCombo.Combos.PvE
                                     return Thunder2;
                             }
 
-                        if (LevelChecked(Flare) && HasEffect(Buffs.EnhancedFlare) &&
+                            if (LevelChecked(Flare) && HasEffect(Buffs.EnhancedFlare) &&
                                 (gauge.UmbralHearts is 1 || currentMP < MP.FireAoE) &&
                                 ActionReady(Triplecast) && !HasEffect(Buffs.Triplecast))
                                 return Triplecast;
@@ -377,35 +378,34 @@ namespace XIVSlothCombo.Combos.PvE
                         if (gauge.UmbralHearts < 3 && LevelChecked(Freeze) && TraitLevelChecked(Traits.EnhancedFreeze) && currentMP >= MP.Freeze)
                             return Freeze;
 
-                    // Thunder II/IV uptime
-                    if (!ThunderList.ContainsKey(lastComboMove) && currentMP >= MP.ThunderAoE)
-                    {
-                        // Check for High Thunder II if level is 92 or above
-                        if (LevelChecked(HighThunder2) && PlayerLevel >= 92 && GetDebuffRemainingTime(Debuffs.HighThunder2) <= 4)
-                            return HighThunder2;
+                        // Thunder II/IV uptime
+                        if (!ThunderList.ContainsKey(lastComboMove) && currentMP >= MP.ThunderAoE)
+                        {
+                            // Check for High Thunder II if level is 92 or above
+                            if (LevelChecked(HighThunder2) && Svc.ClientState.LocalPlayer.Level >= 92 && GetDebuffRemainingTime(Debuffs.HighThunder2) <= 4)
+                                return HighThunder2;
 
-                        // Fallback to Thunder IV if under level 92
-                        if (LevelChecked(Thunder4) && PlayerLevel < 92 && GetDebuffRemainingTime(Debuffs.Thunder4) <= 4)
-                            return Thunder4;
+                            // Fallback to Thunder IV if under level 92
+                            if (LevelChecked(Thunder4) && Svc.ClientState.LocalPlayer.Level < 92 && GetDebuffRemainingTime(Debuffs.Thunder4) <= 4)
+                                return Thunder4;
 
-                        // Fallback to Thunder II if Thunder IV is unavailable and the debuff needs refreshing
-                        if (LevelChecked(Thunder2) && !LevelChecked(Thunder4) && GetDebuffRemainingTime(Debuffs.Thunder2) <= 4)
-                            return Thunder2;
-                    }
+                            // Fallback to Thunder II if Thunder IV is unavailable and the debuff needs refreshing
+                            if (LevelChecked(Thunder2) && !LevelChecked(Thunder4) && GetDebuffRemainingTime(Debuffs.Thunder2) <= 4)
+                                return Thunder2;
+                        }
 
-                    if (currentMP < 9400 && !TraitLevelChecked(Traits.EnhancedFreeze) && Freeze.LevelChecked() && currentMP >= MP.Freeze)
+                        if (currentMP < 9400 && !TraitLevelChecked(Traits.EnhancedFreeze) && Freeze.LevelChecked() && currentMP >= MP.Freeze)
                             return Freeze;
 
                         if (currentMP >= 9400 && !TraitLevelChecked(Traits.AspectMasteryIII))
                             return Transpose;
 
-                        if ((gauge.UmbralHearts is 3 || currentMP == MP.MaxMP) &&
-                            TraitLevelChecked(Traits.AspectMasteryIII))
+                        if ((gauge.UmbralHearts is 3 || currentMP == MP.MaxMP) && TraitLevelChecked(Traits.AspectMasteryIII))
                             return OriginalHook(Fire2);
                     }
                 }
 
-                return actionID;
+                return actionID; // Ensure method returns a value
             }
         }
 
