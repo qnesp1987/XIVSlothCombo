@@ -47,7 +47,7 @@ namespace XIVSlothCombo
         [
             //ADV.JobID,
             //AST.JobID,
-            BLM.JobID,
+            //BLM.JobID,
             //BLU.JobID,
             //BRD.JobID,
             //DNC.JobID,
@@ -57,7 +57,7 @@ namespace XIVSlothCombo
             //GNB.JobID,
             //MCH.JobID,
             //MNK.JobID,
-            NIN.JobID,
+            //NIN.JobID,
             //PCT.JobID,
             //PLD.JobID,
             //RDM.JobID,
