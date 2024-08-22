@@ -33,6 +33,9 @@ namespace XIVSlothCombo.Data
 
         private static readonly Dictionary<string, List<uint>> statusCache = [];
 
+        internal static readonly Dictionary<uint, long> ChargeTimestamps = [];
+        internal static readonly Dictionary<uint, long> ActionTimestamps = [];
+
         internal readonly static List<uint> CombatActions = [];
 
         private delegate void ReceiveActionEffectDelegate(ulong sourceObjectId, IntPtr sourceActor, IntPtr position, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
@@ -42,7 +45,7 @@ namespace XIVSlothCombo.Data
             if (!CustomComboFunctions.InCombat()) CombatActions.Clear();
             ReceiveActionEffectHook!.Original(sourceObjectId, sourceActor, position, effectHeader, effectArray, effectTrail);
             ActionEffectHeader header = Marshal.PtrToStructure<ActionEffectHeader>(effectHeader);
-
+            
             if (ActionType is 13 or 2) return;
             if (header.ActionId != 7 &&
                 header.ActionId != 8 &&
@@ -87,6 +90,12 @@ namespace XIVSlothCombo.Data
         {
             try
             {
+                if (actionType == 1 && CustomComboFunctions.GetMaxCharges(actionId) > 0)
+                    ChargeTimestamps[actionId] = Environment.TickCount64;
+
+                if (actionType == 1)
+                    ActionTimestamps[actionId] = Environment.TickCount64;
+
                 CheckForChangedTarget(actionId, ref targetObjectId);
                 SendActionHook!.Original(targetObjectId, actionType, actionId, sequence, a5, a6, a7, a8, a9);
                 TimeLastActionUsed = DateTime.Now;
@@ -134,6 +143,19 @@ namespace XIVSlothCombo.Data
         public static unsafe bool OutOfRange(uint actionId, IGameObject source, IGameObject target)
         {
             return ActionManager.GetActionInRangeOrLoS(actionId, source.Struct(), target.Struct()) is 566;
+        }
+
+        /// <summary>
+        /// Returns the amount of time since an action was last used.
+        /// </summary>
+        /// <param name="actionId"></param>
+        /// <returns>Time in milliseconds if found, else -1.</returns>
+        public static float TimeSinceActionUsed(uint actionId)
+        {
+            if (ActionTimestamps.ContainsKey(actionId))
+                return Environment.TickCount64 - ActionTimestamps[actionId];
+
+            return -1f;
         }
 
         public static uint WhichOfTheseActionsWasLast(params uint[] actions)
@@ -223,6 +245,7 @@ namespace XIVSlothCombo.Data
             if (flag == ConditionFlag.InCombat && !value)
             {
                 CombatActions.Clear();
+                ActionTimestamps.Clear();
                 LastAbility = 0;
                 LastAction = 0;
                 LastWeaponskill = 0;

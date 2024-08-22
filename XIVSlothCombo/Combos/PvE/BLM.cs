@@ -60,8 +60,7 @@ namespace XIVSlothCombo.Combos.PvE
                 CircleOfPower = 738,
                 Sharpcast = 867,
                 Triplecast = 1211,
-                Thunderhead = 3870,
-                EnhancedFlare = 2960;
+                Thunderhead = 3870;
         }
 
         public static class Debuffs
@@ -78,7 +77,7 @@ namespace XIVSlothCombo.Combos.PvE
         public static class Traits
         {
             public const uint
-                EnhancedFreeze = 295,
+                UmbralHeart = 295,
                 EnhancedPolyglot = 297,
                 AspectMasteryIII = 459,
                 EnhancedFoul = 461,
@@ -92,9 +91,8 @@ namespace XIVSlothCombo.Combos.PvE
             public const int MaxMP = 10000;
 
             public const int AllMPSpells = 800; //"ALL MP" spell. Only caring about the absolute minimum.
-            public static int ThunderST => CustomComboFunctions.GetResourceCost(CustomComboFunctions.OriginalHook(Thunder));
-            public static int ThunderAoE => CustomComboFunctions.GetResourceCost(CustomComboFunctions.OriginalHook(Thunder2));
             public static int FireI => CustomComboFunctions.GetResourceCost(CustomComboFunctions.OriginalHook(Fire));
+            public static int FlareAoE => CustomComboFunctions.GetResourceCost(CustomComboFunctions.OriginalHook(Flare));
             public static int FireAoE => CustomComboFunctions.GetResourceCost(CustomComboFunctions.OriginalHook(Fire2));
             public static int FireIII => CustomComboFunctions.GetResourceCost(CustomComboFunctions.OriginalHook(Fire3));
             public static int BlizzardAoE => CustomComboFunctions.GetResourceCost(CustomComboFunctions.OriginalHook(Blizzard2));
@@ -146,137 +144,146 @@ namespace XIVSlothCombo.Combos.PvE
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLM_ST_SimpleMode;
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                if (actionID == Fire)
+                if (actionID != Fire) return actionID;
+
+                var gauge = GetJobGauge<BLMGauge>();
+                var maxPolyglot = TraitLevelChecked(Traits.EnhancedPolyglotII) ? 3 : TraitLevelChecked(Traits.EnhancedPolyglot) ? 2 : 1;
+                var maxPolyglotCD = maxPolyglot * 30000;
+                var remainingPolyglotCD = Math.Max(0, (maxPolyglot - gauge.PolyglotStacks) * 30000 + (gauge.EnochianTimer - 30000));
+                var curMp = LocalPlayer.CurrentMp;
+                int nextMpGain = gauge.UmbralIceStacks switch
                 {
-                    var gauge = GetJobGauge<BLMGauge>();
-                    var maxPolyglot = TraitLevelChecked(Traits.EnhancedPolyglotII) ? 3 : TraitLevelChecked(Traits.EnhancedPolyglot) ? 2 : 1;
-                    var maxPolyglotCD = maxPolyglot * 30000;
-                    var remainingPolyglotCD = Math.Max(0, (maxPolyglot - gauge.PolyglotStacks) * 30000 + (gauge.EnochianTimer - 30000));
-                    var curMp = LocalPlayer.CurrentMp;
-                    int nextMpGain = gauge.UmbralIceStacks switch
-                    {
-                        0 => 0,
-                        1 => 2500,
-                        2 => 5000,
-                        3 => 10000,
-                        _ => 0
-                    };
-                    var thunderDebuff = FindEffectOnMember(ThunderList[OriginalHook(Thunder)], CurrentTarget);
-                    var elementTimer = gauge.ElementTimeRemaining / 1000f;
-                    var gcdsInTimer = Math.Floor(elementTimer / GetActionCastTime(Fire));
-                    var canSwiftB3 = IsOffCooldown(All.Swiftcast) || ActionReady(Triplecast) || GetBuffStacks(Buffs.Triplecast) > 0;
+                    0 => 0,
+                    1 => 2500,
+                    2 => 5000,
+                    3 => 10000,
+                    _ => 0
+                };
+                var thunderDebuff = FindEffect(ThunderList[OriginalHook(Thunder)], CurrentTarget, LocalPlayer.GameObjectId);
+                var elementTimer = gauge.ElementTimeRemaining / 1000f;
+                var gcdsInTimer = Math.Floor(elementTimer / GetActionCastTime(Fire));
+                var canSwiftB3 = IsOffCooldown(All.Swiftcast) || ActionReady(Triplecast) || GetBuffStacks(Buffs.Triplecast) > 0;
 
-                    if (HasEffect(Buffs.Thunderhead) && gcdsInTimer > 1)
-                    {
-                        if (thunderDebuff is null || thunderDebuff.RemainingTime < 3)
-                            return OriginalHook(Thunder);
-                    }
+                if (IsEnabled(CustomComboPreset.BLM_Variant_Cure) &&
+                    IsEnabled(Variant.VariantCure) &&
+                    PlayerHealthPercentageHp() <= Config.BLM_VariantCure)
+                    return Variant.VariantCure;
 
-                    if (ActionReady(Amplifier) && remainingPolyglotCD >= 20000 && CanSpellWeave(ActionWatching.LastSpell))
+                if (IsEnabled(CustomComboPreset.BLM_Variant_Rampart) &&
+                    IsEnabled(Variant.VariantRampart) &&
+                    IsOffCooldown(Variant.VariantRampart) &&
+                    CanSpellWeave(actionID))
+                    return Variant.VariantRampart;
+
+                if (HasEffect(Buffs.Thunderhead) && gcdsInTimer > 1)
+                {
+                    if (thunderDebuff is null || thunderDebuff.RemainingTime < 3)
+                        return OriginalHook(Thunder);
+                }
+
+                if (ActionReady(Amplifier) && remainingPolyglotCD >= 20000 && CanSpellWeave(ActionWatching.LastSpell))
+                    return Amplifier;
+
+                if (remainingPolyglotCD < 6000 && gcdsInTimer > 2 && gauge.HasPolyglotStacks())
+                    return Xenoglossy.LevelChecked() ? Xenoglossy : Foul;
+
+                if (IsMoving)
+                {
+                    if (ActionReady(Amplifier) && gauge.PolyglotStacks < maxPolyglot)
                         return Amplifier;
 
-                    if (remainingPolyglotCD < 6000 && gcdsInTimer > 2 && gauge.HasPolyglotStacks())
+                    if (gauge.HasPolyglotStacks())
                         return Xenoglossy.LevelChecked() ? Xenoglossy : Foul;
+                }
 
-                    if (IsMoving)
+                if (CanSpellWeave(actionID) && ActionReady(LeyLines))
+                    return LeyLines;
+
+                if (gauge.InAstralFire)
+                {
+
+                    if (gauge.IsParadoxActive && gcdsInTimer < 2 && curMp >= MP.FireI)
+                        return Paradox;
+
+                    if (HasEffect(Buffs.Firestarter))
                     {
-                        if (ActionReady(Amplifier) && gauge.PolyglotStacks < maxPolyglot)
-                            return Amplifier;
-
-                        if (gauge.HasPolyglotStacks())
-                            return Xenoglossy.LevelChecked() ? Xenoglossy : Foul;
-                    }
-
-                    if (CanSpellWeave(actionID) && ActionReady(LeyLines))
-                        return LeyLines;
-
-                    if (gauge.InAstralFire)
-                    {
-
-                        if (gauge.IsParadoxActive && gcdsInTimer < 2 && curMp >= MP.FireI)
-                            return Paradox;
-
-                        if (HasEffect(Buffs.Firestarter))
-                        {
-                            if (gcdsInTimer < 2 || curMp < MP.FireI || WasLastAbility(Transpose))
-                                return Fire3;
-                        }
-
-                        if (curMp < MP.FireI && Despair.LevelChecked() && curMp >= MP.Despair)
-                        {
-                            if (ActionReady(Triplecast) && GetBuffStacks(Buffs.Triplecast) == 0)
-                                return Triplecast;
-
-                            return Despair;
-                        }
-
-                        if (curMp == 0 && FlareStar.LevelChecked() && gauge.AstralSoulStacks == 6)
-                            return FlareStar;
-
-                        if (Fire4.LevelChecked())
-                        {
-                            if (gcdsInTimer > 1 && curMp >= MP.FireI)
-                                return Fire4;
-                        }
-
-                        if (curMp >= MP.FireI)
-                            return Fire;
-
-                        if (ActionReady(Manafont))
-                            return Manafont;
-
-                        if (ActionReady(Blizzard3) && !canSwiftB3)
-                            return Blizzard3;
-
-                        if (ActionReady(Transpose))
-                            return Transpose;
-
-                    }
-                    if (gauge.InUmbralIce)
-                    {
-                        if (ActionReady(Blizzard3) && gauge.UmbralIceStacks < 3)
-                        {
-                            if (ActionReady(Triplecast) && GetBuffStacks(Buffs.Triplecast) == 0)
-                                return Triplecast;
-
-                            if (GetBuffStacks(Buffs.Triplecast) == 0 && IsOffCooldown(All.Swiftcast))
-                                return All.Swiftcast;
-
-                            if (HasEffect(All.Buffs.Swiftcast) || GetBuffStacks(Buffs.Triplecast) > 0)
-                                return Blizzard3;
-                        }
-
-                        if (Blizzard4.LevelChecked() && gauge.UmbralHearts < 3)
-                            return Blizzard4;
-
-                        if (gauge.IsParadoxActive)
-                            return Paradox;
-
-                        if (gauge.HasPolyglotStacks())
-                            return Xenoglossy.LevelChecked() ? Xenoglossy : Foul;
-
-                        if (curMp + nextMpGain >= 7500 && (LocalPlayer.CastActionId == Blizzard || WasLastSpell(Blizzard) || WasLastSpell(Blizzard4)))
-                        {
-                            if (Fire3.LevelChecked())
-                                return Fire3;
-
-                            return Fire;
-                        }
-
-                        if ((curMp + nextMpGain <= 10000 || curMp < 7500))
-                            return Blizzard;
-
-                        if (ActionReady(Transpose) && CanSpellWeave(ActionWatching.LastSpell))
-                            return Transpose;
-
-                        if (Fire3.LevelChecked())
+                        if (gcdsInTimer < 2 || curMp < MP.FireI || WasLastAbility(Transpose))
                             return Fire3;
                     }
 
-                    if (Blizzard3.LevelChecked())
+                    if (curMp < MP.FireI && Despair.LevelChecked() && curMp >= MP.Despair)
+                    {
+                        if (ActionReady(Triplecast) && GetBuffStacks(Buffs.Triplecast) == 0)
+                            return Triplecast;
+
+                        return Despair;
+                    }
+
+                    if (curMp == 0 && FlareStar.LevelChecked() && gauge.AstralSoulStacks == 6)
+                        return FlareStar;
+
+                    if (Fire4.LevelChecked())
+                    {
+                        if (gcdsInTimer > 1 && curMp >= MP.FireI)
+                            return Fire4;
+                    }
+
+                    if (curMp >= MP.FireI)
+                        return Fire;
+
+                    if (ActionReady(Manafont))
+                        return Manafont;
+
+                    if (ActionReady(Blizzard3) && !canSwiftB3)
                         return Blizzard3;
 
+                    if (ActionReady(Transpose))
+                        return Transpose;
+
                 }
+                if (gauge.InUmbralIce)
+                {
+                    if (ActionReady(Blizzard3) && gauge.UmbralIceStacks < 3 && TraitLevelChecked(Traits.UmbralHeart))
+                    {
+                        if (ActionReady(Triplecast) && GetBuffStacks(Buffs.Triplecast) == 0)
+                            return Triplecast;
+
+                        if (GetBuffStacks(Buffs.Triplecast) == 0 && IsOffCooldown(All.Swiftcast))
+                            return All.Swiftcast;
+
+                        if (HasEffect(All.Buffs.Swiftcast) || GetBuffStacks(Buffs.Triplecast) > 0)
+                            return Blizzard3;
+                    }
+
+                    if (Blizzard4.LevelChecked() && gauge.UmbralHearts < 3 && TraitLevelChecked(Traits.UmbralHeart))
+                        return Blizzard4;
+
+                    if (gauge.IsParadoxActive)
+                        return Paradox;
+
+                    if (gauge.HasPolyglotStacks())
+                        return Xenoglossy.LevelChecked() ? Xenoglossy : Foul;
+
+                    if (curMp + nextMpGain >= 7500 && (LocalPlayer.CastActionId == Blizzard || WasLastSpell(Blizzard) || WasLastSpell(Blizzard4)))
+                    {
+                        if (Fire3.LevelChecked())
+                            return Fire3;
+
+                        return Fire;
+                    }
+
+                    if ((curMp + nextMpGain <= 10000 || curMp < 7500))
+                        return Blizzard;
+
+                    if (ActionReady(Transpose) && CanSpellWeave(ActionWatching.LastSpell))
+                        return Transpose;
+
+                    if (Fire3.LevelChecked())
+                        return Fire3;
+                }
+
+                if (Blizzard3.LevelChecked())
+                    return Blizzard3;
                 return actionID;
             }
         }
@@ -287,118 +294,140 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                uint currentMP = LocalPlayer.CurrentMp;
-                BLMGauge? gauge = GetJobGauge<BLMGauge>();
+                if (actionID is not (Blizzard2 or HighBlizzard2)) return actionID;
 
-                if (actionID is Blizzard2 or HighBlizzard2)
+                var gauge = GetJobGauge<BLMGauge>();
+                var maxPolyglot = TraitLevelChecked(Traits.EnhancedPolyglotII) ? 3 : TraitLevelChecked(Traits.EnhancedPolyglot) ? 2 : 1;
+                var maxPolyglotCD = maxPolyglot * 30000;
+                var remainingPolyglotCD = Math.Max(0, (maxPolyglot - gauge.PolyglotStacks) * 30000 + (gauge.EnochianTimer - 30000));
+                var curMp = LocalPlayer.CurrentMp;
+                int nextMpGain = gauge.UmbralIceStacks switch
                 {
-                    // 2xHF2 Transpose with Freeze [A7]
-                    if (gauge.ElementTimeRemaining <= 0)
-                        return OriginalHook(Blizzard2);
+                    0 => 0,
+                    1 => 2500,
+                    2 => 5000,
+                    3 => 10000,
+                    _ => 0
+                };
+                var thunderDebuff = FindEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget, LocalPlayer.GameObjectId);
+                var elementTimer = gauge.ElementTimeRemaining / 1000f;
+                var gcdsInTimer = Math.Floor(elementTimer / GetActionCastTime(ActionWatching.LastSpell));
+                var canSwiftF = TraitLevelChecked(Traits.AspectMasteryIII) && (IsOffCooldown(All.Swiftcast) || ActionReady(Triplecast) || GetBuffStacks(Buffs.Triplecast) > 0);
+                var canWeave = CanSpellWeave(ActionWatching.LastSpell);
 
-                    if (gauge.ElementTimeRemaining > 0)
-                    {
-                        if (CurrentTarget is null)
-                        {
-                            if (gauge.InAstralFire && LevelChecked(Transpose))
-                                return Transpose;
+                if (IsEnabled(CustomComboPreset.BLM_Variant_Cure) &&
+                    IsEnabled(Variant.VariantCure) &&
+                    PlayerHealthPercentageHp() <= Config.BLM_VariantCure)
+                    return Variant.VariantCure;
 
-                            if (gauge.InUmbralIce && LevelChecked(UmbralSoul))
-                                return UmbralSoul;
-                        }
+                if (IsEnabled(CustomComboPreset.BLM_Variant_Rampart) &&
+                    IsEnabled(Variant.VariantRampart) &&
+                    IsOffCooldown(Variant.VariantRampart) &&
+                    canWeave)
+                    return Variant.VariantRampart;
 
-                        if (IsEnabled(CustomComboPreset.BLM_Variant_Cure) &&
-                            IsEnabled(Variant.VariantCure) &&
-                            PlayerHealthPercentageHp() <= Config.BLM_VariantCure)
-                            return Variant.VariantCure;
-
-                        if (IsEnabled(CustomComboPreset.BLM_Variant_Rampart) &&
-                            IsEnabled(Variant.VariantRampart) &&
-                            IsOffCooldown(Variant.VariantRampart) &&
-                            CanSpellWeave(actionID))
-                            return Variant.VariantRampart;
-                    }
-
-                    // Astral Fire
-                    if (gauge.InAstralFire)
-                    {
-                        // Manafont to Flare
-                        if (LevelChecked(Flare))
-                        {
-                            if (ActionReady(Manafont) && currentMP is 0)
-                                return Manafont;
-
-                            if (WasLastAction(Manafont))
-                                return Flare;
-                        }
-
-                        // Polyglot usage 
-                        if (LevelChecked(Foul) && gauge.HasPolyglotStacks() && WasLastAction(OriginalHook(Flare)))
-                            return Foul;
-
-                        // Blizzard to Umbral Ice
-                        if ((currentMP is 0 && WasLastAction(Flare)) ||
-                            (currentMP < MP.FireAoE && !LevelChecked(Flare)))
-                            return OriginalHook(Blizzard2);
-
-                        if (currentMP >= MP.AllMPSpells)
-                        {
-                            // Thunder II/IV uptime
-                            if (!ThunderList.ContainsKey(lastComboMove) && currentMP >= MP.ThunderAoE)
-                            {
-                                if (LevelChecked(Thunder4) &&
-                                    GetDebuffRemainingTime(Debuffs.Thunder4) <= 4)
-                                    return Thunder4;
-
-                                if (LevelChecked(Thunder2) && !LevelChecked(Thunder4) &&
-                                    GetDebuffRemainingTime(Debuffs.Thunder2) <= 4)
-                                    return Thunder2;
-                            }
-
-                            if (LevelChecked(Flare) && HasEffect(Buffs.EnhancedFlare) &&
-                                (gauge.UmbralHearts is 1 || currentMP < MP.FireAoE) &&
-                                ActionReady(Triplecast) && !HasEffect(Buffs.Triplecast))
-                                return Triplecast;
-
-                            if (LevelChecked(Flare) && HasEffect(Buffs.EnhancedFlare) &&
-                                (gauge.UmbralHearts is 1 || currentMP < MP.FireAoE))
-                                return Flare;
-
-                            if (currentMP > MP.FireAoE)
-                                return OriginalHook(Fire2);
-                        }
-                    }
-
-                    // Umbral Ice
-                    if (gauge.InUmbralIce)
-                    {
-                        if (gauge.UmbralHearts < 3 && LevelChecked(Freeze) && TraitLevelChecked(Traits.EnhancedFreeze) && currentMP >= MP.Freeze)
-                            return Freeze;
-
-                        // Thunder II/IV uptime
-                        if (!ThunderList.ContainsKey(lastComboMove) && currentMP >= MP.ThunderAoE)
-                        {
-                            if (LevelChecked(Thunder4) &&
-                                GetDebuffRemainingTime(Debuffs.Thunder4) <= 4)
-                                return Thunder4;
-
-                            if (LevelChecked(Thunder2) && !LevelChecked(Thunder4) &&
-                                GetDebuffRemainingTime(Debuffs.Thunder2) <= 4)
-                                return Thunder2;
-                        }
-
-                        if (currentMP < 9400 && !TraitLevelChecked(Traits.EnhancedFreeze) && Freeze.LevelChecked() && currentMP >= MP.Freeze)
-                            return Freeze;
-
-                        if (currentMP >= 9400 && !TraitLevelChecked(Traits.AspectMasteryIII))
-                            return Transpose;
-
-                        if ((gauge.UmbralHearts is 3 || currentMP == MP.MaxMP) &&
-                            TraitLevelChecked(Traits.AspectMasteryIII))
-                            return OriginalHook(Fire2);
-                    }
+                if (HasEffect(Buffs.Thunderhead) && gcdsInTimer > 1 && Thunder2.LevelChecked())
+                {
+                    if (thunderDebuff is null || thunderDebuff.RemainingTime < 3)
+                        return OriginalHook(Thunder2);
                 }
 
+                if (ActionReady(Amplifier) && remainingPolyglotCD >= 20000 && canWeave)
+                    return Amplifier;
+
+                if (IsMoving)
+                {
+                    if (ActionReady(Amplifier) && gauge.PolyglotStacks < maxPolyglot)
+                        return Amplifier;
+
+                    if (gauge.HasPolyglotStacks())
+                        return Foul;
+                }
+
+                if (canWeave && ActionReady(LeyLines))
+                    return LeyLines;
+
+                if (gauge.InAstralFire)
+                {
+                    if (curMp == 0 && FlareStar.LevelChecked() && gauge.AstralSoulStacks == 6)
+                        return FlareStar;
+
+                    if (!FlareStar.LevelChecked() && ActionReady(OriginalHook(Fire2)) && gauge.UmbralHearts > 1)
+                        return OriginalHook(Fire2);
+
+                    if (Flare.LevelChecked() && curMp >= MP.FlareAoE)
+                    {
+                        if (ActionReady(Triplecast) && GetBuffStacks(Buffs.Triplecast) == 0 && canWeave)
+                            return Triplecast;
+
+                        return Flare;
+                    }
+
+                    if (Fire2.LevelChecked())
+                    {
+                        if (gcdsInTimer > 1 && curMp >= MP.FireAoE)
+                            return OriginalHook(Fire2);
+                    }
+
+                    if (ActionReady(Manafont))
+                        return Manafont;
+
+                    if (ActionReady(Transpose) && (!TraitLevelChecked(Traits.AspectMasteryIII) || canSwiftF))
+                        return Transpose;
+
+                    if (ActionReady(Blizzard2) && TraitLevelChecked(Traits.AspectMasteryIII))
+                        return OriginalHook(Blizzard2);
+
+                }
+                if (gauge.InUmbralIce)
+                {
+                    if (ActionWatching.WhichOfTheseActionsWasLast(OriginalHook(Fire2), OriginalHook(Freeze), OriginalHook(Flare), OriginalHook(FlareStar)) == OriginalHook(Freeze) && FlareStar.LevelChecked())
+                    {
+                        if (ActionReady(Transpose) && canWeave)
+                            return Transpose;
+
+                        return OriginalHook(Fire2);
+                    }
+
+                    if (ActionReady(OriginalHook(Blizzard2)) && gauge.UmbralIceStacks < 3 && TraitLevelChecked(Traits.AspectMasteryIII))
+                    {
+                        if (ActionReady(Triplecast) && GetBuffStacks(Buffs.Triplecast) == 0 && canWeave)
+                            return Triplecast;
+
+                        if (GetBuffStacks(Buffs.Triplecast) == 0 && IsOffCooldown(All.Swiftcast) && canWeave)
+                            return All.Swiftcast;
+
+                        if (HasEffect(All.Buffs.Swiftcast) || GetBuffStacks(Buffs.Triplecast) > 0)
+                            return OriginalHook(Blizzard2);
+                    }
+
+                    if (gauge.UmbralIceStacks < 3 && ActionReady(OriginalHook(Blizzard2)))
+                        return OriginalHook(Blizzard2);
+
+                    if (Freeze.LevelChecked() && gauge.UmbralHearts < 3 && TraitLevelChecked(Traits.UmbralHeart))
+                        return Freeze;
+
+                    if (gauge.HasPolyglotStacks())
+                        return Foul;
+
+                    if (BLMHelper.DoubleBlizz())
+                    {
+                        if (Fire2.LevelChecked())
+                            return OriginalHook(Fire2);
+                    }
+
+                    if (curMp < LocalPlayer.MaxMp)
+                        return Freeze.LevelChecked() ? OriginalHook(Freeze) : OriginalHook(Blizzard2);
+
+                    if (ActionReady(Transpose) && ((canWeave && Flare.LevelChecked()) || !TraitLevelChecked(Traits.AspectMasteryIII)))
+                        return Transpose;
+
+                    if (Fire2.LevelChecked() && TraitLevelChecked(Traits.AspectMasteryIII))
+                        return OriginalHook(Fire2);
+                }
+
+                if (Blizzard2.LevelChecked())
+                    return OriginalHook(Blizzard2);
                 return actionID;
             }
         }
