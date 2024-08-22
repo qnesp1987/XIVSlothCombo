@@ -1,6 +1,7 @@
 ﻿using XIVSlothCombo.Attributes;
 using XIVSlothCombo.Combos.PvE;
 using XIVSlothCombo.Combos.PvP;
+using static XIVSlothCombo.Combos.PvE.BRD;
 
 namespace XIVSlothCombo.Combos
 {
@@ -185,7 +186,7 @@ namespace XIVSlothCombo.Combos
         AST_ST_DPS_CombustUptime = 1018,
               
         [ParentCombo(AST_ST_DPS)]
-        [CustomComboInfo("Lightspeed Weave Option", "Adds Lightspeed when moving", AST.JobID, 2, "", "")]
+        [CustomComboInfo("Lightspeed Weave Option", "Adds Lightspeed", AST.JobID, 2, "", "")]
         AST_DPS_LightSpeed = 1020,
 
         [ParentCombo(AST_ST_DPS)]
@@ -213,13 +214,8 @@ namespace XIVSlothCombo.Combos
         AST_DPS_Oracle = 1015,
 
         [ParentCombo(AST_ST_DPS)]
-        [CustomComboInfo("Level 100 Opener", "Use the Balance opener.", AST.JobID, 1)]
+        [CustomComboInfo("Level 100 Opener", "Use the Balance opener.", AST.JobID, 11, "", "")]
         AST_ST_DPS_Opener = 1040,
-
-        [ParentCombo(AST_ST_DPS)]
-        [CustomComboInfo("Earthly Star Option", "Adds Earthly Star." +
-                                                "\nTo be used in conjunction with Redirect/Reaction/etc", AST.JobID, 11)]
-        AST_ST_DPS_EarthlyStar = 1051,
 
         #endregion
 
@@ -229,7 +225,7 @@ namespace XIVSlothCombo.Combos
         AST_AOE_DPS = 1041,    
 
         [ParentCombo(AST_AOE_DPS)]
-        [CustomComboInfo("Lightspeed Weave Option", "Adds Lightspeed when moving", AST.JobID, 2, "", "")]
+        [CustomComboInfo("Lightspeed Weave Option", "Adds Lightspeed", AST.JobID, 2, "", "")]
         AST_AOE_LightSpeed = 1048,
 
         [ParentCombo(AST_AOE_DPS)]
@@ -249,17 +245,12 @@ namespace XIVSlothCombo.Combos
         AST_AOE_AutoPlay = 1045,
 
         [ParentCombo(AST_AOE_DPS)]
-        [CustomComboInfo("Lord of Crowns Weave Option", "Adds Lord Of Crowns", AST.JobID, 7, "", "")]
+        [CustomComboInfo("Lord of Crowns Weave Option", "Adds Lord Of Crowns", AST.JobID, 10, "", "")]
         AST_AOE_LazyLord = 1046,
 
         [ParentCombo(AST_AOE_DPS)]
-        [CustomComboInfo("Oracle Option", "Adds Oracle after Divination", AST.JobID, 8)]
-        AST_AOE_Oracle = 1047,
-
-        [ParentCombo(AST_AOE_DPS)]
-        [CustomComboInfo("Earthly Star Option", "Adds Earthly Star." +
-                                                "\nTo be used in conjunction with Redirect/Reaction/etc", AST.JobID, 9)]
-        AST_AOE_DPS_EarthlyStar = 1052,
+        [CustomComboInfo("Oracle Option", "Adds Oracle after Divination", AST.JobID)]
+        AST_AOE_Oracle = 1047,       
 
         #endregion
 
@@ -629,14 +620,42 @@ namespace XIVSlothCombo.Combos
         #region BARD
 
         [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
+        [ConflictingCombos(BRD_ST_AdvMode)]
+        [CustomComboInfo("Simple Mode - Single Target", "Adds every single target ability to one button,\nIf there are DoTs on target, will try to maintain their uptime.", BRD.JobID)]
+        BRD_ST_SimpleMode = 3036,
+
+        [ConflictingCombos(BRD_AoE_Combo, BRD_AoE_AdvMode)]
+        [ReplaceSkill(BRD.QuickNock, BRD.Ladonsbite)]
+        [CustomComboInfo("Simple Mode - AoE", "Weaves oGCDs onto Quick Nock/Ladonsbite.", BRD.JobID)]
+        BRD_AoE_SimpleMode = 3035,
+
+        [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
         [ConflictingCombos(BRD_ST_SimpleMode)]
+        [CustomComboInfo("Advanced Mode - Single Target", "Adds every single target ability to one button,\nIf there are DoTs on target, will try to maintain their uptime.", BRD.JobID)]
+        BRD_ST_AdvMode = 3009,
+
+        [ConflictingCombos(BRD_AoE_Combo, BRD_AoE_SimpleMode)]
+        [ReplaceSkill(BRD.QuickNock, BRD.Ladonsbite)]
+        [CustomComboInfo("Advanced Mode - AoE", "Weaves oGCDs onto Quick Nock/Ladonsbite.", BRD.JobID)]
+        BRD_AoE_AdvMode = 3015,
+
+        [ReplaceSkill(BRD.Stormbite)]
+        [CustomComboInfo("Simple Burst-less Mode - Single Target", "The same as Simple Mode - Single Target, but without burst cooldowns or buffs, and on another action." +
+        "\nPerfect for using if you are trying to hold your burst. Does not conflict", BRD.JobID)]
+        BRD_ST_Holdmode = 3040,
+
+        [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
+        [ConflictingCombos(BRD_ST_AdvMode, BRD_ST_SimpleMode)]
         [CustomComboInfo("Heavy Shot into Straight Shot Feature", "Replaces Heavy Shot/Burst Shot with Straight Shot/Refulgent Arrow when procced.", BRD.JobID)]
         BRD_StraightShotUpgrade = 3001,
-
-        [ConflictingCombos(BRD_ST_SimpleMode)]
+                
         [ParentCombo(BRD_StraightShotUpgrade)]
         [CustomComboInfo("DoT Maintenance Option", "Enabling this option will make Heavy Shot into Straight Shot refresh your DoTs on your current.", BRD.JobID)]
         BRD_DoTMaintainance = 3002,
+
+        [ParentCombo(BRD_StraightShotUpgrade)]
+        [CustomComboInfo("Apex Arrow Option", "Replaces Burst Shot with Apex Arrow when gauge is full and Blast Arrow when you are Blast Arrow ready.", BRD.JobID)]
+        BRD_ApexST = 3034,
 
         [ReplaceSkill(BRD.IronJaws)]
         [ConflictingCombos(BRD_IronJaws_Alternate)]
@@ -648,125 +667,127 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Iron Jaws Alternate Feature", "Iron Jaws is replaced with Caustic Bite/Stormbite if one or both are not up.\nIron Jaws will only show up when debuffs are about to expire.", BRD.JobID)]
         BRD_IronJaws_Alternate = 3004,
 
-        [ReplaceSkill(BRD.BurstShot, BRD.QuickNock)]
-        [ConflictingCombos(BRD_ST_SimpleMode)]
-        [CustomComboInfo("Burst Shot/Quick Nock to Apex Arrow Feature", "Replaces Burst Shot and Quick Nock with Apex Arrow when gauge is full and Blast Arrow when you are Blast Arrow ready.", BRD.JobID)]
+        [ParentCombo(BRD_AoE_Combo)]
+        [CustomComboInfo("Apex Arrow Option", "Replaces Ladonsbite and Quick Nock with Apex Arrow when gauge is full and Blast Arrow when you are Blast Arrow ready.", BRD.JobID)]
         BRD_Apex = 3005,
 
         [ReplaceSkill(BRD.Bloodletter)]
-        [ConflictingCombos(BRD_ST_SimpleMode)]
-        [CustomComboInfo("Single Target oGCD Feature", "All oGCD's on Bloodletter (+ Songs rotation) depending on their CD.", BRD.JobID)]
+        [CustomComboInfo("Single Target oGCD Feature", "All oGCD's on Bloodletter/Heartbreakshot (+ Songs rotation) depending on their CD.", BRD.JobID)]
         BRD_ST_oGCD = 3006,
 
-        [ReplaceSkill(BRD.RainOfDeath)]
-        [ConflictingCombos(BRD_AoE_Combo)]
+        [ReplaceSkill(BRD.RainOfDeath)]       
         [CustomComboInfo("AoE oGCD Feature", "All AoE oGCD's on Rain of Death depending on their CD.", BRD.JobID)]
         BRD_AoE_oGCD = 3007,
 
         [ReplaceSkill(BRD.QuickNock, BRD.Ladonsbite)]
-        [ConflictingCombos(BRD_AoE_SimpleMode)]
-        [CustomComboInfo("AoE Combo Feature", "Replaces Quick Nock/Ladonsbite with Shadowbite when ready.", BRD.JobID)]
+        [ConflictingCombos(BRD_AoE_AdvMode, BRD_AoE_SimpleMode)]
+        [CustomComboInfo("Quick Nock Feature", "Replaces Quick Nock/Ladonsbite with Shadowbite when ready.", BRD.JobID)]
         BRD_AoE_Combo = 3008,
+                
+        [ParentCombo(BRD_ST_AdvMode)]
+        [CustomComboInfo("Bard DoTs Option", "This option will make Bard apply DoTs if none are present on the target.", BRD.JobID)]
+        BRD_Adv_DoT = 3010,
 
-        [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
-        [ConflictingCombos(BRD_StraightShotUpgrade, BRD_DoTMaintainance, BRD_Apex, BRD_ST_oGCD, BRD_IronJawsApex)]
-        [CustomComboInfo("Simple Bard Feature", "Adds every single target ability to one button,\nIf there are DoTs on target, Simple Bard will try to maintain their uptime.", BRD.JobID)]
-        BRD_ST_SimpleMode = 3009,
-
-        [ParentCombo(BRD_ST_SimpleMode)]
-        [CustomComboInfo("Simple Bard DoTs Option", "This option will make Simple Bard apply DoTs if none are present on the target.", BRD.JobID)]
-        BRD_Simple_DoT = 3010,
-
-        [ParentCombo(BRD_ST_SimpleMode)]
-        [CustomComboInfo("Simple Bard Songs Option", "This option adds the Bard's Songs to the Simple Bard Feature.", BRD.JobID)]
-        BRD_Simple_Song = 3011,
+        [ParentCombo(BRD_ST_AdvMode)]
+        [CustomComboInfo("Bard Songs Option", "This option adds the Bard's Songs to the Advanced Bard Feature.", BRD.JobID)]
+        BRD_Adv_Song = 3011,
 
         [ParentCombo(BRD_AoE_oGCD)]
-        [CustomComboInfo("Songs Feature", "Adds Songs onto AoE oGCD Feature.", BRD.JobID)]
+        [CustomComboInfo("Songs Option", "Adds Songs onto AoE oGCD Feature.", BRD.JobID)]
         BRD_oGCDSongs = 3012,
 
+        [ReplaceSkill(BRD.Barrage)]
         [CustomComboInfo("Bard Buffs Feature", "Adds Raging Strikes and Battle Voice onto Barrage.", BRD.JobID)]
         BRD_Buffs = 3013,
 
         [ReplaceSkill(BRD.WanderersMinuet)]
         [CustomComboInfo("One Button Songs Feature", "Add Mage's Ballad and Army's Paeon to Wanderer's Minuet depending on cooldowns.", BRD.JobID)]
         BRD_OneButtonSongs = 3014,
+                
+        [ParentCombo(BRD_AoE_AdvMode)]
+        [CustomComboInfo("Bard Song Option", "Weave Songs on the Advanced AoE.", BRD.JobID)]
+        BRD_AoE_Adv_Songs = 3016,
 
-        [ReplaceSkill(BRD.QuickNock, BRD.Ladonsbite)]
-        [CustomComboInfo("Simple AoE Bard Feature", "Weaves oGCDs onto Quick Nock/Ladonsbite.", BRD.JobID)]
-        BRD_AoE_SimpleMode = 3015,
+        [ParentCombo(BRD_AoE_AdvMode)]
+        [CustomComboInfo("oGcd Option", "Weave Sidewinder, Empyreal arrow, Rain of death, and Pitch perfect when available.", BRD.JobID)]
+        BRD_AoE_Adv_oGCD = 3037,
 
-        [ParentCombo(BRD_AoE_SimpleMode)]
-        [CustomComboInfo("Simple AoE Bard Song Option", "Weave Songs on the Simple AoE.", BRD.JobID)]
-        BRD_AoE_Simple_Songs = 3016,
+        [ParentCombo(BRD_ST_AdvMode)]
+        [CustomComboInfo("oGcd Option", "Weave Sidewinder, Empyreal arrow, Rain of death, and Pitch perfect when available.", BRD.JobID)]
+        BRD_ST_Adv_oGCD = 3038,
 
-        [ParentCombo(BRD_ST_SimpleMode)]
-        [CustomComboInfo("Simple Buffs Option", "Adds buffs onto the Simple Bard feature.", BRD.JobID)]
-        BRD_Simple_Buffs = 3017,
+        [ParentCombo(BRD_ST_AdvMode)]
+        [CustomComboInfo("Buffs Option", "Adds buffs onto the Advanced Bard feature.", BRD.JobID)]
+        BRD_Adv_Buffs = 3017,
 
-        [ParentCombo(BRD_Simple_Buffs)]
-        [CustomComboInfo("Simple Buffs - Radiant Option", "Adds Radiant Finale to the Simple Buffs feature.", BRD.JobID)]
-        BRD_Simple_BuffsRadiant = 3018,
+        [ParentCombo(BRD_Adv_Buffs)]
+        [CustomComboInfo("Buffs - Radiant Option", "Adds Radiant Finale to theBuffs feature.", BRD.JobID)]
+        BRD_Adv_BuffsRadiant = 3018,
 
-        [ParentCombo(BRD_ST_SimpleMode)]
-        [CustomComboInfo("Simple No Waste Option", "Adds enemy health checking on mobs for buffs, DoTs and Songs.\nThey will not be reapplied if less than specified.", BRD.JobID)]
-        BRD_Simple_NoWaste = 3019,
+        [ParentCombo(BRD_ST_AdvMode)]
+        [CustomComboInfo("No Waste Option", "Adds enemy health checking on mobs for buffs, DoTs and Songs.\nThey will not be reapplied if less than specified.", BRD.JobID)]
+        BRD_Adv_NoWaste = 3019,
 
-        [ParentCombo(BRD_ST_SimpleMode)]
-        [CustomComboInfo("Simple Interrupt Option", "Uses interrupt during the rotation if applicable.", BRD.JobID)]
-        BRD_Simple_Interrupt = 3020,
+        [ParentCombo(BRD_ST_AdvMode)]
+        [CustomComboInfo("Interrupt Option", "Uses interrupt during the rotation if applicable.", BRD.JobID)]
+        BRD_Adv_Interrupt = 3020,
 
-        [CustomComboInfo("Disable Apex Arrow Feature", "Removes Apex Arrow from Simple Bard and AoE Feature.", BRD.JobID)]
-        BRD_RemoveApexArrow = 3021,
+        [ParentCombo(BRD_ST_AdvMode)]
+        [CustomComboInfo("Apex Arrow Option", "Adds Apex Arrow and Blast shot", BRD.JobID)]
+        BRD_ST_ApexArrow = 3021,
+
+        [ParentCombo(BRD_AoE_AdvMode)]
+        [CustomComboInfo("Apex Arrow Option", "Adds Apex Arrow and Blast shot", BRD.JobID)]
+        BRD_Aoe_ApexArrow = 3039,
 
         //[ConflictingCombos(BardoGCDSingleTargetFeature)]
         //[ParentCombo(SimpleBardFeature)]
         //[CustomComboInfo("Simple Opener", "Adds the optimum opener to simple bard.\nThis conflicts with pretty much everything outside of simple bard options due to the nature of the opener.", BRD.JobID)]
         //BardSimpleOpener = 3022,
 
-        [ParentCombo(BRD_ST_SimpleMode)]
-        [CustomComboInfo("Simple Pooling Option", "Pools Bloodletter charges to allow for optimum burst phases.", BRD.JobID)]
-        BRD_Simple_Pooling = 3023,
+        [ParentCombo(BRD_ST_AdvMode)]
+        [CustomComboInfo("Pooling Option", "Pools Bloodletter charges to allow for optimum burst phases, will also keep sidewinder in the buff window during wanderers.", BRD.JobID)]
+        BRD_Adv_Pooling = 3023,
 
-        [ConflictingCombos(BRD_ST_SimpleMode)]
         [ParentCombo(BRD_IronJaws)]
         [CustomComboInfo("Iron Jaws Apex Option", "Adds Apex and Blast Arrow to Iron Jaws when available.", BRD.JobID)]
         BRD_IronJawsApex = 3024,
 
-        [ParentCombo(BRD_ST_SimpleMode)]
-        [CustomComboInfo("Simple Raging Jaws Option", "Enable the snapshotting of DoTs, within the remaining time of Raging Strikes below:", BRD.JobID)]
-        BRD_Simple_RagingJaws = 3025,
+        [ParentCombo(BRD_ST_AdvMode)]
+        [CustomComboInfo("Raging Jaws Option", "Enable the snapshotting of DoTs, within the remaining time of Raging Strikes below:", BRD.JobID)]
+        BRD_Adv_RagingJaws = 3025,
 
         //[ParentCombo(BRD_AoE_Simple_Songs)]
         //[CustomComboInfo("Exclude Wanderer's Minuet Option", "Dont use Wanderer's Minuet.", BRD.JobID)]
         //BRD_AoE_Simple_SongsExcludeWM = 3027,
 
-        [ParentCombo(BRD_ST_SimpleMode)]
+        [ParentCombo(BRD_ST_AdvMode)]
         [CustomComboInfo("Second Wind Option", "Uses Second Wind when below set HP percentage.", BRD.JobID)]
         BRD_ST_SecondWind = 3028,
 
-        [ParentCombo(BRD_AoE_SimpleMode)]
+        [ParentCombo(BRD_AoE_AdvMode)]
         [CustomComboInfo("Second Wind Option", "Uses Second Wind when below set HP percentage.", BRD.JobID)]
         BRD_AoE_SecondWind = 3029,
 
         [Variant]
-        [VariantParent(BRD_ST_SimpleMode, BRD_AoE_SimpleMode)]
+        [VariantParent(BRD_ST_AdvMode, BRD_AoE_AdvMode)]
         [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", BRD.JobID)]
         BRD_Variant_Rampart = 3030,
 
         [Variant]
-        [VariantParent(BRD_ST_SimpleMode, BRD_AoE_SimpleMode)]
+        [VariantParent(BRD_ST_AdvMode, BRD_AoE_AdvMode)]
         [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", BRD.JobID)]
         BRD_Variant_Cure = 3031,
 
-        [ParentCombo(BRD_AoE_Simple_Songs)]
-        [CustomComboInfo("Simple AoE Buffs Option", "Adds buffs onto the Simple AoE Bard feature.", BRD.JobID)]
-        BRD_AoE_Simple_Buffs = 3032,
+        [ParentCombo(BRD_AoE_Adv_Songs)]
+        [CustomComboInfo("AoE Buffs Option", "Adds buffs onto the Advance AoE Bard feature.", BRD.JobID)]
+        BRD_AoE_Adv_Buffs = 3032,
 
-        [ParentCombo(BRD_AoE_SimpleMode)]
-        [CustomComboInfo("Simple AoE No Waste Option", "Adds enemy health checking on targetted mob for songs.\nThey will not be reapplied if less than specified.", BRD.JobID)]
-        BRD_AoE_Simple_NoWaste = 3033,
-        // Last value = 3033
+        [ParentCombo(BRD_AoE_AdvMode)]
+        [CustomComboInfo("AoE No Waste Option", "Adds enemy health checking on targetted mob for songs.\nThey will not be reapplied if less than specified.", BRD.JobID)]
+        BRD_AoE_Adv_NoWaste = 3033,
+               
+        // Last value = 3040
 
         #endregion
 
@@ -1504,264 +1525,201 @@ namespace XIVSlothCombo.Combos
 
         #region GUNBREAKER
 
-        #region Simple ST
-        [ConflictingCombos(GNB_ST_Advanced, GNB_NM_Features)]
-        [ReplaceSkill(GNB.KeenEdge)]
-        [CustomComboInfo("Simple Mode - Single Target", "Replace Keen Edge with its combo chain.\n This is the ideal selection for newcomers to the job.", GNB.JobID)]
-        GNB_ST_Simple = 7001,
-        #endregion
-
-        #region Simple AOE
-        [ConflictingCombos(GNB_AoE_Advanced, GNB_NM_Features)]
-        [ReplaceSkill(GNB.DemonSlice)]
-        [CustomComboInfo("Simple Mode - AoE", "Replace Demon Slice with its combo chain.\n This is the ideal selection for newcomers to the job.", GNB.JobID)]
-        GNB_AoE_Simple = 7002,
-        #endregion
-
-        #region Advanced ST
-        [ConflictingCombos(GNB_ST_Simple)]
+        #region ST
         [ReplaceSkill(GNB.KeenEdge)]
         [CustomComboInfo("Advanced Mode - Single Target", "Replace Keen Edge with its combo chain.\n Uses Burst Strike when you have 3 cartridges & your last combo action was Brutal Shell.", GNB.JobID)]
-        GNB_ST_Advanced = 7003,
+        GNB_ST_MainCombo = 7001,
 
         #region Lightning Shot
-        [ParentCombo(GNB_ST_Advanced)]
+        [ParentCombo(GNB_ST_MainCombo)]
         [CustomComboInfo("Lightning Shot Uptime Option", "Adds Lightning Shot to the main combo when you are out of range.", GNB.JobID)]
-        GNB_ST_RangedUptime = 7004,
+        GNB_ST_RangedUptime = 7002,
         #endregion
 
         #region Gnashing Fang
-        [ParentCombo(GNB_ST_Advanced)]
-        [CustomComboInfo("Continuation Option", "Adds Continuation to the main combo.\n 'Gnashing Fang Starter' option must be enabled or started manually.", GNB.JobID)]
-        GNB_ST_Continuation = 7005,
+        [ParentCombo(GNB_ST_MainCombo)]
+        [CustomComboInfo("Gnashing Fang & Continuation Option", "Adds Gnashing Fang to the main combo.\n Gnashing Fang Starter option must be enabled or started manually and Sloth will finish it off.", GNB.JobID)]
+        GNB_ST_Gnashing = 7003,
 
-        [ParentCombo(GNB_ST_Continuation)]
+        [ParentCombo(GNB_ST_Gnashing)]
         [CustomComboInfo("Gnashing Fang Starter Option", "Begins Gnashing Fang for you on the main combo.", GNB.JobID)]
-        GNB_ST_GnashingStarter = 7006,
+        GNB_ST_GnashingFang_Starter = 7004,
         #endregion
 
         #region Cooldowns
-        [ParentCombo(GNB_ST_Advanced)]
-        [CustomComboInfo("Cooldowns Option", "Adds various cooldowns to the main combo.", GNB.JobID)]
-        GNB_ST_Advanced_CooldownsGroup = 7007,
+        [ParentCombo(GNB_ST_MainCombo)]
+        [CustomComboInfo("Cooldowns Option", "Adds various cooldowns to the main combo when under No Mercy or when No Mercy is on cooldown.", GNB.JobID)]
+        GNB_ST_MainCombo_CooldownsGroup = 7005,
 
-        [ConflictingCombos(GNB_NM_Features)]
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ConflictingCombos(GNB_NoMercy_Cooldowns)]
+        [ParentCombo(GNB_ST_MainCombo_CooldownsGroup)]
         [CustomComboInfo("No Mercy Option", "Adds No Mercy to the main combo when at full ammo.", GNB.JobID)]
-        GNB_ST_NoMercy = 7008,
+        GNB_ST_NoMercy = 7006,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_MainCombo_CooldownsGroup)]
         [CustomComboInfo("Danger/Blasting Zone Option", "Adds Danger/Blasting Zone to the main combo.", GNB.JobID)]
-        GNB_ST_BlastingZone = 7009,
+        GNB_ST_BlastingZone = 7007,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_MainCombo_CooldownsGroup)]
         [CustomComboInfo("Bow Shock Option", "Adds Bow Shock to the main combo.", GNB.JobID)]
-        GNB_ST_BowShock = 7010,
+        GNB_ST_BowShock = 7008,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_MainCombo_CooldownsGroup)]
         [CustomComboInfo("Bloodfest Option", "Adds Bloodfest to the main combo when ammo is 0.", GNB.JobID)]
-        GNB_ST_Bloodfest = 7011,
+        GNB_ST_Bloodfest = 7009,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_MainCombo_CooldownsGroup)]
         [CustomComboInfo("Sonic Break Option", "Adds Sonic Break to the main combo.", GNB.JobID)]
-        GNB_ST_SonicBreak = 7012,
+        GNB_ST_SonicBreak = 7010,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_MainCombo_CooldownsGroup)]
         [CustomComboInfo("Double Down Option", "Adds Double Down to the main combo when under No Mercy buff.", GNB.JobID)]
-        GNB_ST_DoubleDown = 7013,
+        GNB_ST_DoubleDown = 7011,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_MainCombo_CooldownsGroup)]
         [CustomComboInfo("Reign combo Option", "Adds Reign/Noble/Lionheart to the main combo.", GNB.JobID)]
-        GNB_ST_Reign = 7014,
+        GNB_ST_Reign = 7012,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_MainCombo_CooldownsGroup)]
         [CustomComboInfo("Burst Strike Option", "Adds Burst Strike and Hypervelocity (when available) to the main combo when under No Mercy and Gnashing Fang is over.", GNB.JobID)]
-        GNB_ST_BurstStrike = 7015,
+        GNB_ST_BurstStrike = 7013,
         #endregion
 
-        #endregion 
-
-        #region Advanced AoE
-        [ConflictingCombos(GNB_AoE_Simple)]
+        #region AoE
         [ReplaceSkill(GNB.DemonSlice)]
         [CustomComboInfo("Advanced Mode - AoE", "Replace Demon Slice with its combo chain.", GNB.JobID)]
-        GNB_AoE_Advanced = 7200,
+        GNB_AoE_MainCombo = 7200,
 
-        [ConflictingCombos(GNB_NM_Features)]
-        [ParentCombo(GNB_AoE_Advanced)]
-        [CustomComboInfo("No Mercy Option", "Adds No Mercy to the AoE combo when appropriate.", GNB.JobID)]
+        [ConflictingCombos(GNB_NoMercy_Cooldowns)]
+        [ParentCombo(GNB_AoE_MainCombo)]
+        [CustomComboInfo("No Mercy Option", "Adds No Mercy to the AoE combo when it's available.", GNB.JobID)]
         GNB_AoE_NoMercy = 7201,
 
-        [ParentCombo(GNB_AoE_Advanced)]
-        [CustomComboInfo("Danger/Blasting Zone Option", "Adds Danger/Blasting Zone to the AoE combo when appropriate.", GNB.JobID)]
-        GNB_AoE_DangerZone = 7202,
+        [ParentCombo(GNB_AoE_MainCombo)]
+        [CustomComboInfo("Danger/Blasting Zone Option", "Adds Danger/Blasting Zone to the AoE combo when it's available.", GNB.JobID)]
+        GNB_AOE_DangerZone = 7202,
 
-        [ParentCombo(GNB_AoE_Advanced)]
-        [CustomComboInfo("Bow Shock Option", "Adds Bow Shock onto the AoE combo when appropriate.", GNB.JobID)]
+        [ParentCombo(GNB_AoE_MainCombo)]
+        [CustomComboInfo("Bow Shock Option", "Adds Bow Shock onto the AoE combo when it's available.", GNB.JobID)]
         GNB_AoE_BowShock = 7203,
 
-        [ParentCombo(GNB_AoE_Advanced)]
-        [CustomComboInfo("Bloodfest Option", "Adds Bloodfest to the AoE combo when appropriate.", GNB.JobID)]
+        [ParentCombo(GNB_AoE_MainCombo)]
+        [CustomComboInfo("Bloodfest AoE Option", "Adds Bloodfest to the AoE combo when it's available.\n Will spend cartridges through Fated Circle to prepare for Bloodfest usage.", GNB.JobID)]
         GNB_AoE_Bloodfest = 7204,
 
-        [ParentCombo(GNB_AoE_Advanced)]
-        [CustomComboInfo("Sonic Break Option", "Adds Sonic Break to the AoE combo when appropriate.", GNB.JobID)]
-        GNB_AoE_SonicBreak = 7205,
+        [ParentCombo(GNB_AoE_MainCombo)]
+        [CustomComboInfo("Sonic Break Option", "Adds Sonic Break to the AoE combo when it's available.", GNB.JobID)]
+        GNB_AOE_SonicBreak = 7205,
 
-        [ParentCombo(GNB_AoE_Advanced)]
-        [CustomComboInfo("Double Down Option", "Adds Double Down to the AoE combo when appropriate.", GNB.JobID)]
+        [ParentCombo(GNB_AoE_MainCombo)]
+        [CustomComboInfo("Double Down AoE Option", "Adds Double Down to the AoE combo when it's available and you have 2 or more cartrdiges.", GNB.JobID)]
         GNB_AoE_DoubleDown = 7206,
 
-        [ParentCombo(GNB_AoE_Advanced)]
-        [CustomComboInfo("Reign Combo Option", "Adds Reign/Noble/LionHeart to the AoE combo when appropriate.", GNB.JobID)]
-        GNB_AoE_Reign = 7207,
-
-        [ParentCombo(GNB_AoE_Advanced)]
-        [CustomComboInfo("Fated Circle Option", "Adds Fated Circle to the AoE combo when appropriate.", GNB.JobID)]
-        GNB_AoE_FatedCircle = 7208,
-
-        [ParentCombo(GNB_AoE_Advanced)]
+        [ParentCombo(GNB_AoE_MainCombo)]
         [CustomComboInfo("Ammo Overcap Option", "Adds Fated Circle to the AoE combo when about to overcap.", GNB.JobID)]
-        GNB_AoE_Overcap = 7209,
+        GNB_AOE_Overcap = 7207,
         #endregion
 
         #region Gnashing Fang
         [ReplaceSkill(GNB.GnashingFang)]
-        [CustomComboInfo("Gnashing Fang Features", "Collection of Gnashing Fang related features.\n Enable all for this to be an all-in-one Single Target Burst button.", GNB.JobID)]
-        GNB_GF_Features = 7300,
+        [CustomComboInfo("Gnashing Fang Features", "Collection of Gnashing Fang related features.", GNB.JobID)]
+        GNB_GF_Continuation = 7300,
 
-        [ParentCombo(GNB_GF_Features)]
-        [CustomComboInfo("Continuation Option", "Adds Continuation to Gnashing Fang when available.", GNB.JobID)]
-        GNB_GF_Continuation = 7301,
+        [ParentCombo(GNB_GF_Continuation)]
+        [CustomComboInfo("Cooldowns on Gnashing Fang Option", "Adds Bloodfest/Bow Shock/Blasting Zone on Gnashing Fang, order dependent on No Mercy buff.", GNB.JobID)]
+        GNB_GF_Cooldowns = 7301,
 
-        [ConflictingCombos(GNB_ST_NoMercy)]
-        [ParentCombo(GNB_GF_Features)]
-        [CustomComboInfo("No Mercy Option", "Adds No Mercy to Gnashing Fang when available.", GNB.JobID)]
+        [ParentCombo(GNB_GF_Continuation)]
+        [CustomComboInfo("No Mercy on Gnashing Fang Option", "Adds No Mercy to Gnashing Fang when available.", GNB.JobID)]
         GNB_GF_NoMercy = 7302,
 
-        [ParentCombo(GNB_GF_Features)]
-        [CustomComboInfo("Danger/Blasting Zone Option", "Adds Danger/Blasting Zone to Gnashing Fang when available.", GNB.JobID)]
-        GNB_GF_Zone = 7303,
+        [ParentCombo(GNB_GF_Continuation)]
+        [CustomComboInfo("Double Down on Gnashing Fang Option", "Adds Double Down to Gnashing Fang under No Mercy when appropriate.", GNB.JobID)]
+        GNB_GF_DoubleDown = 7303,
 
-        [ParentCombo(GNB_GF_Features)]
-        [CustomComboInfo("Bow Shock Option", "Adds Bow Shock to Gnashing Fang when available.", GNB.JobID)]
-        GNB_GF_BowShock = 7304,
+        [ParentCombo(GNB_GF_Continuation)]
+        [CustomComboInfo("Sonic Break on Gnashing Fang Option", "Adds Sonic Break on Gnashing Fang under No Mercy when appropriate.", GNB.JobID)]
+        GNB_GF_SonicBreak = 7304,
 
-        [ParentCombo(GNB_GF_Features)]
-        [CustomComboInfo("Bloodfest Option", "Adds Bloodfest to Gnashing Fang when available.", GNB.JobID)]
-        GNB_GF_Bloodfest = 7305,
+        [ParentCombo(GNB_GF_Continuation)]
+        [CustomComboInfo("Burst Strike on Gnashing Fang Option", "Adds Burst Strike on Gnashing Fang under No Mercy when appropriate.", GNB.JobID)]
+        GNB_GF_BurstStrike = 7305,
 
-        [ParentCombo(GNB_GF_Features)]
-        [CustomComboInfo("Sonic Break Option", "Adds Sonic Break on Gnashing Fang under No Mercy when appropriate.", GNB.JobID)]
-        GNB_GF_SonicBreak = 7306,
-
-        [ParentCombo(GNB_GF_Features)]
-        [CustomComboInfo("Double Down Option", "Adds Double Down to Gnashing Fang under No Mercy when appropriate.", GNB.JobID)]
-        GNB_GF_DoubleDown = 7307,
-
-        [ParentCombo(GNB_GF_Features)]
-        [CustomComboInfo("Reign combo Option", "Adds Reign combo on Gnashing Fang under No Mercy when appropriate.", GNB.JobID)]
-        GNB_GF_Reign = 7308,
-
-        [ParentCombo(GNB_GF_Features)]
-        [CustomComboInfo("Burst Strike Option", "Adds Burst Strike on Gnashing Fang under No Mercy when appropriate.", GNB.JobID)]
-        GNB_GF_BurstStrike = 7309,
-
+        [ParentCombo(GNB_GF_Continuation)]
+        [CustomComboInfo("Reign combo on Gnashing Fang Option", "Adds Reign combo on Gnashing Fang under No Mercy when appropriate.", GNB.JobID)]
+        GNB_GF_Reign = 7306,
         #endregion
 
         #region Burst Strike
         [ReplaceSkill(GNB.BurstStrike)]
         [CustomComboInfo("Burst Strike Features", "Collection of Burst Strike related features.", GNB.JobID)]
-        GNB_BS_Features = 7400,
+        GNB_BS = 7400,
 
-        [ParentCombo(GNB_BS_Features)]
-        [CustomComboInfo("Hypervelocity Option", "Adds Continuation (Hypervelocity) to Burst Strike when available.", GNB.JobID)]
+        [ParentCombo(GNB_BS)]
+        [CustomComboInfo("Burst Strike Continuation Feature", "Adds Hypervelocity on Burst Strike.", GNB.JobID)]
         GNB_BS_Continuation = 7401,
 
-        [ParentCombo(GNB_BS_Features)]
-        [CustomComboInfo("Bloodfest Option", "Adds Bloodfest to Burst Strike when approrpiate.", GNB.JobID)]
+        [ParentCombo(GNB_BS)]
+        [CustomComboInfo("Burst Strike to Bloodfest Feature", "Replace Burst Strike with Bloodfest if you have no powder gauge.", GNB.JobID)]
         GNB_BS_Bloodfest = 7402,
 
-        [ParentCombo(GNB_BS_Features)]
-        [CustomComboInfo("Double Down Option", "Adds Double Down to Burst Strike when appropriate.", GNB.JobID)]
+        [ParentCombo(GNB_BS)]
+        [CustomComboInfo("Double Down on Burst Strike Feature", "Adds Double Down to Burst Strike when under No Mercy and ammo is above 2.", GNB.JobID)]
         GNB_BS_DoubleDown = 7403,
 
-        [ParentCombo(GNB_BS_Features)]
-        [CustomComboInfo("Reign Combo Option", "Adds Reign/Noble/Lionheart to Burst Strike when appropriate.", GNB.JobID)]
+        [ParentCombo(GNB_BS)]
+        [CustomComboInfo("Reign combo on Burst Strike Feature", "Adds Reign/Noble/Lionheart to Burst Strike when under No Mercy and when Double Down & Gnashing Fang are on cooldown.", GNB.JobID)]
         GNB_BS_Reign = 7404,
         #endregion
 
         #region No Mercy
-        [ConflictingCombos(GNB_ST_Simple, GNB_AoE_Simple, GNB_ST_NoMercy, GNB_AoE_NoMercy, GNB_GF_NoMercy)]
+        [ConflictingCombos(GNB_ST_NoMercy, GNB_AoE_NoMercy)]
         [ReplaceSkill(GNB.NoMercy)]
         [CustomComboInfo("No Mercy Features", "Collection of No Mercy related features.", GNB.JobID)]
-        GNB_NM_Features = 7500,
+        GNB_NoMercy_Cooldowns = 7500,
 
-        [ParentCombo(GNB_NM_Features)]
-        [CustomComboInfo("Bloodfest Option", "Adds Bloodfest to No Mercy when appropriate.", GNB.JobID)]
-        GNB_NM_Bloodfest = 7501,
+        [ParentCombo(GNB_NoMercy_Cooldowns)]
+        [CustomComboInfo("Double Down Option", "Adds Double Down to No Mercy when No Mercy is on cooldown.", GNB.JobID)]
+        GNB_NoMercy_Cooldowns_DD = 7501,
 
-        [ParentCombo(GNB_NM_Features)]
-        [CustomComboInfo("Danger/Blasting Zone Option", "Adds Danger/Blasting Zone to No Mercy.", GNB.JobID)]
-        GNB_NM_Zone = 7502,
-
-        [ParentCombo(GNB_NM_Features)]
-        [CustomComboInfo("Bow Shock Option", "Adds Bow Shock to No Mercy appropriately after No Mercy is used.", GNB.JobID)]
-        GNB_NM_BS = 7503,
-
-        [ParentCombo(GNB_NM_Features)]
-        [CustomComboInfo("Sonic Break Option", "Adds Sonic Break to No Mercy appropriately after No Mercy is used.", GNB.JobID)]
-        GNB_NM_SB = 7504,
-
-        [ParentCombo(GNB_NM_Features)]
-        [CustomComboInfo("Double Down Option", "Adds Double to No Mercy appropriately after No Mercy is used.", GNB.JobID)]
-        GNB_NM_DD = 7505,
-
-        [ParentCombo(GNB_NM_Features)]
-        [CustomComboInfo("Reign Option", "Adds Reign to No Mercy appropriately after No Mercy is used.", GNB.JobID)]
-        GNB_NM_Reign = 7506,
+        [ParentCombo(GNB_NoMercy_Cooldowns)]
+        [CustomComboInfo("Sonic Break/Bow Shock Option", "Adds Sonic Break and Bow Shock to No Mercy when No Mercy is on cooldown.", GNB.JobID)]
+        GNB_NoMercy_Cooldowns_SonicBreakBowShock = 7502,
         #endregion
 
         #region Fated Circle
         [ReplaceSkill(GNB.FatedCircle)]
         [CustomComboInfo("Fated Circle Features", "Collection of Fated Circle related features.", GNB.JobID)]
-        GNB_FC_Features = 7600,
+        GNB_FC = 7600,
 
-        [ParentCombo(GNB_FC_Features)]
-        [CustomComboInfo("Fated Brand Option", "Adds Continuation (Fated Brand) on Fated Circle.", GNB.JobID)]
+        [ParentCombo(GNB_FC)]
+        [CustomComboInfo("Fated Circle Continuation Feature", "Adds Continuation on Fated Circle.", GNB.JobID)]
         GNB_FC_Continuation = 7601,
 
-        [ParentCombo(GNB_FC_Features)]
-        [CustomComboInfo("Bloodfest Option", "Adds Bloodfest to fated Circle when appropriate.", GNB.JobID)]
+        [ParentCombo(GNB_FC)]
+        [CustomComboInfo("Fated Circle to Bloodfest Feature", "Replace Fated Circle with Bloodfest if you have no powder gauge.", GNB.JobID)]
         GNB_FC_Bloodfest = 7602,
 
-        [ParentCombo(GNB_FC_Features)]
-        [CustomComboInfo("Double Down Option", "Adds Double Down to Fated Circle when appropriate.", GNB.JobID)]
+        [ParentCombo(GNB_FC)]
+        [CustomComboInfo("Double Down on Fated Circle Feature", "Adds Double Down to Fated Circle when under No Mercy and ammo is above 2.", GNB.JobID)]
         GNB_FC_DoubleDown = 7603,
-
-        [ParentCombo(GNB_FC_Features)]
-        [CustomComboInfo("Reign Option", "Adds Reign/Noble/LionHeart to Fated Circle when appropriate.", GNB.JobID)]
-        GNB_FC_Reign = 7604,
         #endregion
 
-        #region Aurora
         [CustomComboInfo("Aurora Protection Feature", "Locks out Aurora if Aurora's effect is on the target.", GNB.JobID, 0, "", "")]
         GNB_AuroraProtection = 7700,
-        #endregion
 
-        #region Variant Skills
         [Variant]
-        [VariantParent(GNB_ST_Advanced, GNB_AoE_Advanced)]
+        [VariantParent(GNB_ST_MainCombo, GNB_AoE_MainCombo)]
         [CustomComboInfo("Spirit Dart Option", "Use Variant Spirit Dart whenever the debuff is not present or less than 3s.", GNB.JobID)]
         GNB_Variant_SpiritDart = 7033,
 
         [Variant]
-        [VariantParent(GNB_ST_Advanced, GNB_AoE_Advanced)]
+        [VariantParent(GNB_ST_MainCombo, GNB_AoE_MainCombo)]
         [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", GNB.JobID)]
         GNB_Variant_Cure = 7034,
 
         [Variant]
-        [VariantParent(GNB_ST_Advanced, GNB_AoE_Advanced)]
+        [VariantParent(GNB_ST_MainCombo, GNB_AoE_MainCombo)]
         [CustomComboInfo("Ultimatum Option", "Use Variant Ultimatum on cooldown.", GNB.JobID)]
         GNB_Variant_Ultimatum = 7035,
         #endregion
@@ -1987,132 +1945,147 @@ namespace XIVSlothCombo.Combos
 
         #region MONK
 
-        [ReplaceSkill([MNK.ArmOfTheDestroyer])]
-        [CustomComboInfo("Simple Mode - AoE", "Replaces Arm of the Destroyer with a one-button full single target rotation.\nThis is ideal for newcomers to the job.", MNK.JobID)]
-        MNK_AOE_SimpleMode = 9003,
+        [ReplaceSkill(MNK.ArmOfTheDestroyer)]
+        [CustomComboInfo("Arm of the Destroyer Combo", "Replaces Arm Of The Destroyer with its combo chain.", MNK.JobID)]
+        MNK_AoE_SimpleMode = 9000,
 
-        [ReplaceSkill([MNK.Bootshine])]
-        [CustomComboInfo("Simple Mode - Single Target", "Replaces Bootshine with a one - button full single target rotation.\nThis is ideal for newcomers to the job.", MNK.JobID)]
-        [ConflictingCombos(MNK_ST_BeastChakras, MNK_ST_AdvancedMode)]
-        MNK_ST_SimpleMode = 9004,
-
-        #region Monk Advanced ST
-        [ReplaceSkill([MNK.Bootshine])]
-        [CustomComboInfo("Advanced Mode - Single Target", "Replaces Bootshine with a one-button full single target rotation.\nThese features are ideal if you want to customize the rotation.", MNK.JobID)]
-        [ConflictingCombos(MNK_ST_BeastChakras, MNK_ST_SimpleMode)]
-        MNK_ST_AdvancedMode = 9005,
-
-        [ParentCombo(MNK_ST_AdvancedMode)]
-        [CustomComboInfo("Opener Option", "Uses selected opener", MNK.JobID)]
-        MNK_STUseOpener = 9006,
-
-        [ParentCombo(MNK_ST_AdvancedMode)]
-        [CustomComboInfo("Meditation Option", "Adds Meditation to the rotation", MNK.JobID)]
-        MNK_STUseMeditation = 9007,
-
-        [ParentCombo(MNK_ST_AdvancedMode)]
-        [CustomComboInfo("Buffs Option", "Adds selected buffs to the rotation", MNK.JobID)]
-        MNK_STUseBuffs = 9008,
-
-        [ParentCombo(MNK_STUseBuffs)]
-        [CustomComboInfo("Brotherhood Option", "Adds Brotherhood to the rotation", MNK.JobID)]
-        MNK_STUseBrotherhood = 9009,
-
-        [ParentCombo(MNK_STUseBuffs)]
-        [CustomComboInfo("Riddle of Wind Option", "Adds Riddle of Wind to the rotation", MNK.JobID)]
-        MNK_STUseROW = 9010,
-
-        [ParentCombo(MNK_STUseBuffs)]
-        [CustomComboInfo("Riddle of Fire Option", "Adds Riddle of Fire to the rotation", MNK.JobID)]
-        MNK_STUseROF = 9011,
-
-        [ParentCombo(MNK_ST_AdvancedMode)]
-        [CustomComboInfo("The Forbidden Chakra Option", "Adds The Forbidden Chakra to the rotation", MNK.JobID)]
-        MNK_STUseTheForbiddenChakra = 9012,
-
-        [ParentCombo(MNK_ST_AdvancedMode)]
-        [CustomComboInfo("Perfect Balance Option", "Adds Perfect Balance and Masterful Blitz to the rotation", MNK.JobID)]
-        MNK_STUsePerfectBalance = 9013,
-
-        [ParentCombo(MNK_ST_AdvancedMode)]
-        [CustomComboInfo("True North Option", "Adds True North dynamically, when not in positional, to the rotation", MNK.JobID)]
-        MNK_STUseTrueNorth = 9014,
-
-        [ParentCombo(MNK_STUseROW)]
-        [CustomComboInfo("Wind's Reply Option", "Adds Wind's Reply to the rotation", MNK.JobID)]
-        MNK_STUseWindsReply = 9015,
-
-        [ParentCombo(MNK_STUseROF)]
-        [CustomComboInfo("Fire's Reply Option", "Adds Fire's Reply to the rotation", MNK.JobID)]
-        MNK_STUseFiresReply = 9016,
-
-        [ParentCombo(MNK_ST_AdvancedMode)]
-        [CustomComboInfo("Form Shift Option", "Adds Form Shift to the rotation", MNK.JobID)]
-        MNK_STUseFormShift = 9017,
-
-        [ParentCombo(MNK_ST_AdvancedMode)]
-        [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the rotation.", MNK.JobID)]
-        MNK_ST_ComboHeals = 9018,
-
-        #endregion
-
-        #region Monk Beast Chakras
-
-        [ConflictingCombos(MNK_ST_AdvancedMode, MNK_ST_SimpleMode)]
-        [CustomComboInfo("Beast Chakra Handlers", "Merge single target GCDs which share the same beast chakra", MNK.JobID)]
-        MNK_ST_BeastChakras = 9019,
-
-        [ReplaceSkill(MNK.Bootshine)]
-        [CustomComboInfo("Opo-opo Option", "Replace Bootshine/Leaping Opo with Dragon Kick.", MNK.JobID)]
-        [ParentCombo(MNK_ST_BeastChakras)]
-        MNK_BC_OPOOPO = 9020,
+        [ReplaceSkill(MNK.DragonKick)]
+        [CustomComboInfo("Dragon Kick --> Bootshine Feature", "Replaces Dragon Kick with Bootshine if both a form and Leaden Fist are up.", MNK.JobID)]
+        MNK_DragonKick_Bootshine = 9001,
 
         [ReplaceSkill(MNK.TrueStrike)]
-        [CustomComboInfo("Raptor Option", "Replace True Strike/Rising Raptor with Twin Snakes.", MNK.JobID)]
-        [ParentCombo(MNK_ST_BeastChakras)]
-        MNK_BC_RAPTOR = 9021,
+        [CustomComboInfo("Twin Snakes Feature", "Replaces True Strike with Twin Snakes if Disciplined Fist is not applied or is less than 6 seconds from falling off.", MNK.JobID)]
+        MNK_TwinSnakes = 9011,
 
-        [ReplaceSkill(MNK.SnapPunch)]
-        [CustomComboInfo("Coeurl Option", "Replace Snap Punch/Pouncing Coeurl with Demolish.", MNK.JobID)]
-        [ParentCombo(MNK_ST_BeastChakras)]
-        MNK_BC_COEURL = 9022,
-
-        #endregion
+        [ReplaceSkill(MNK.Bootshine)]
+        [ConflictingCombos(MNK_ST_SimpleMode)]
+        [CustomComboInfo("Basic Rotation", "Basic Monk Combo on one button", MNK.JobID)]
+        MNK_BasicCombo = 9002,
 
         [ReplaceSkill(MNK.PerfectBalance)]
         [CustomComboInfo("Perfect Balance Feature", "Perfect Balance becomes Masterful Blitz while you have 3 Beast Chakra.", MNK.JobID)]
-        MNK_PerfectBalance = 9023,
+        MNK_PerfectBalance = 9003,
+
+        [ReplaceSkill(MNK.DragonKick)]
+        [CustomComboInfo("Bootshine Balance Feature", "Replaces Dragon Kick with Masterful Blitz if you have 3 Beast Chakra.", MNK.JobID)]
+        MNK_BootshineBalance = 9004,
+
+        [ReplaceSkill(MNK.HowlingFist, MNK.Enlightenment)]
+        [CustomComboInfo("Howling Fist/Meditation Feature", "Replaces Howling Fist/Enlightenment with Meditation when the Fifth Chakra is not open.", MNK.JobID)]
+        MNK_HowlingFistMeditation = 9005,
+
+        [ReplaceSkill(MNK.Bootshine)]
+        [ConflictingCombos(MNK_BasicCombo)]
+        [CustomComboInfo("Bootshine Combo", "Replace Bootshine with its combo chain. \nIf all sub options are selected will turn into a full one button rotation (Simple Monk). Slider values can be used to control Disciplined Fist + Demolish uptime.", MNK.JobID, -2, "", "")]
+        MNK_ST_SimpleMode = 9006,
+
+        [ReplaceSkill(MNK.MasterfulBlitz)]
+        [CustomComboInfo("Perfect Balance Feature Plus", "All of the (optimal?) Blitz combos on Masterful Blitz when Perfect Balance is active", MNK.JobID)]
+        MNK_PerfectBalance_Plus = 9007,
+
+        [ParentCombo(MNK_ST_SimpleMode)]
+        [CustomComboInfo("Masterful Blitz on Main Combo", "Adds Masterful Blitz to the main combo", MNK.JobID)]
+        MNK_ST_Simple_MasterfulBlitz = 9008,
+
+        [ParentCombo(MNK_AoE_SimpleMode)]
+        [CustomComboInfo("Masterful Blitz to AoE Combo", "Adds Masterful Blitz to the AoE combo.", MNK.JobID)]
+        MNK_AoE_Simple_MasterfulBlitz = 9009,
 
         [ReplaceSkill(MNK.RiddleOfFire)]
         [CustomComboInfo("Riddle of Fire/Brotherhood Feature", "Replaces Riddle of Fire with Brotherhood when Riddle of Fire is on cooldown.", MNK.JobID)]
-        MNK_Riddle_Brotherhood = 9024,
+        MNK_Riddle_Brotherhood = 9012,
 
-        #region Variant
+        [ParentCombo(MNK_ST_SimpleMode)]
+        [CustomComboInfo("CDs on Main Combo", "Adds various CDs to the main combo when under Riddle of Fire or when Riddle of Fire is on cooldown.", MNK.JobID)]
+        MNK_ST_Simple_CDs = 9013,
+
+        [ParentCombo(MNK_ST_Simple_CDs)]
+        [CustomComboInfo("Riddle of Wind on Main Combo", "Adds Riddle of Wind to the main combo.", MNK.JobID)]
+        MNK_ST_Simple_CDs_RiddleOfWind = 9014,
+
+        [ParentCombo(MNK_ST_Simple_CDs)]
+        [CustomComboInfo("Perfect Balance on Main Combo", "Adds Perfect Balance to the main combo.", MNK.JobID)]
+        MNK_ST_Simple_CDs_PerfectBalance = 9015,
+
+        [ParentCombo(MNK_ST_Simple_CDs)]
+        [CustomComboInfo("Brotherhood on Main Combo", "Adds Brotherhood to the main combo.", MNK.JobID)]
+        MNK_ST_Simple_CDs_Brotherhood = 9016,
+
+        [ParentCombo(MNK_ST_SimpleMode)]
+        [CustomComboInfo("Meditation on Main Combo", "Adds Meditation spender to the main combo.", MNK.JobID)]
+        MNK_ST_Simple_Meditation = 9017,
+
+        [ParentCombo(MNK_ST_SimpleMode)]
+        [CustomComboInfo("Lunar Solar Opener", "Start with the Lunar Solar Opener on the main combo. Requires level 68 for Riddle of Fire.\nA 1.93/1.94 GCD is highly recommended.", MNK.JobID)]
+        MNK_ST_Simple_LunarSolarOpener = 9018,
+
+        [ParentCombo(MNK_AoE_SimpleMode)]
+        [CustomComboInfo("CDs on AoE Combo", "Adds various CDs to the AoE combo when under Riddle of Fire or when Riddle of Fire is on cooldown.", MNK.JobID)]
+        MNK_AoE_Simple_CDs = 9019,
+
+        [ParentCombo(MNK_AoE_Simple_CDs)]
+        [CustomComboInfo("Riddle of Wind on AoE Combo", "Adds Riddle of Wind to the AoE combo.", MNK.JobID)]
+        MNK_AoE_Simple_CDs_RiddleOfWind = 9020,
+
+        [ParentCombo(MNK_AoE_Simple_CDs)]
+        [CustomComboInfo("Perfect Balance on AoE Combo", "Adds Perfect Balance to the AoE combo.", MNK.JobID)]
+        MNK_AoE_Simple_CDs_PerfectBalance = 9021,
+
+        [ParentCombo(MNK_AoE_Simple_CDs)]
+        [CustomComboInfo("Brotherhood on AoE Combo", "Adds Brotherhood to the AoE combo.", MNK.JobID)]
+        MNK_AoE_Simple_CDs_Brotherhood = 9022,
+
+        [ParentCombo(MNK_AoE_SimpleMode)]
+        [CustomComboInfo("Meditation on AoE Combo", "Adds Meditation to the AoE combo.", MNK.JobID)]
+        MNK_AoE_Simple_Meditation = 9023,
+
+        [ParentCombo(MNK_AoE_SimpleMode)]
+        [CustomComboInfo("Thunderclap on AoE Combo", "Adds Thunderclap when out of combat to the AoE combo.", MNK.JobID)]
+        MNK_AoE_Simple_Thunderclap = 9024,
+
+        [ParentCombo(MNK_ST_SimpleMode)]
+        [CustomComboInfo("Thunderclap on Main Combo", "Adds Thunderclap when out of combat to the main combo.", MNK.JobID)]
+        MNK_ST_Simple_Thunderclap = 9025,
+
+        [ParentCombo(MNK_ST_SimpleMode)]
+        [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", MNK.JobID)]
+        MNK_ST_ComboHeals = 9026,
+
+        [ParentCombo(MNK_AoE_SimpleMode)]
+        [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", MNK.JobID)]
+        MNK_AoE_ComboHeals = 9027,
+
+        [ParentCombo(MNK_ST_Simple_Meditation)]
+        [CustomComboInfo("Mediation Uptime Feature", "Replaces Main Combo with Mediation when you are out of range and out of opener/burst.", MNK.JobID)]
+        MNK_ST_Meditation_Uptime = 9028,
+
+        [ParentCombo(MNK_ST_SimpleMode)]
+        [CustomComboInfo("Dynamic True North Option", "Adds True North to the main combo right before positionals if you aren't in the correct position for their bonuses.", MNK.JobID)]
+        MNK_TrueNorthDynamic = 9029,
 
         [Variant]
-        [VariantParent(MNK_ST_AdvancedMode, MNK_AOE_SimpleMode)]
-        [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", MNK.JobID)]
-        MNK_Variant_Rampart = 9025,
-
-        [Variant]
-        [VariantParent(MNK_ST_AdvancedMode, MNK_AOE_SimpleMode)]
+        [VariantParent(MNK_ST_SimpleMode, MNK_AoE_SimpleMode)]
         [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", MNK.JobID)]
-        MNK_Variant_Cure = 9026,
+        MNK_Variant_Cure = 9030,
 
-        #endregion
+        [Variant]
+        [VariantParent(MNK_ST_SimpleMode, MNK_AoE_SimpleMode)]
+        [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", MNK.JobID)]
+        MNK_Variant_Rampart = 9031,
 
-        // End Monk
+        // Last value = 9031
+
         #endregion
 
         #region NINJA
 
         [ReplaceSkill(NIN.SpinningEdge)]
-        [ConflictingCombos(NIN_ST_AdvancedMode)]
+        [ConflictingCombos(NIN_ArmorCrushCombo, NIN_ST_AdvancedMode, NIN_KassatsuChiJin, NIN_KassatsuTrick)]
         [CustomComboInfo("Simple Mode - Single Target", "Replaces Spinning Edge with a one-button full single target rotation.\nThis is the ideal option for newcomers to the job.", NIN.JobID)]
         NIN_ST_SimpleMode = 10000,
 
         [ParentCombo(NIN_ST_SimpleMode)]
-        [CustomComboInfo("Balance Opener Option", "Starts with the Balance opener.\nRequires level 100, with the following requirements:\n- 2 mudra charges ready\n- Dokumori off cooldown.\n- Kunai's Bane off cooldown.\n- TenChiJin off cooldown.\n- Phantom Kamaitachi off cooldown.\n- Bunshin off cooldown.\n- Dream Within a Dream off cooldown.\n- Kassatsu off cooldown.", NIN.JobID)]
+        [CustomComboInfo("Balance Opener Option", "Starts with the Balance opener.\nDoes pre-pull first, if you enter combat before hiding the opener will fail.\nLikewise, moving during TCJ will cause the opener to fail too.\nRequires you to be out of combat with majority of your cooldowns available for it to work.", NIN.JobID)]
         NIN_ST_SimpleMode_BalanceOpener = 10001,
 
         [ReplaceSkill(NIN.DeathBlossom)]
@@ -2130,29 +2103,29 @@ namespace XIVSlothCombo.Combos
         NIN_ST_AdvancedMode_RangedUptime = 10004,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Mug/Dokumori Option", "Adds Mug/Dokumori to Advanced Mode.", NIN.JobID)]
+        [CustomComboInfo("Mug Option", "Adds Mug to Advanced Mode.", NIN.JobID)]
         NIN_ST_AdvancedMode_Mug = 10005,
 
         [ConflictingCombos(NIN_ST_AdvancedMode_Mug_AlignBefore)]
         [ParentCombo(NIN_ST_AdvancedMode_Mug)]
-        [CustomComboInfo("Align Mug with Trick Attack/Kunai's Bane Option", "Only uses Mug whilst the target has Trick Attack/Kunai's Bane, otherwise will use on cooldown.", NIN.JobID)]
+        [CustomComboInfo("Align Mug with Trick Attack Option", "Only uses Mug whilst the target has Trick Attack, otherwise will use on cooldown.", NIN.JobID)]
         NIN_ST_AdvancedMode_Mug_AlignAfter = 10006,
 
         [ConflictingCombos(NIN_ST_AdvancedMode_Mug_AlignAfter)]
         [ParentCombo(NIN_ST_AdvancedMode_Mug)]
-        [CustomComboInfo("Use Mug before Trick Attack/Kunai's Bane Option", "Aligns Mug with Trick Attack/Kunai's Bane but weaves it at least 1 GCD before Trick Attack/Kunai's Bane.", NIN.JobID)]
+        [CustomComboInfo("Use Mug before Trick Attack Option", "Aligns Mug with Trick Attack but weaves it at least 1 GCD before Trick Attack.", NIN.JobID)]
         NIN_ST_AdvancedMode_Mug_AlignBefore = 10007,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Trick Attack/Kunai's Bane Option", "Adds Trick Attack/Kunai's Bane to Advanced Mode.", NIN.JobID)] //Has Config
+        [CustomComboInfo("Trick Attack Option", "Adds Trick Attack to Advanced Mode.", NIN.JobID)] //Has Config
         NIN_ST_AdvancedMode_TrickAttack = 10008,
 
         [ParentCombo(NIN_ST_AdvancedMode_TrickAttack)]
-        [CustomComboInfo("Save Cooldowns Before Trick Attack/Kunai's Bane Option", "Stops using abilities with longer cooldowns up to 15 seconds before Trick Attack/Kunai's Bane comes off cooldown.", NIN.JobID)] //HasConfig
+        [CustomComboInfo("Save Cooldowns Before Trick Attack Option", "Stops using abilities with longer cooldowns up to 15 seconds before Trick Attack comes off cooldown.", NIN.JobID)] //HasConfig
         NIN_ST_AdvancedMode_TrickAttack_Cooldowns = 10009,
 
         [ParentCombo(NIN_ST_AdvancedMode_TrickAttack)]
-        [CustomComboInfo("Delayed Trick Attack/Kunai's Bane Option", "Waits at least 8 seconds into combat before using Trick Attack/Kunai's Bane.", NIN.JobID)]
+        [CustomComboInfo("Delayed Trick Attack Option", "Waits at least 8 seconds into combat before using Trick Attack.", NIN.JobID)]
         NIN_ST_AdvancedMode_TrickAttack_Delayed = 10010,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
@@ -2175,10 +2148,15 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Use Suiton", "Spends Mudra charges on Suiton.", NIN.JobID)]
         NIN_ST_AdvancedMode_Ninjitsus_Suiton = 10015,
 
+        [ParentCombo(NIN_ST_AdvancedMode_Ninjitsus)]
+        [CustomComboInfo("Use Huton", "Spends Mudra charges on Huton.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Ninjitsus_Huton = 10016,
+
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Assassinate/Dream Within a Dream Option", "Adds Assassinate and Dream Within a Dream to Advanced Mode.", NIN.JobID)]
         NIN_ST_AdvancedMode_AssassinateDWAD = 10017,
 
+        [ConflictingCombos(NIN_KassatsuTrick, NIN_KassatsuChiJin)]
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Kassatsu Option", "Adds Kassatsu to Advanced Mode.", NIN.JobID)]
         NIN_ST_AdvancedMode_Kassatsu = 10018,
@@ -2188,16 +2166,20 @@ namespace XIVSlothCombo.Combos
         NIN_ST_AdvancedMode_Kassatsu_HyoshoRaynryu = 10019,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
+        [CustomComboInfo("Armor Crush Option", "Adds Armor Crush to Advanced Mode.", NIN.JobID)] //Has Config
+        NIN_ST_AdvancedMode_ArmorCrush = 10020,
+
+        [ParentCombo(NIN_ST_AdvancedMode)]
+        [CustomComboInfo("Huraijin Option", "Adds Huraijin to Advanced Mode.", NIN.JobID)]
+        NIN_ST_AdvancedMode_Huraijin = 10021,
+
+        [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Bhavacakra Option", "Adds Bhavacakra to Advanced Mode.", NIN.JobID)] //Has Config
         NIN_ST_AdvancedMode_Bhavacakra = 10022,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Ten Chi Jin Option", "Adds Ten Chi Jin (the cooldown) to Advanced Mode.", NIN.JobID)]
         NIN_ST_AdvancedMode_TCJ = 10023,
-
-        [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Tenri Jindo Option", "Adds Tenri Jindo to Advanced Mode.", NIN.JobID)]
-        NIN_ST_AdvancedMode_TenriJindo = 10071,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
         [CustomComboInfo("Meisui Option", "Adds Meisui to Advanced Mode.", NIN.JobID)]
@@ -2219,8 +2201,9 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Forked Raiju Gap-Closer Option", "Uses Forked Raiju when out of range.", NIN.JobID)]
         NIN_ST_AdvancedMode_Raiju_Forked = 10028,
 
+        [ConflictingCombos(NIN_KassatsuChiJin, NIN_KassatsuTrick)]
         [ParentCombo(NIN_ST_AdvancedMode)]
-        [CustomComboInfo("Balance Opener Option", "Starts with the Balance opener.\nRequires level 100, with the following requirements:\n- 2 mudra charges ready\n- Dokumori off cooldown.\n- Kunai's Bane off cooldown.\n- TenChiJin off cooldown.\n- Phantom Kamaitachi off cooldown.\n- Bunshin off cooldown.\n- Dream Within a Dream off cooldown.\n- Kassatsu off cooldown.", NIN.JobID)]
+        [CustomComboInfo("Balance Opener Option", "Starts with the Balance opener.\nDoes pre-pull first, if you enter combat before hiding the opener will fail.\nLikewise, moving during TCJ will cause the opener to fail too.\nRequires you to be out of combat with majority of your cooldowns available for it to work.", NIN.JobID)]
         NIN_ST_AdvancedMode_BalanceOpener = 10029,
 
         [ParentCombo(NIN_ST_AdvancedMode)]
@@ -2249,10 +2232,6 @@ namespace XIVSlothCombo.Combos
         NIN_AoE_AdvancedMode = 10035,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
-        [CustomComboInfo("Kunai's Bane Option", "Adds Kunai's Bane to Advanced Mode. (Does not add Trick Attack)", NIN.JobID)]
-        NIN_AoE_AdvancedMode_KunaisBane = 10073,
-
-        [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Assassinate/Dream Within a Dream Option", "Adds Assassinate/Dream Within a Dream to Advanced Mode.", NIN.JobID)]
         NIN_AoE_AdvancedMode_AssassinateDWAD = 10036,
 
@@ -2276,6 +2255,7 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Use Huton", "Spends Mudra charges on Huton.", NIN.JobID)]
         NIN_AoE_AdvancedMode_Ninjitsus_Huton = 10041,
 
+        [ConflictingCombos(NIN_KassatsuTrick, NIN_KassatsuChiJin)]
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Kassatsu Option", "Adds Kassatsu to Advanced Mode.", NIN.JobID)]
         NIN_AoE_AdvancedMode_Kassatsu = 10042,
@@ -2285,16 +2265,16 @@ namespace XIVSlothCombo.Combos
         NIN_AoE_AdvancedMode_GokaMekkyaku = 10043,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
+        [CustomComboInfo("Huraijin Option", "Adds Huraijin to Advanced Mode.", NIN.JobID)]
+        NIN_AoE_AdvancedMode_Huraijin = 10044,
+
+        [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Hellfrog Medium Option", "Adds Hellfrog Medium to Advanced Mode.", NIN.JobID)]
         NIN_AoE_AdvancedMode_HellfrogMedium = 10045,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Ten Chi Jin Option", "Adds Ten Chi Jin (the cooldown) to Advanced Mode.", NIN.JobID)]
         NIN_AoE_AdvancedMode_TCJ = 10046,
-
-        [ParentCombo(NIN_AoE_AdvancedMode)]
-        [CustomComboInfo("Tenri Jindo Option", "Adds Tenri Jindo to Advanced Mode.", NIN.JobID)]
-        NIN_AoE_AdvancedMode_TenriJindo = 10072,
 
         [ParentCombo(NIN_AoE_AdvancedMode)]
         [CustomComboInfo("Meisui Option", "Adds Meisui to Advanced Mode.", NIN.JobID)]
@@ -2321,23 +2301,26 @@ namespace XIVSlothCombo.Combos
         NIN_AoE_AdvancedMode_Bloodbath = 10052,
 
         [ReplaceSkill(NIN.ArmorCrush)]
+        [ConflictingCombos(NIN_ST_SimpleMode)]
         [CustomComboInfo("Armor Crush Combo Feature", "Replace Armor Crush with its combo chain.", NIN.JobID)]
         NIN_ArmorCrushCombo = 10053,
 
+        [ConflictingCombos(NIN_ST_AdvancedMode_BalanceOpener, NIN_ST_AdvancedMode_BalanceOpener, NIN_ST_AdvancedMode_Kassatsu, NIN_AoE_AdvancedMode_Kassatsu, NIN_KassatsuChiJin)]
         [ReplaceSkill(NIN.Kassatsu)]
-        [CustomComboInfo("Kassatsu to Trick Feature", "Replaces Kassatsu with Trick Attack/Kunai's Bane while Suiton or Hidden is up.\nCooldown tracking plugin recommended.", NIN.JobID)]
+        [CustomComboInfo("Kassatsu to Trick Feature", "Replaces Kassatsu with Trick Attack while Suiton or Hidden is up.\nCooldown tracking plugin recommended.", NIN.JobID)]
         NIN_KassatsuTrick = 10054,
 
         [ReplaceSkill(NIN.TenChiJin)]
         [CustomComboInfo("Ten Chi Jin to Meisui Feature", "Replaces Ten Chi Jin (the move) with Meisui while Suiton is up.\nCooldown tracking plugin recommended.", NIN.JobID)]
         NIN_TCJMeisui = 10055,
 
+        [ConflictingCombos(NIN_ST_AdvancedMode_BalanceOpener, NIN_ST_AdvancedMode_BalanceOpener, NIN_KassatsuTrick, NIN_ST_AdvancedMode_Kassatsu, NIN_AoE_AdvancedMode_Kassatsu)]
         [ReplaceSkill(NIN.Chi)]
         [CustomComboInfo("Kassatsu Chi/Jin Feature", "Replaces Chi with Jin while Kassatsu is up if you have Enhanced Kassatsu.", NIN.JobID)]
         NIN_KassatsuChiJin = 10056,
 
         [ReplaceSkill(NIN.Hide)]
-        [CustomComboInfo("Hide to Mug/Trick Attack/Kunai's Bane Feature", "Replaces Hide with Mug while in combat and Trick Attack/Kunai's Bane whilst Hidden.", NIN.JobID)]
+        [CustomComboInfo("Hide to Mug/Trick Attack Feature", "Replaces Hide with Mug while in combat and Trick Attack whilst Hidden.", NIN.JobID)]
         NIN_HideMug = 10057,
 
         [ReplaceSkill(NIN.Ten, NIN.Chi, NIN.Jin)]
@@ -4570,63 +4553,47 @@ namespace XIVSlothCombo.Combos
 
         #region GUNBREAKER
 
-        #region Burst Mode
         [PvPCustomCombo]
         [CustomComboInfo("Burst Mode", "Turns Solid Barrel Combo into an all-in-one damage button.", GNB.JobID)]
         GNBPvP_Burst = 117000,
 
         [ParentCombo(GNBPvP_Burst)]
-        [CustomComboInfo("Double Down Option", "Adds Double Down to rotation when appropriate.", GNB.JobID)]
+        [CustomComboInfo("Double Down Option", "Adds Double Down to Burst Mode while under the No Mercy buff.", GNB.JobID)]
         GNBPvP_DoubleDown = 117001,
 
-        [ParentCombo(GNBPvP_Burst)]
-        [CustomComboInfo("Burst Strike Option", "Adds Burst Strike to rotation when appropriate.", GNB.JobID)]
-        GNBPvP_BurstStrike = 117002,
+        [PvPCustomCombo]
+        [CustomComboInfo("Gnashing Fang Continuation Feature", "Adds Continuation onto Gnashing Fang.", GNB.JobID)]
+        GNBPvP_GnashingFang = 117002,
 
         [ParentCombo(GNBPvP_Burst)]
-        [CustomComboInfo("Draw & Junction Option", "Adds Draw And Junction to rotation when appropriate.", GNB.JobID)]
-        GNBPvP_ST_DrawAndJunction = 117003,
+        [CustomComboInfo("Draw And Junction Option", "Adds Draw And Junction to Burst Mode.", GNB.JobID)]
+        GNBPvP_DrawAndJunction = 117003,
 
         [ParentCombo(GNBPvP_Burst)]
-        [CustomComboInfo("Gnashing Fang Option", "Adds Gnashing Fang to to rotation when appropriate.", GNB.JobID)]
+        [CustomComboInfo("Gnashing Fang Option", "Adds Gnashing Fang to Burst Mode while under the No Mercy buff.", GNB.JobID)]
         GNBPvP_ST_GnashingFang = 117004,
 
         [ParentCombo(GNBPvP_Burst)]
-        [CustomComboInfo("Continuation Option", "Adds Continuation to rotation when appropriate.", GNB.JobID)]
+        [CustomComboInfo("Continuation Option", "Adds Continuation to Burst Mode.", GNB.JobID)]
         GNBPvP_ST_Continuation = 117005,
 
         [ParentCombo(GNBPvP_Burst)]
-        [CustomComboInfo("Rough Divide Option", "Adds Rough Divide to rotation when appropriate.", GNB.JobID)]
+        [CustomComboInfo("Rough Divide Option", "Weaves Rough Divide when No Mercy Buff is about to expire.", GNB.JobID)]
         GNBPvP_RoughDivide = 117006,
 
         [ParentCombo(GNBPvP_Burst)]
-        [CustomComboInfo("Junction Cast DPS Option", "Adds Junction Cast (DPS) to rotation.", GNB.JobID)]
+        [CustomComboInfo("Junction Cast DPS Option", "Adds Junction Cast (DPS) to Burst Mode.", GNB.JobID)]
         GNBPvP_JunctionDPS = 117007,
 
         [ParentCombo(GNBPvP_Burst)]
-        [CustomComboInfo("Junction Cast Healer Option", "Adds Junction Cast (Healer) to rotation.", GNB.JobID)]
+        [CustomComboInfo("Junction Cast Healer Option", "Adds Junction Cast (Healer) to Burst Mode.", GNB.JobID)]
         GNBPvP_JunctionHealer = 117008,
 
         [ParentCombo(GNBPvP_Burst)]
-        [CustomComboInfo("Junction Cast Tank Option", "Adds Junction Cast (Tank) to rotation.", GNB.JobID)]
+        [CustomComboInfo("Junction Cast Tank Option", "Adds Junction Cast (Tank) to Burst Mode.", GNB.JobID)]
         GNBPvP_JunctionTank = 117009,
 
-        #endregion
-
-        #region Option Select
-        [ConflictingCombos(GNBPvP_ST_GnashingFang)]
-        [PvPCustomCombo]
-        [CustomComboInfo("Continuation Feature", "Adds Continuation to Gnashing Fang.", GNB.JobID)]
-        GNBPvP_GnashingFang = 117010,
-
-        [ConflictingCombos(GNBPvP_ST_DrawAndJunction)]
-        [PvPCustomCombo]
-        [CustomComboInfo("Junctioned Cast Feature", "Adds Junctioned Cast to Draw and Junction.", GNB.JobID)]
-        GNBPvP_DrawAndJunction = 117011,
-
-        // Last value = 117011
-
-        #endregion
+        // Last value = 117009
 
         #endregion
 
