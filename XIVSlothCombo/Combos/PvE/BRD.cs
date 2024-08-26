@@ -1427,5 +1427,51 @@ namespace XIVSlothCombo.Combos.PvE
                 return actionID;
             }
         }
+        internal class BRD_ST_Holdmode: CustomCombo
+        {
+            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_ST_Holdmode;
+
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                if (actionID is Stormbite or Windbite)
+                {
+                    bool canWeave = CanWeave(actionID);
+                    bool venomous = TargetHasEffect(Debuffs.VenomousBite);
+                    bool windbite = TargetHasEffect(Debuffs.Windbite);
+                    bool caustic = TargetHasEffect(Debuffs.CausticBite);
+                    bool stormbite = TargetHasEffect(Debuffs.Stormbite);
+                    float venomRemaining = GetDebuffRemainingTime(Debuffs.VenomousBite);
+                    float windRemaining = GetDebuffRemainingTime(Debuffs.Windbite);
+                    float causticRemaining = GetDebuffRemainingTime(Debuffs.CausticBite);
+                    float stormRemaining = GetDebuffRemainingTime(Debuffs.Stormbite);
+                    uint bloodletterCharges = GetRemainingCharges(Bloodletter);
+
+                    if (InCombat())
+                    {
+                        if (canWeave && ActionReady(EmpyrealArrow))
+                            return EmpyrealArrow;
+                        if (canWeave && bloodletterCharges == 3)
+                            return OriginalHook(Bloodletter);
+                        if (LevelChecked(IronJaws) &&
+                            ((venomous && venomRemaining < 4) || (caustic && causticRemaining < 4)) ||
+                            (windbite && windRemaining < 4) || (stormbite && stormRemaining < 4))
+                            return IronJaws;
+                        if (!LevelChecked(IronJaws) && venomous && venomRemaining < 4)
+                            return VenomousBite;
+                        if (!LevelChecked(IronJaws) && windbite && windRemaining < 4)
+                            return Windbite;
+                    }
+                                       
+                    if (HasEffect(Buffs.HawksEye))
+                        return OriginalHook(StraightShot);
+                    if (!HasEffect(Buffs.HawksEye) && caustic && stormbite)
+                        return OriginalHook(HeavyShot);
+                    if (!caustic || venomous)
+                        return OriginalHook(VenomousBite);
+                }
+
+                return actionID;
+            }
+        }
     }
 }
