@@ -1681,6 +1681,8 @@ namespace XIVSlothCombo.Window.Functions
                 UserConfig.DrawRadioButton(NIN.Config.NIN_SimpleMudra_Choice, "Mudra Path Set 1", $"1. Ten Mudras -> Fuma Shuriken, Raiton/Hyosho Ranryu, Suiton (Doton under Kassatsu).\nChi Mudras -> Fuma Shuriken, Hyoton, Huton.\nJin Mudras -> Fuma Shuriken, Katon/Goka Mekkyaku, Doton", 1);
                 UserConfig.DrawRadioButton(NIN.Config.NIN_SimpleMudra_Choice, "Mudra Path Set 2", $"2. Ten Mudras -> Fuma Shuriken, Hyoton/Hyosho Ranryu, Doton.\nChi Mudras -> Fuma Shuriken, Katon, Suiton.\nJin Mudras -> Fuma Shuriken, Raiton/Goka Mekkyaku, Huton (Doton under Kassatsu).", 2);
             }
+            if (preset == CustomComboPreset.NIN_ST_AdvancedMode)
+                UserConfig.DrawSliderInt(0, 10, NIN.Config.BurnKazematoi, "Target HP% to dump all pooled Kazematoi below");
 
             if (preset == CustomComboPreset.NIN_ST_AdvancedMode_Bhavacakra)
                 UserConfig.DrawSliderInt(50, 100, NIN.Config.Ninki_BhavaPooling, "Set the minimal amount of Ninki required to have before spending on Bhavacakra.");
@@ -1931,6 +1933,7 @@ namespace XIVSlothCombo.Window.Functions
                     ImGui.Unindent();
                 }
                 UserConfig.DrawAdditionalBoolChoice(RDM.Config.RDM_ST_oGCD_ViceOfThorns, "Vice of Thorns", "");
+                UserConfig.DrawAdditionalBoolChoice(RDM.Config.RDM_ST_oGCD_Prefulgence, "Prefulgence", "");
             }
 
             if (preset is CustomComboPreset.RDM_ST_MeleeCombo)
@@ -1982,6 +1985,7 @@ namespace XIVSlothCombo.Window.Functions
                     ImGui.Unindent();
                 }
                 UserConfig.DrawAdditionalBoolChoice(RDM.Config.RDM_AoE_oGCD_ViceOfThorns, "Vice of Thorns", "");
+                UserConfig.DrawAdditionalBoolChoice(RDM.Config.RDM_AoE_oGCD_Prefulgence, "Prefulgence", "");
             }
 
             if (preset is CustomComboPreset.RDM_AoE_MeleeCombo)
@@ -2291,9 +2295,6 @@ namespace XIVSlothCombo.Window.Functions
                 }
             }
 
-            if (preset is CustomComboPreset.SCH_AoE_Lucid)
-                UserConfig.DrawSliderInt(4000, 9500, SCH.Config.SCH_AoE_LucidOption, "MP Threshold", 150, SliderIncrements.Hundreds);
-
             if (preset is CustomComboPreset.SCH_ST_Heal)
             {
                 UserConfig.DrawAdditionalBoolChoice(SCH.Config.SCH_ST_Heal_Adv, "Advanced Options", "", isConditionalChoice: true);
@@ -2320,7 +2321,10 @@ namespace XIVSlothCombo.Window.Functions
             if (preset is CustomComboPreset.SCH_ST_Heal_Esuna)
                 UserConfig.DrawSliderInt(0, 100, SCH.Config.SCH_ST_Heal_EsunaOption, "Stop using when below HP %. Set to Zero to disable this check");
 
-            if (preset is CustomComboPreset.SCH_AoE_Heal)
+            if (preset is CustomComboPreset.SCH_AoE_Lucid)
+                UserConfig.DrawSliderInt(4000, 9500, SCH.Config.SCH_AoE_LucidOption, "MP Threshold", 150, SliderIncrements.Hundreds);
+
+            if (preset is CustomComboPreset.SCH_AoE_Heal_Lucid)
                 UserConfig.DrawSliderInt(4000, 9500, SCH.Config.SCH_AoE_Heal_LucidOption, "MP Threshold", 150, SliderIncrements.Hundreds);
 
             if (preset is CustomComboPreset.SCH_DeploymentTactics)
