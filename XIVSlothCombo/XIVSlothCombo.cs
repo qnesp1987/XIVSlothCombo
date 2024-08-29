@@ -62,7 +62,7 @@ namespace XIVSlothCombo
             //PLD.JobID,
             //RDM.JobID,
             //RPR.JobID,
-            SAM.JobID,
+            //SAM.JobID,
             //SCH.JobID,
             //SGE.JobID,
             //SMN.JobID,
@@ -80,6 +80,7 @@ namespace XIVSlothCombo
             {
                 if (jobID != value && value != null)
                 {
+                    Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember = null;
                     Svc.Log.Debug($"Switched to job {value}");
                     PvEFeatures.HasToOpenJob = true;
                 }
