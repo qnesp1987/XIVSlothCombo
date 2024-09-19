@@ -1391,14 +1391,18 @@ namespace XIVSlothCombo.Window.Functions
                 ImGui.Spacing();
             }
 
+            if (preset == CustomComboPreset.DNC_Variant_Cure)
+                UserConfig.DrawSliderInt(1, 100, DNC.Config.DNCVariantCurePercent, "HP% to be at or under", 200);
+
+            #region Multi-Button Sliders
+
             if (preset == CustomComboPreset.DNC_ST_EspritOvercap)
                 UserConfig.DrawSliderInt(50, 100, DNC.Config.DNCEspritThreshold_ST, "Esprit", 150, SliderIncrements.Fives);
 
             if (preset == CustomComboPreset.DNC_AoE_EspritOvercap)
                 UserConfig.DrawSliderInt(50, 100, DNC.Config.DNCEspritThreshold_AoE, "Esprit", 150, SliderIncrements.Fives);
 
-            if (preset == CustomComboPreset.DNC_Variant_Cure)
-                UserConfig.DrawSliderInt(1, 100, DNC.Config.DNCVariantCurePercent, "HP% to be at or under", 200);
+            #endregion
 
             #region Advanced ST Sliders
 
@@ -1453,19 +1457,39 @@ namespace XIVSlothCombo.Window.Functions
             #region DARK KNIGHT
 
             if (preset == CustomComboPreset.DRK_ST_ManaSpenderPooling && enabled)
-                UserConfig.DrawSliderInt(0, 3000, DRK.Config.DRK_ST_ManaSpenderPooling, "How much MP to save (0 = Use All)", 150, SliderIncrements.Thousands);
+                UserConfig.DrawSliderInt(0, 3000, DRK.Config.DRK_ST_ManaSpenderPooling,
+                    "How much MP to save (0 = Use All)",
+                    itemWidth: 150f, sliderIncrement:SliderIncrements.Thousands);
 
             if (preset == CustomComboPreset.DRK_ST_CDs_LivingShadow && enabled)
-                UserConfig.DrawSliderInt(0, 30, DRK.Config.DRK_ST_LivingDeadThreshold, "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)", 150, SliderIncrements.Fives);
+                UserConfig.DrawSliderInt(0, 30, DRK.Config.DRK_ST_LivingDeadThreshold,
+                    "Stop Using When Target HP% is at or Below (Set to 0 to Disable check)",
+                    itemWidth: 150f, sliderIncrement:SliderIncrements.Fives);
+
+            if (preset == CustomComboPreset.DRK_ST_Delirium && enabled)
+                UserConfig.DrawSliderInt(0, 30, DRK.Config.DRK_ST_DeliriumThreshold,
+                    "Stop Using When Target HP% is at or Below (Set to 0 to Disable check)",
+                    itemWidth: 150f, sliderIncrement:SliderIncrements.Fives);
 
             if (preset == CustomComboPreset.DRK_AoE_CDs_LivingShadow && enabled)
-                UserConfig.DrawSliderInt(0, 60, DRK.Config.DRK_AoE_LivingDeadThreshold, "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)", 150, SliderIncrements.Fives);
+                UserConfig.DrawSliderInt(0, 60, DRK.Config.DRK_AoE_LivingDeadThreshold,
+                    "Stop Using When Target HP% is at or Below (Set to 0 to Disable check)",
+                    itemWidth: 150f, sliderIncrement:SliderIncrements.Fives);
+
+            if (preset == CustomComboPreset.DRK_AoE_Delirium && enabled)
+                UserConfig.DrawSliderInt(0, 60, DRK.Config.DRK_AoE_DeliriumThreshold,
+                    "Stop Using When Target HP% is at or Below (Set to 0 to Disable check)",
+                    itemWidth: 150f, sliderIncrement:SliderIncrements.Fives);
 
             if (preset == CustomComboPreset.DRKPvP_Burst)
-                UserConfig.DrawSliderInt(1, 100, DRKPvP.Config.ShadowbringerThreshold, "HP% to be at or above to use Shadowbringer");
+                UserConfig.DrawSliderInt(1, 100, DRKPvP.Config.ShadowbringerThreshold,
+                    "HP% to be at or Above to use (Set to 0 to Disable)",
+                    itemWidth: 150f, sliderIncrement:SliderIncrements.Fives);
 
             if (preset == CustomComboPreset.DRK_Variant_Cure)
-                UserConfig.DrawSliderInt(1, 100, DRK.Config.DRK_VariantCure, "HP% to be at or under", 200);
+                UserConfig.DrawSliderInt(1, 100, DRK.Config.DRK_VariantCure,
+                    "HP% to be at or Below",
+                    itemWidth: 200, sliderIncrement:SliderIncrements.Fives);
 
             #endregion
             // ====================================================================================
@@ -1519,9 +1543,9 @@ namespace XIVSlothCombo.Window.Functions
             if (preset == CustomComboPreset.GNB_Variant_Cure)
                 UserConfig.DrawSliderInt(1, 100, GNB.Config.GNB_VariantCure, "HP% to be at or under", 200);
             if (preset == CustomComboPreset.GNB_ST_NoMercy)
-                UserConfig.DrawSliderInt(0, 10, GNB.Config.GNB_ST_NoMercyStop, "Disable Usage if Target HP% is below set value.\nTo Disable this, set to 0.");
+                UserConfig.DrawSliderInt(0, 25, GNB.Config.GNB_ST_NoMercyStop, "Stop Usage if Target HP% is below set value.\nTo Disable this option, set to 0.");
             if (preset == CustomComboPreset.GNB_AoE_NoMercy)
-                UserConfig.DrawSliderInt(0, 10, GNB.Config.GNB_AoE_NoMercyStop, "Disable Usage if Target HP% is below set value.\nTo Disable this, set to 0.");
+                UserConfig.DrawSliderInt(0, 25, GNB.Config.GNB_AoE_NoMercyStop, "Stop Usage if Target HP% is below set value.\nTo Disable this option, set to 0.");
 
             #endregion
             // ====================================================================================
@@ -1576,18 +1600,34 @@ namespace XIVSlothCombo.Window.Functions
 
             #endregion
             // ====================================================================================
+
             #region MONK
 
             if (preset == CustomComboPreset.MNK_ST_ComboHeals)
             {
-                UserConfig.DrawSliderInt(0, 100, MNK.Config.MNK_ST_SecondWind_Threshold, "Second Wind HP percentage threshold (0 = Disabled)", 150, SliderIncrements.Ones);
-                UserConfig.DrawSliderInt(0, 100, MNK.Config.MNK_ST_Bloodbath_Threshold, "Bloodbath HP percentage threshold (0 = Disabled)", 150, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 100, MNK.Config.MNK_ST_SecondWind_Threshold,
+                    "Second Wind HP percentage threshold (0 = Disabled)", 150, SliderIncrements.Ones);
+
+                UserConfig.DrawSliderInt(0, 100, MNK.Config.MNK_ST_Bloodbath_Threshold,
+                    "Bloodbath HP percentage threshold (0 = Disabled)", 150, SliderIncrements.Ones);
+            }
+
+            if (preset == CustomComboPreset.MNK_AoE_ComboHeals)
+            {
+                UserConfig.DrawSliderInt(0, 100, MNK.Config.MNK_AoE_SecondWind_Threshold,
+                    "Second Wind HP percentage threshold (0 = Disabled)", 150, SliderIncrements.Ones);
+
+                UserConfig.DrawSliderInt(0, 100, MNK.Config.MNK_AoE_Bloodbath_Threshold,
+                    "Bloodbath HP percentage threshold (0 = Disabled)", 150, SliderIncrements.Ones);
             }
 
             if (preset == CustomComboPreset.MNK_STUseOpener && enabled)
             {
-                UserConfig.DrawHorizontalRadioButton(MNK.Config.MNK_SelectedOpener, "Double Lunar", "Uses Lunar/Lunar opener", 1);
-                UserConfig.DrawHorizontalRadioButton(MNK.Config.MNK_SelectedOpener, "Solar Lunar", "Uses Solar/Lunar opener", 2);
+                UserConfig.DrawHorizontalRadioButton(MNK.Config.MNK_SelectedOpener, "Double Lunar",
+                    "Uses Lunar/Lunar opener", 0);
+
+                UserConfig.DrawHorizontalRadioButton(MNK.Config.MNK_SelectedOpener, "Solar Lunar",
+                    "Uses Solar/Lunar opener", 1);
             }
 
             if (preset == CustomComboPreset.MNK_Variant_Cure)
@@ -1680,10 +1720,31 @@ namespace XIVSlothCombo.Window.Functions
             {
                 UserConfig.DrawSliderInt(0, 10000, PCT.Config.PCT_ST_AdvancedMode_LucidOption, "Add Lucid Dreaming when below this MP", sliderIncrement: SliderIncrements.Hundreds);
             }
+
+            if (preset == CustomComboPreset.PCT_AoE_AdvancedMode_HolyinWhite)
+            {
+                UserConfig.DrawSliderInt(0, 5, PCT.Config.PCT_AoE_AdvancedMode_HolyinWhiteOption, "How many charges to keep ready? (0 = Use all)");
+            }
+
             if(preset == CustomComboPreset.PCT_AoE_AdvancedMode_LucidDreaming)
             {
                 UserConfig.DrawSliderInt(0, 10000, PCT.Config.PCT_AoE_AdvancedMode_LucidOption, "Add Lucid Dreaming when below this MP", sliderIncrement: SliderIncrements.Hundreds);
             }
+            if (preset == CustomComboPreset.PCT_ST_AdvancedMode_LandscapeMotif)
+                UserConfig.DrawSliderInt(0, 10, PCT.Config.PCT_ST_LandscapeStop, "Health % to stop Drawing Motif");
+            if (preset == CustomComboPreset.PCT_ST_AdvancedMode_CreatureMotif)
+                UserConfig.DrawSliderInt(0, 10, PCT.Config.PCT_ST_CreatureStop, "Health % to stop Drawing Motif");
+            if (preset == CustomComboPreset.PCT_ST_AdvancedMode_WeaponMotif)
+                UserConfig.DrawSliderInt(0, 10, PCT.Config.PCT_ST_WeaponStop, "Health % to stop Drawing Motif");
+            if (preset == CustomComboPreset.PCT_AoE_AdvancedMode_LandscapeMotif)
+                UserConfig.DrawSliderInt(0, 10, PCT.Config.PCT_AoE_LandscapeStop, "Health % to stop Drawing Motif");
+            if (preset == CustomComboPreset.PCT_AoE_AdvancedMode_CreatureMotif)
+                UserConfig.DrawSliderInt(0, 10, PCT.Config.PCT_AoE_CreatureStop, "Health % to stop Drawing Motif");
+            if (preset == CustomComboPreset.PCT_AoE_AdvancedMode_WeaponMotif)
+                UserConfig.DrawSliderInt(0, 10, PCT.Config.PCT_AoE_WeaponStop, "Health % to stop Drawing Motif");
+
+            if (preset == CustomComboPreset.PCT_Variant_Cure)
+                UserConfig.DrawSliderInt(1, 100, PCT.Config.PCT_VariantCure, "HP% to be at or under", 200);
 
             // PvP
             if (preset == CustomComboPreset.PCTPvP_BurstControl)
@@ -2235,7 +2296,22 @@ namespace XIVSlothCombo.Window.Functions
                 UserConfig.DrawSliderInt(0, 100, SCH.Config.SCH_ST_Heal_AdloquiumOption, "Use Adloquium on targets at or below HP % even if they have Galvanize\n0 = Only ever use Adloquium on targets without Galvanize\n100 = Always use Adloquium");
 
             if (preset is CustomComboPreset.SCH_ST_Heal_Lustrate)
+            {
                 UserConfig.DrawSliderInt(0, 100, SCH.Config.SCH_ST_Heal_LustrateOption, "Start using when below HP %. Set to 100 to disable this check");
+                UserConfig.DrawPriorityInput(SCH.Config.SCH_ST_Heals_Priority, 3, 0, $"{SCH.Lustrate.ActionName()} Priority: ");
+            }
+
+            if (preset is CustomComboPreset.SCH_ST_Heal_Excogitation)
+            {
+                UserConfig.DrawSliderInt(0, 100, SCH.Config.SCH_ST_Heal_ExcogitationOption, "Start using when below HP %. Set to 100 to disable this check");
+                UserConfig.DrawPriorityInput(SCH.Config.SCH_ST_Heals_Priority, 3, 1, $"{SCH.Excogitation.ActionName()} Priority: ");
+            }
+
+            if (preset is CustomComboPreset.SCH_ST_Heal_Protraction)
+            {
+                UserConfig.DrawSliderInt(0, 100, SCH.Config.SCH_ST_Heal_ProtractionOption, "Start using when below HP %. Set to 100 to disable this check");
+                UserConfig.DrawPriorityInput(SCH.Config.SCH_ST_Heals_Priority, 3, 2, $"{SCH.Protraction.ActionName()} Priority: ");
+            }
 
             if (preset is CustomComboPreset.SCH_ST_Heal_Esuna)
                 UserConfig.DrawSliderInt(0, 100, SCH.Config.SCH_ST_Heal_EsunaOption, "Stop using when below HP %. Set to Zero to disable this check");
@@ -2404,6 +2480,9 @@ namespace XIVSlothCombo.Window.Functions
                 UserConfig.DrawRadioButton(VPR.Config.VPR_ReawakenLegacyButton, "Replaces Reawaken", "Replaces Reawaken with Full Generation - Legacy combo.", 0);
                 UserConfig.DrawRadioButton(VPR.Config.VPR_ReawakenLegacyButton, "Replaces Steel Fangs", "Replaces Steel Fangs with Full Generation - Legacy combo.", 1);
             }
+
+            if (preset == CustomComboPreset.VPR_Variant_Cure)
+                UserConfig.DrawSliderInt(1, 100, VPR.Config.VPR_VariantCure, "HP% to be at or under", 200);
 
             #endregion
             // ====================================================================================
