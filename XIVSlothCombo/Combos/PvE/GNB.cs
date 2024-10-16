@@ -960,8 +960,7 @@ namespace XIVSlothCombo.Combos.PvE
                                 if (IsEnabled(CustomComboPreset.GNB_AoE_BSOvercap) && !LevelChecked(FatedCircle))
                                     return BurstStrike;
                             }
-                            if (Ammo != MaxCartridges(level) ||
-                                (Ammo == MaxCartridges(level) && !LevelChecked(FatedCircle) && !IsEnabled(CustomComboPreset.GNB_AoE_BSOvercap)))
+                            if (Ammo != MaxCartridges(level))
                             {
                                 return DemonSlaughter;
                             }
