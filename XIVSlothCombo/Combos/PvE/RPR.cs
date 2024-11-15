@@ -1,11 +1,8 @@
-using Dalamud.Game.ClientState.JobGauge.Types;
 using XIVSlothCombo.Combos.PvE.Content;
-using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
 using XIVSlothCombo.CustomComboNS.Functions;
 using XIVSlothCombo.Data;
 using static XIVSlothCombo.Combos.JobHelpers.RPR;
-using static XIVSlothCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace XIVSlothCombo.Combos.PvE;
 
@@ -66,8 +63,6 @@ internal class RPR
         Soulsow = 24387,
         HarvestMoon = 24388;
 
-    protected static RPRGauge? Gauge = GetJobGauge<RPRGauge>();
-
     public static class Buffs
     {
         public const ushort
@@ -110,24 +105,14 @@ internal class RPR
 
         public static UserBoolArray
             RPR_SoulsowOptions = new("RPR_SoulsowOptions");
-
-        public static UserBool
-            RPR_ST_TrueNorth_Moving = new("RPR_ST_TrueNorth_Moving");
     }
 
     internal class RPR_ST_SimpleMode : CustomCombo
     {
-        internal static RPROpenerLogic RPROpener = new();
-
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RPR_ST_SimpleMode;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            bool trueNorthReady = TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
-                                  !HasEffect(All.Buffs.TrueNorth) && CanDelayedWeave(actionID);
-            bool trueNorthDynReady = trueNorthReady;
-            float GCD = GetCooldown(Slice).CooldownTotal;
-
             if (actionID is Slice)
             {
                 //Variant Cure
@@ -147,18 +132,17 @@ internal class RPR
                 if (RPROpener.DoFullOpener(ref actionID))
                     return actionID;
 
-                //Arcane Circle
-                if (CanDelayedWeave(ActionWatching.LastWeaponskill) &&
-                    LevelChecked(ArcaneCircle) &&
-                    ((LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) && IsOffCooldown(ArcaneCircle)) ||
-                     (!LevelChecked(Enshroud) && IsOffCooldown(ArcaneCircle))))
-                    return ArcaneCircle;
-
                 //All Weaves
                 if (CanWeave(ActionWatching.LastWeaponskill))
                 {
+                    //Arcane Cirlce
+                    if (LevelChecked(ArcaneCircle) &&
+                        ((LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) && IsOffCooldown(ArcaneCircle)) ||
+                         (!LevelChecked(Enshroud) && IsOffCooldown(ArcaneCircle))))
+                        return ArcaneCircle;
+
                     //Enshroud
-                    if (RPRHelpers.UseEnshroud(Gauge))
+                    if (RPRHelper.UseEnshroud(Gauge))
                         return Enshroud;
 
                     //Gluttony/Bloodstalk
@@ -166,17 +150,14 @@ internal class RPR
                         !HasEffect(Buffs.Enshrouded) && !HasEffect(Buffs.SoulReaver) &&
                         !HasEffect(Buffs.Executioner) && !HasEffect(Buffs.ImmortalSacrifice) &&
                         !HasEffect(Buffs.IdealHost) && !HasEffect(Buffs.PerfectioParata) &&
-                        (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 || !LevelChecked(ArcaneCircle)) &&
-                        !RPRHelpers.IsComboExpiring(3))
+                        !RPRHelper.IsComboExpiring(3))
                     {
                         //Gluttony
-                        if (!JustUsed(Perfectio) && ActionReady(Gluttony))
-                        {
-                            if (trueNorthReady)
-                                return All.TrueNorth;
-
-                            return Gluttony;
-                        }
+                        if (ActionReady(Gluttony) &&
+                            (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 || !LevelChecked(ArcaneCircle)))
+                            return trueNorthReady
+                                ? All.TrueNorth
+                                : Gluttony;
 
                         //Bloodstalk
                         if (LevelChecked(BloodStalk) &&
@@ -190,7 +171,7 @@ internal class RPR
                     if (HasEffect(Buffs.Enshrouded))
                     {
                         //Sacrificium
-                        if (Gauge.LemureShroud is 2 && Gauge.VoidShroud is 1 &&
+                        if (Gauge.LemureShroud is 2 && GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 &&
                             HasEffect(Buffs.Oblatio) && LevelChecked(Sacrificium))
                             return OriginalHook(Gluttony);
 
@@ -201,10 +182,11 @@ internal class RPR
                 }
 
                 //Ranged Attacks
-                if (!InMeleeRange() && LevelChecked(Harpe) && HasBattleTarget())
+                if (!InMeleeRange() && LevelChecked(Harpe) && HasBattleTarget() &&
+                    !HasEffect(Buffs.Executioner) && !HasEffect(Buffs.SoulReaver))
                 {
                     //Communio
-                    if (HasEffect(Buffs.Enshrouded) && Gauge.LemureShroud is 1 && Gauge.VoidShroud is 0 &&
+                    if (HasEffect(Buffs.Enshrouded) && Gauge.LemureShroud is 1 &&
                         LevelChecked(Communio))
                         return Communio;
 
@@ -214,13 +196,13 @@ internal class RPR
                 }
 
                 //Shadow Of Death
-                if (RPRHelpers.UseShadowOfDeath())
+                if (RPRHelper.UseShadowOfDeath())
                     return ShadowOfDeath;
 
                 if (TargetHasEffect(Debuffs.DeathsDesign))
                 {
                     //Perfectio
-                    if (HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio) && !RPRHelpers.IsComboExpiring(1))
+                    if (HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio) && !RPRHelper.IsComboExpiring(1))
                         return OriginalHook(Communio);
 
                     //Gibbet/Gallows
@@ -230,7 +212,8 @@ internal class RPR
                         //Gibbet
                         if (HasEffect(Buffs.EnhancedGibbet))
                         {
-                            if (trueNorthDynReady && !OnTargetsFlank())
+                            if (trueNorthReady && !OnTargetsFlank() &&
+                                CanDelayedWeave(ActionWatching.LastWeaponskill))
                                 return All.TrueNorth;
 
                             return OriginalHook(Gibbet);
@@ -240,7 +223,8 @@ internal class RPR
                         if (HasEffect(Buffs.EnhancedGallows) ||
                             (!HasEffect(Buffs.EnhancedGibbet) && !HasEffect(Buffs.EnhancedGallows)))
                         {
-                            if (trueNorthDynReady && !OnTargetsRear())
+                            if (trueNorthReady && !OnTargetsRear() &&
+                                CanDelayedWeave(ActionWatching.LastWeaponskill))
                                 return All.TrueNorth;
 
                             return OriginalHook(Gallows);
@@ -258,7 +242,7 @@ internal class RPR
                     if (HasEffect(Buffs.Enshrouded))
                     {
                         //Communio
-                        if (Gauge.LemureShroud is 1 && Gauge.VoidShroud is 0 && LevelChecked(Communio))
+                        if (Gauge.LemureShroud is 1 && LevelChecked(Communio))
                             return Communio;
 
                         //Void Reaping
@@ -273,7 +257,7 @@ internal class RPR
 
                     //Soul Slice
                     if (Gauge.Soul <= 50 && ActionReady(SoulSlice) &&
-                        !RPRHelpers.IsComboExpiring(3) && !JustUsed(Perfectio) &&
+                        !RPRHelper.IsComboExpiring(3) &&
                         !HasEffect(Buffs.Enshrouded) && !HasEffect(Buffs.SoulReaver) &&
                         !HasEffect(Buffs.IdealHost) && !HasEffect(Buffs.Executioner) &&
                         !HasEffect(Buffs.PerfectioParata) && !HasEffect(Buffs.ImmortalSacrifice))
@@ -306,18 +290,12 @@ internal class RPR
 
     internal class RPR_ST_AdvancedMode : CustomCombo
     {
-        internal static RPROpenerLogic RPROpener = new();
-
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RPR_ST_AdvancedMode;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            double enemyHP = GetTargetHPPercent();
-            bool trueNorthReady = TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
-                                  !HasEffect(All.Buffs.TrueNorth) && CanDelayedWeave(actionID);
             bool trueNorthDynReady = trueNorthReady;
             int PositionalChoice = Config.RPR_Positional;
-            float GCD = GetCooldown(Slice).CooldownTotal;
 
             // Prevent the dynamic true north option from using the last charge
             if (IsEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic) &&
@@ -345,23 +323,21 @@ internal class RPR
                     if (RPROpener.DoFullOpener(ref actionID))
                         return actionID;
 
-                //Arcane Circle
-                if (IsEnabled(CustomComboPreset.RPR_ST_CDs) &&
-                    IsEnabled(CustomComboPreset.RPR_ST_ArcaneCircle) &&
-                    CanDelayedWeave(ActionWatching.LastWeaponskill) &&
-                    LevelChecked(ArcaneCircle) &&
-                    ((LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) && IsOffCooldown(ArcaneCircle)) ||
-                     (!LevelChecked(Enshroud) && IsOffCooldown(ArcaneCircle))))
-                    return ArcaneCircle;
-
                 //All Weaves
                 if (CanWeave(ActionWatching.LastWeaponskill))
                 {
                     if (IsEnabled(CustomComboPreset.RPR_ST_CDs))
                     {
+                        //Arcane Cirlce
+                        if (IsEnabled(CustomComboPreset.RPR_ST_ArcaneCircle) &&
+                            LevelChecked(ArcaneCircle) &&
+                            ((LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) && IsOffCooldown(ArcaneCircle)) ||
+                             (!LevelChecked(Enshroud) && IsOffCooldown(ArcaneCircle))))
+                            return ArcaneCircle;
+
                         //Enshroud
                         if (IsEnabled(CustomComboPreset.RPR_ST_Enshroud) &&
-                            RPRHelpers.UseEnshroud(Gauge))
+                            RPRHelper.UseEnshroud(Gauge))
                             return Enshroud;
 
                         //Gluttony/Bloodstalk
@@ -369,12 +345,12 @@ internal class RPR
                             !HasEffect(Buffs.Enshrouded) && !HasEffect(Buffs.SoulReaver) &&
                             !HasEffect(Buffs.Executioner) && !HasEffect(Buffs.ImmortalSacrifice) &&
                             !HasEffect(Buffs.IdealHost) && !HasEffect(Buffs.PerfectioParata) &&
-                            (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 || !LevelChecked(ArcaneCircle)) &&
-                            !RPRHelpers.IsComboExpiring(3))
+                            !RPRHelper.IsComboExpiring(3))
                         {
                             //Gluttony
                             if (IsEnabled(CustomComboPreset.RPR_ST_Gluttony) &&
-                                !JustUsed(Perfectio) && ActionReady(Gluttony))
+                                ActionReady(Gluttony) &&
+                                (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 || !LevelChecked(ArcaneCircle)))
                             {
                                 if (IsEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic) &&
                                     trueNorthReady)
@@ -398,7 +374,7 @@ internal class RPR
                     {
                         //Sacrificium
                         if (IsEnabled(CustomComboPreset.RPR_ST_Sacrificium) &&
-                            Gauge.LemureShroud is 2 && Gauge.VoidShroud is 1 &&
+                            Gauge.LemureShroud is 2 && GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 &&
                             HasEffect(Buffs.Oblatio) && LevelChecked(Sacrificium))
                             return OriginalHook(Gluttony);
 
@@ -411,10 +387,11 @@ internal class RPR
 
                 //Ranged Attacks
                 if (IsEnabled(CustomComboPreset.RPR_ST_RangedFiller) &&
-                    !InMeleeRange() && LevelChecked(Harpe) && HasBattleTarget())
+                    !InMeleeRange() && LevelChecked(Harpe) && HasBattleTarget() &&
+                    !HasEffect(Buffs.Executioner) && !HasEffect(Buffs.SoulReaver))
                 {
                     //Communio
-                    if (HasEffect(Buffs.Enshrouded) && Gauge.LemureShroud is 1 && Gauge.VoidShroud is 0 &&
+                    if (HasEffect(Buffs.Enshrouded) && Gauge.LemureShroud is 1 &&
                         LevelChecked(Communio))
                         return Communio;
 
@@ -426,14 +403,14 @@ internal class RPR
 
                 //Shadow Of Death
                 if (IsEnabled(CustomComboPreset.RPR_ST_SoD) &&
-                    RPRHelpers.UseShadowOfDeath() && enemyHP > Config.RPR_SoDThreshold)
+                    RPRHelper.UseShadowOfDeath() && GetTargetHPPercent() > Config.RPR_SoDThreshold)
                     return ShadowOfDeath;
 
                 if (TargetHasEffect(Debuffs.DeathsDesign))
                 {
                     //Perfectio
                     if (IsEnabled(CustomComboPreset.RPR_ST_Perfectio) &&
-                        HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio) && !RPRHelpers.IsComboExpiring(1))
+                        HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio) && !RPRHelper.IsComboExpiring(1))
                         return OriginalHook(Communio);
 
                     //Gibbet/Gallows
@@ -447,7 +424,8 @@ internal class RPR
                              !HasEffect(Buffs.EnhancedGallows)))
                         {
                             if (IsEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic) &&
-                                trueNorthDynReady && !OnTargetsFlank())
+                                trueNorthDynReady && !OnTargetsFlank() &&
+                                CanDelayedWeave(ActionWatching.LastWeaponskill))
                                 return All.TrueNorth;
 
                             return OriginalHook(Gibbet);
@@ -459,7 +437,8 @@ internal class RPR
                              !HasEffect(Buffs.EnhancedGallows)))
                         {
                             if (IsEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic) &&
-                                trueNorthDynReady && !OnTargetsRear())
+                                trueNorthDynReady && !OnTargetsRear() &&
+                                CanDelayedWeave(ActionWatching.LastWeaponskill))
                                 return All.TrueNorth;
 
                             return OriginalHook(Gallows);
@@ -480,7 +459,7 @@ internal class RPR
                     {
                         //Communio
                         if (IsEnabled(CustomComboPreset.RPR_ST_Communio) &&
-                            Gauge.LemureShroud is 1 && Gauge.VoidShroud is 0 && LevelChecked(Communio))
+                            Gauge.LemureShroud is 1 && LevelChecked(Communio))
                             return Communio;
 
                         //Void Reaping
@@ -498,7 +477,7 @@ internal class RPR
                     //Soul Slice
                     if (IsEnabled(CustomComboPreset.RPR_ST_SoulSlice) &&
                         Gauge.Soul <= 50 && ActionReady(SoulSlice) &&
-                        !RPRHelpers.IsComboExpiring(3) && !JustUsed(Perfectio) &&
+                        !RPRHelper.IsComboExpiring(3) &&
                         !HasEffect(Buffs.Enshrouded) && !HasEffect(Buffs.SoulReaver) &&
                         !HasEffect(Buffs.IdealHost) && !HasEffect(Buffs.Executioner) &&
                         !HasEffect(Buffs.PerfectioParata) && !HasEffect(Buffs.ImmortalSacrifice))
@@ -538,8 +517,6 @@ internal class RPR
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            float GCD = GetCooldown(SpinningScythe).CooldownTotal;
-
             if (actionID is SpinningScythe)
             {
                 if (IsEnabled(CustomComboPreset.RPR_Variant_Cure) &&
@@ -577,7 +554,7 @@ internal class RPR
                         if (!HasEffect(Buffs.SoulReaver) && !HasEffect(Buffs.Enshrouded) &&
                             !HasEffect(Buffs.Executioner) &&
                             ActionReady(Enshroud) && (Gauge.Shroud >= 50 || HasEffect(Buffs.IdealHost)) &&
-                            !RPRHelpers.IsComboExpiring(6))
+                            !RPRHelper.IsComboExpiring(6))
                             return Enshroud;
 
                         if (LevelChecked(Gluttony) && Gauge.Soul >= 50 && !HasEffect(Buffs.Enshrouded) &&
@@ -636,9 +613,6 @@ internal class RPR
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            double enemyHP = GetTargetHPPercent();
-            float GCD = GetCooldown(SpinningScythe).CooldownTotal;
-
             if (actionID is SpinningScythe)
             {
                 if (IsEnabled(CustomComboPreset.RPR_Variant_Cure) &&
@@ -655,7 +629,7 @@ internal class RPR
                 if (IsEnabled(CustomComboPreset.RPR_AoE_WoD) &&
                     LevelChecked(WhorlOfDeath) &&
                     GetDebuffRemainingTime(Debuffs.DeathsDesign) < 6 && !HasEffect(Buffs.SoulReaver) &&
-                    enemyHP > Config.RPR_WoDThreshold)
+                    GetTargetHPPercent() > Config.RPR_WoDThreshold)
                     return WhorlOfDeath;
 
                 if (TargetHasEffect(Debuffs.DeathsDesign))
@@ -682,7 +656,7 @@ internal class RPR
                             if (IsEnabled(CustomComboPreset.RPR_AoE_Enshroud) &&
                                 !HasEffect(Buffs.SoulReaver) && !HasEffect(Buffs.Enshrouded) &&
                                 ActionReady(Enshroud) && (Gauge.Shroud >= 50 || HasEffect(Buffs.IdealHost)) &&
-                                !RPRHelpers.IsComboExpiring(6))
+                                !RPRHelper.IsComboExpiring(6))
                                 return Enshroud;
 
                             if (IsEnabled(CustomComboPreset.RPR_AoE_Gluttony) &&
@@ -759,85 +733,101 @@ internal class RPR
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            bool trueNorthReady = TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
-                                  !HasEffect(All.Buffs.TrueNorth);
-
-            if (actionID is GrimSwathe)
+            switch (actionID)
             {
-                if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_Enshroud))
+                case GrimSwathe:
                 {
-                    if (HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio))
-                        return OriginalHook(Communio);
-
-                    if (HasEffect(Buffs.Enshrouded))
+                    if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_Enshroud))
                     {
-                        if (Gauge.LemureShroud == 1 && Gauge.VoidShroud == 0 && LevelChecked(Communio))
-                            return Communio;
+                        if (HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio))
+                            return OriginalHook(Communio);
 
-                        if (Gauge.LemureShroud is 2 && Gauge.VoidShroud is 1 && HasEffect(Buffs.Oblatio))
-                            return OriginalHook(Gluttony);
+                        if (HasEffect(Buffs.Enshrouded))
+                        {
+                            switch (Gauge.LemureShroud)
+                            {
+                                case 1 when Gauge.VoidShroud == 0 && LevelChecked(Communio):
+                                    return Communio;
 
-                        if (Gauge.VoidShroud >= 2 && LevelChecked(LemuresScythe))
-                            return OriginalHook(GrimSwathe);
+                                case 2 when Gauge.VoidShroud is 1 && HasEffect(Buffs.Oblatio):
+                                    return OriginalHook(Gluttony);
+                            }
 
-                        if (Gauge.LemureShroud > 1)
-                            return OriginalHook(Guillotine);
+                            if (Gauge.VoidShroud >= 2 && LevelChecked(LemuresScythe))
+                                return OriginalHook(GrimSwathe);
+
+                            if (Gauge.LemureShroud > 1)
+                                return OriginalHook(Guillotine);
+                        }
                     }
+
+                    if (ActionReady(Gluttony) && !HasEffect(Buffs.Enshrouded) && !HasEffect(Buffs.SoulReaver))
+                        return Gluttony;
+
+                    if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_Sacrificium) &&
+                        HasEffect(Buffs.Enshrouded) && HasEffect(Buffs.Oblatio))
+                        return OriginalHook(Gluttony);
+
+                    if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_BloodSwatheCombo) &&
+                        (HasEffect(Buffs.SoulReaver) || HasEffect(Buffs.Executioner)) && LevelChecked(Guillotine))
+                        return Guillotine;
+
+                    break;
                 }
 
-                if (ActionReady(Gluttony) && !HasEffect(Buffs.Enshrouded) && !HasEffect(Buffs.SoulReaver))
-                    return Gluttony;
-
-                if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_BloodSwatheCombo) &&
-                    (HasEffect(Buffs.SoulReaver) || HasEffect(Buffs.Executioner)) && LevelChecked(Guillotine))
-                    return Guillotine;
-            }
-
-            if (actionID is BloodStalk)
-            {
-                if (IsEnabled(CustomComboPreset.RPR_TrueNorthGluttony) &&
-                    trueNorthReady && CanWeave(actionID))
+                case BloodStalk when IsEnabled(CustomComboPreset.RPR_TrueNorthGluttony) &&
+                                     trueNorthReady:
                     return All.TrueNorth;
 
-                if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_Enshroud))
+                case BloodStalk:
                 {
-                    if (HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio))
-                        return OriginalHook(Communio);
-
-                    if (HasEffect(Buffs.Enshrouded))
+                    if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_Enshroud))
                     {
-                        if (Gauge.LemureShroud == 1 && Gauge.VoidShroud == 0 && LevelChecked(Communio))
-                            return Communio;
+                        if (HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio))
+                            return OriginalHook(Communio);
 
-                        if (Gauge.LemureShroud is 2 && Gauge.VoidShroud is 1 && HasEffect(Buffs.Oblatio))
-                            return OriginalHook(Gluttony);
+                        if (HasEffect(Buffs.Enshrouded))
+                        {
+                            switch (Gauge.LemureShroud)
+                            {
+                                case 1 when Gauge.VoidShroud == 0 && LevelChecked(Communio):
+                                    return Communio;
 
-                        if (Gauge.VoidShroud >= 2 && LevelChecked(LemuresSlice))
-                            return OriginalHook(BloodStalk);
+                                case 2 when Gauge.VoidShroud is 1 && HasEffect(Buffs.Oblatio):
+                                    return OriginalHook(Gluttony);
+                            }
 
-                        if (HasEffect(Buffs.EnhancedVoidReaping))
+                            if (Gauge.VoidShroud >= 2 && LevelChecked(LemuresSlice))
+                                return OriginalHook(BloodStalk);
+
+                            if (HasEffect(Buffs.EnhancedVoidReaping))
+                                return OriginalHook(Gibbet);
+
+                            if (HasEffect(Buffs.EnhancedCrossReaping) ||
+                                (!HasEffect(Buffs.EnhancedCrossReaping) && !HasEffect(Buffs.EnhancedVoidReaping)))
+                                return OriginalHook(Gallows);
+                        }
+                    }
+
+                    if (ActionReady(Gluttony) && !HasEffect(Buffs.Enshrouded) && !HasEffect(Buffs.SoulReaver))
+                        return Gluttony;
+
+                    if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_Sacrificium) &&
+                        HasEffect(Buffs.Enshrouded) && HasEffect(Buffs.Oblatio))
+                        return OriginalHook(Gluttony);
+
+                    if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_BloodSwatheCombo) &&
+                        (HasEffect(Buffs.SoulReaver) || HasEffect(Buffs.Executioner)) && LevelChecked(Gibbet))
+                    {
+                        if (HasEffect(Buffs.EnhancedGibbet))
                             return OriginalHook(Gibbet);
 
-                        if (HasEffect(Buffs.EnhancedCrossReaping))
-                            return OriginalHook(Gallows);
-
-                        if (!HasEffect(Buffs.EnhancedCrossReaping) && !HasEffect(Buffs.EnhancedVoidReaping))
+                        if (HasEffect(Buffs.EnhancedGallows) ||
+                            (!HasEffect(Buffs.EnhancedGibbet) && !HasEffect(Buffs.EnhancedGallows)))
                             return OriginalHook(Gallows);
                     }
-                }
 
-                if (ActionReady(Gluttony) && !HasEffect(Buffs.Enshrouded) && !HasEffect(Buffs.SoulReaver))
-                    return Gluttony;
-
-                if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_BloodSwatheCombo) &&
-                    (HasEffect(Buffs.SoulReaver) || HasEffect(Buffs.Executioner)) && LevelChecked(Gibbet))
-                {
-                    if (HasEffect(Buffs.EnhancedGibbet))
-                        return OriginalHook(Gibbet);
-
-                    if (HasEffect(Buffs.EnhancedGallows) ||
-                        (!HasEffect(Buffs.EnhancedGibbet) && !HasEffect(Buffs.EnhancedGallows)))
-                        return OriginalHook(Gallows);
+                    break;
                 }
             }
 
@@ -852,11 +842,10 @@ internal class RPR
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID is ArcaneCircle)
-                if (HasEffect(Buffs.ImmortalSacrifice) && LevelChecked(PlentifulHarvest))
-                    return PlentifulHarvest;
-
-            return actionID;
+            return actionID is ArcaneCircle &&
+                   HasEffect(Buffs.ImmortalSacrifice) && LevelChecked(PlentifulHarvest)
+                ? PlentifulHarvest
+                : actionID;
         }
     }
 
@@ -878,7 +867,7 @@ internal class RPR
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            bool[] soulSowOptions = PluginConfiguration.GetCustomBoolArrayValue(Config.RPR_SoulsowOptions);
+            bool[] soulSowOptions = Config.RPR_SoulsowOptions;
             bool soulsowReady = LevelChecked(Soulsow) && !HasEffect(Buffs.Soulsow);
 
             return (soulSowOptions.Length > 0 && ((actionID is Harpe && soulSowOptions[0]) ||
@@ -899,23 +888,25 @@ internal class RPR
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            bool trueNorthReady = TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
-                                  !HasEffect(All.Buffs.TrueNorth);
-
-            if (actionID is Enshroud)
+            switch (actionID)
             {
-                if (IsEnabled(CustomComboPreset.RPR_TrueNorthEnshroud) &&
-                    GetBuffStacks(Buffs.SoulReaver) is 2 && trueNorthReady && CanDelayedWeave(Slice))
+                case Enshroud when IsEnabled(CustomComboPreset.RPR_TrueNorthEnshroud) &&
+                                   GetBuffStacks(Buffs.SoulReaver) is 2 && trueNorthReady && CanDelayedWeave(Slice):
                     return All.TrueNorth;
 
-                if (HasEffect(Buffs.SoulReaver))
+                case Enshroud:
                 {
-                    if (HasEffect(Buffs.EnhancedGibbet))
-                        return OriginalHook(Gibbet);
+                    if (HasEffect(Buffs.SoulReaver))
+                    {
+                        if (HasEffect(Buffs.EnhancedGibbet))
+                            return OriginalHook(Gibbet);
 
-                    if (HasEffect(Buffs.EnhancedGallows) ||
-                        (!HasEffect(Buffs.EnhancedGibbet) && !HasEffect(Buffs.EnhancedGallows)))
-                        return OriginalHook(Gallows);
+                        if (HasEffect(Buffs.EnhancedGallows) ||
+                            (!HasEffect(Buffs.EnhancedGibbet) && !HasEffect(Buffs.EnhancedGallows)))
+                            return OriginalHook(Gallows);
+                    }
+
+                    break;
                 }
             }
 
@@ -929,24 +920,31 @@ internal class RPR
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID is Gibbet or Gallows && HasEffect(Buffs.Enshrouded))
+            switch (actionID)
             {
-                if (Gauge.LemureShroud == 1 && Gauge.VoidShroud == 0 && LevelChecked(Communio))
-                    return Communio;
+                case Gibbet or Gallows when HasEffect(Buffs.Enshrouded):
+                {
+                    if (Gauge is { LemureShroud: 1, VoidShroud: 0 } && LevelChecked(Communio))
+                        return Communio;
 
-                if (IsEnabled(CustomComboPreset.RPR_LemureOnGGG) &&
-                    Gauge.VoidShroud >= 2 && LevelChecked(LemuresSlice) && CanWeave(actionID))
-                    return OriginalHook(BloodStalk);
-            }
+                    if (IsEnabled(CustomComboPreset.RPR_LemureOnGGG) &&
+                        Gauge.VoidShroud >= 2 && LevelChecked(LemuresSlice) && CanWeave(actionID))
+                        return OriginalHook(BloodStalk);
 
-            if (actionID is Guillotine && HasEffect(Buffs.Enshrouded))
-            {
-                if (Gauge.LemureShroud == 1 && Gauge.VoidShroud == 0 && LevelChecked(Communio))
-                    return Communio;
+                    break;
+                }
 
-                if (IsEnabled(CustomComboPreset.RPR_LemureOnGGG) &&
-                    Gauge.VoidShroud >= 2 && LevelChecked(LemuresScythe) && CanWeave(actionID))
-                    return OriginalHook(GrimSwathe);
+                case Guillotine when HasEffect(Buffs.Enshrouded):
+                {
+                    if (Gauge is { LemureShroud: 1, VoidShroud: 0 } && LevelChecked(Communio))
+                        return Communio;
+
+                    if (IsEnabled(CustomComboPreset.RPR_LemureOnGGG) &&
+                        Gauge.VoidShroud >= 2 && LevelChecked(LemuresScythe) && CanWeave(actionID))
+                        return OriginalHook(GrimSwathe);
+
+                    break;
+                }
             }
 
             return actionID;
@@ -959,16 +957,17 @@ internal class RPR
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID is Enshroud)
+            switch (actionID)
             {
-                if (HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio))
+                case Enshroud when HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio):
                     return OriginalHook(Communio);
 
-                if (HasEffect(Buffs.Enshrouded) && LevelChecked(Communio))
+                case Enshroud when HasEffect(Buffs.Enshrouded) && LevelChecked(Communio):
                     return Communio;
-            }
 
-            return actionID;
+                default:
+                    return actionID;
+            }
         }
     }
 }
