@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Statuses;
 using ECommons.DalamudServices;
 using XIVSlothCombo.Combos.JobHelpers.Enums;
 using XIVSlothCombo.Combos.PvE;
@@ -11,15 +12,27 @@ using static XIVSlothCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace XIVSlothCombo.Combos.JobHelpers;
 
-internal static class BLM
+internal class BLM
 {
     // BLM Gauge & Extensions
-    public static BLMGauge Gauge = GetJobGauge<BLMGauge>();
-    
+    public static BLMGauge Gauge => GetJobGauge<BLMGauge>();
     public static int Fire4Count => ActionWatching.CombatActions.Count(x => x == Fire4);
-
-    public static bool HasPolyglotStacks(this BLMGauge gauge) =>gauge.PolyglotStacks > 0;
-
+    public static int maxPolyglot => TraitLevelChecked(Traits.EnhancedPolyglotII) ? 3 :
+        TraitLevelChecked(Traits.EnhancedPolyglot) ? 2 : 1;
+    public static bool canWeave => CanSpellWeave(ActionWatching.LastSpell);
+    public static float elementTimer => Gauge.ElementTimeRemaining / 1000f;
+    public static double gcdsInTimer => Math.Floor(elementTimer / GetActionCastTime(ActionWatching.LastSpell));
+    public static int remainingPolyglotCD => Math.Max(0,
+        (maxPolyglot - Gauge.PolyglotStacks) * 30000 + (Gauge.EnochianTimer - 30000));
+    public static Status? thunderDebuffST =>
+        FindEffect(ThunderList[OriginalHook(Thunder)], CurrentTarget, LocalPlayer.GameObjectId);
+    public static Status? thunderDebuffAoE =>
+        FindEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget, LocalPlayer.GameObjectId);
+    public static bool canSwiftF => TraitLevelChecked(Traits.AspectMasteryIII) &&
+                                    IsOffCooldown(All.Swiftcast);
+    public static uint curMp => LocalPlayer.CurrentMp;
+    public static bool HasPolyglotStacks(BLMGauge gauge) => gauge.PolyglotStacks > 0;
+    
     internal class BLMOpenerLogic
     {
         private OpenerState currentState = OpenerState.PrePull;
@@ -70,9 +83,6 @@ internal static class BLM
                 return false;
 
             if (!ActionReady(Amplifier))
-                return false;
-
-            if (!ActionReady(LeyLines))
                 return false;
 
             return true;
@@ -130,7 +140,7 @@ internal static class BLM
                 if (WasLastAction(Triplecast) && OpenerStep == 7) OpenerStep++;
                 else if (OpenerStep == 7) actionID = Triplecast;
 
-                if (WasLastAction(LeyLines) && OpenerStep == 8) OpenerStep++;
+                if (HasEffect(Buffs.LeyLines) && OpenerStep == 8) OpenerStep++;
                 else if (OpenerStep == 8) actionID = LeyLines;
 
                 if (WasLastAction(Fire4) && Fire4Count is 3 && OpenerStep == 9) OpenerStep++;
@@ -144,12 +154,12 @@ internal static class BLM
 
                 if (WasLastAction(Manafont) && OpenerStep == 12) OpenerStep++;
                 else if (OpenerStep == 12) actionID = Manafont;
+                
+                if (WasLastAction(Fire4) && Fire4Count is 5 && OpenerStep == 13) OpenerStep++;
+                else if (OpenerStep == 13) actionID = Fire4;
 
-                if (WasLastAction(Triplecast) && OpenerStep == 13) OpenerStep++;
-                else if (OpenerStep == 13) actionID = Triplecast;
-
-                if (WasLastAction(Fire4) && Fire4Count is 5 && OpenerStep == 14) OpenerStep++;
-                else if (OpenerStep == 14) actionID = Fire4;
+                if (WasLastAction(Triplecast) && OpenerStep == 14) OpenerStep++;
+                else if (OpenerStep == 14) actionID = Triplecast;
 
                 if (WasLastAction(Fire4) && Fire4Count is 6 && OpenerStep == 15) OpenerStep++;
                 else if (OpenerStep == 15) actionID = Fire4;
@@ -186,7 +196,7 @@ internal static class BLM
                      (actionID == LeyLines && IsOnCooldown(LeyLines)) ||
                      (actionID == Manafont && IsOnCooldown(Manafont)) ||
                      (actionID == All.Swiftcast && IsOnCooldown(All.Swiftcast)) ||
-                     (actionID == Xenoglossy && !Gauge.HasPolyglotStacks())) &&
+                     (actionID == Xenoglossy && !HasPolyglotStacks(Gauge))) &&
                     ActionWatching.TimeSinceLastAction.TotalSeconds >= 3)
                 {
                     CurrentState = OpenerState.FailedOpener;
@@ -243,10 +253,9 @@ internal static class BLM
                 _ => 0
             };
 
-            if (castedSpell is Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2)
-                return Math.Max(LocalPlayer.MaxMp, LocalPlayer.CurrentMp + nextMpGain);
-
-            return Math.Max(0, LocalPlayer.CurrentMp - GetResourceCost(castedSpell));
+            return castedSpell is Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2 
+                ? Math.Max(LocalPlayer.MaxMp, LocalPlayer.CurrentMp + nextMpGain) 
+                : Math.Max(0, LocalPlayer.CurrentMp - GetResourceCost(castedSpell));
         }
 
         public static bool DoubleBlizz()
@@ -259,19 +268,27 @@ internal static class BLM
 
             uint firstSpell = spells[^1];
 
-            if (firstSpell is Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2)
+            switch (firstSpell)
             {
-                uint castedSpell = LocalPlayer.CastActionId;
-
-                if (castedSpell is Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2)
-                    return true;
-
-                if (spells.Count >= 2)
+                case Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2:
                 {
-                    uint secondSpell = spells[^2];
+                    uint castedSpell = LocalPlayer.CastActionId;
 
-                    if (secondSpell is Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2)
+                    if (castedSpell is Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2)
                         return true;
+
+                    if (spells.Count >= 2)
+                    {
+                        uint secondSpell = spells[^2];
+
+                        switch (secondSpell)
+                        {
+                            case Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2:
+                                return true;
+                        }
+                    }
+
+                    break;
                 }
             }
 
