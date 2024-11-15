@@ -5,7 +5,6 @@ using System;
 using XIVSlothCombo.Combos.PvE.Content;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
-using XIVSlothCombo.Data;
 
 namespace XIVSlothCombo.Combos.PvE
 {
@@ -316,9 +315,9 @@ namespace XIVSlothCombo.Combos.PvE
                 if (actionID is Ladonsbite or QuickNock)
                 {
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
-                    bool canWeave = CanWeave(actionID) && !ActionWatching.HasDoubleWeaved();
-                    bool canWeaveBuffs = CanWeave(actionID, 0.6) && !ActionWatching.HasDoubleWeaved();
-                    bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9) && !ActionWatching.HasDoubleWeaved();
+                    bool canWeave = CanWeave(actionID);
+                    bool canWeaveBuffs = CanWeave(actionID, 0.6);
+                    bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9);
                     int songTimerInSeconds = gauge.SongTimer / 1000;
                     bool songNone = gauge.Song == Song.NONE;
                     bool songWanderer = gauge.Song == Song.WANDERER;
@@ -594,9 +593,9 @@ namespace XIVSlothCombo.Combos.PvE
                 if (actionID is HeavyShot or BurstShot)
                 {
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
-                    bool canWeave = CanWeave(actionID) && !ActionWatching.HasDoubleWeaved();
-                    bool canWeaveBuffs = CanWeave(actionID, 0.6) && !ActionWatching.HasDoubleWeaved();
-                    bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9) && !ActionWatching.HasDoubleWeaved();
+                    bool canWeave = CanWeave(actionID);
+                    bool canWeaveBuffs = CanWeave(actionID, 0.6);
+                    bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9);
                     bool songNone = gauge.Song == Song.NONE;
                     bool songWanderer = gauge.Song == Song.WANDERER;
                     bool songMage = gauge.Song == Song.MAGE;
@@ -693,7 +692,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (IsEnabled(CustomComboPreset.BRD_Adv_Buffs) && (!songNone || !LevelChecked(MagesBallad)) && isEnemyHealthHigh)
                     {
-                        bool radiantReady = LevelChecked(RadiantFinale) && IsOffCooldown(RadiantFinale) && TargetHasEffect(Debuffs.CausticBite) && TargetHasEffect(Debuffs.Stormbite);
+                        bool radiantReady = LevelChecked(RadiantFinale) && IsOffCooldown(RadiantFinale);
                         bool ragingReady = LevelChecked(RagingStrikes) && IsOffCooldown(RagingStrikes);
                         bool battleVoiceReady = LevelChecked(BattleVoice) && IsOffCooldown(BattleVoice);
                         bool barrageReady = LevelChecked(Barrage) && IsOffCooldown(Barrage);
@@ -944,9 +943,9 @@ namespace XIVSlothCombo.Combos.PvE
                 if (actionID is Ladonsbite or QuickNock)
                 {
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
-                    bool canWeave = CanWeave(actionID) && !ActionWatching.HasDoubleWeaved();
-                    bool canWeaveBuffs = CanWeave(actionID, 0.6) && !ActionWatching.HasDoubleWeaved();
-                    bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9) && !ActionWatching.HasDoubleWeaved();
+                    bool canWeave = CanWeave(actionID);
+                    bool canWeaveBuffs = CanWeave(actionID, 0.6);
+                    bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9);
                     int songTimerInSeconds = gauge.SongTimer / 1000;
                     bool songNone = gauge.Song == Song.NONE;
                     bool songWanderer = gauge.Song == Song.WANDERER;
@@ -1150,9 +1149,9 @@ namespace XIVSlothCombo.Combos.PvE
                 if (actionID is HeavyShot or BurstShot)
                 {
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
-                    bool canWeave = CanWeave(actionID) && !ActionWatching.HasDoubleWeaved();
-                    bool canWeaveBuffs = CanWeave(actionID, 0.6) && !ActionWatching.HasDoubleWeaved();
-                    bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9) && !ActionWatching.HasDoubleWeaved();
+                    bool canWeave = CanWeave(actionID);
+                    bool canWeaveBuffs = CanWeave(actionID, 0.6);
+                    bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9);
                     bool songNone = gauge.Song == Song.NONE;
                     bool songWanderer = gauge.Song == Song.WANDERER;
                     bool songMage = gauge.Song == Song.MAGE;
@@ -1247,7 +1246,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if ((!songNone || !LevelChecked(MagesBallad)) && isEnemyHealthHigh)
                     {
-                        bool radiantReady = LevelChecked(RadiantFinale) && IsOffCooldown(RadiantFinale) && TargetHasEffect(Debuffs.CausticBite) && TargetHasEffect(Debuffs.Stormbite);
+                        bool radiantReady = LevelChecked(RadiantFinale) && IsOffCooldown(RadiantFinale);
                         bool ragingReady = LevelChecked(RagingStrikes) && IsOffCooldown(RagingStrikes);
                         bool battleVoiceReady = LevelChecked(BattleVoice) && IsOffCooldown(BattleVoice);
                         bool barrageReady = LevelChecked(Barrage) && IsOffCooldown(Barrage);
