@@ -57,7 +57,7 @@ namespace XIVSlothCombo.Combos.PvP
 
                 
                 var harmonicCooldown = GetCooldown(HarmonicArrow);
-                PluginLog.Log($"HarmonicArrow Cooldown: IsCooldown={harmonicCooldown.IsCooldown}, RemainingCharges={harmonicCooldown.RemainingCharges}");
+               
                 if (!harmonicCooldown.IsCooldown && harmonicCooldown.RemainingCharges == 4)
                 {
                     return OriginalHook(HarmonicArrow);
