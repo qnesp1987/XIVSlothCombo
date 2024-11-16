@@ -11,7 +11,7 @@ namespace XIVSlothCombo.Combos.PvP
             PowerfulShot = 29391,
             ApexArrow = 29393,
             SilentNocturne = 29395,
-            EmpyrealArrow = 29398,
+            HarmonicArrow = 41464, 
             RepellingShot = 29399,
             WardensPaean = 29400,
             PitchPerfect = 29392,
@@ -32,15 +32,14 @@ namespace XIVSlothCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-
                 if (actionID == PowerfulShot)
                 {
                     var canWeave = CanWeave(actionID, 0.5);
 
                     if (canWeave)
                     {
-                        if (GetCooldown(EmpyrealArrow).RemainingCharges == 3)
-                            return OriginalHook(EmpyrealArrow);
+                        if (GetCooldown(HarmonicArrow).RemainingCharges == 4) 
+                            return OriginalHook(HarmonicArrow);
 
                         if (IsEnabled(CustomComboPreset.BRDPvP_SilentNocturne) && !GetCooldown(SilentNocturne).IsCooldown)
                             return OriginalHook(SilentNocturne);
