@@ -15,7 +15,7 @@ namespace XIVSlothCombo.Combos.PvP
             RepellingShot = 29399,
             WardensPaean = 29400,
             PitchPerfect = 29392,
-            EncoreofLight = 41467, // Added Encore of Light
+            EncoreofLight = 41467,
             BlastArrow = 29394;
 
         public static class Buffs
@@ -24,7 +24,7 @@ namespace XIVSlothCombo.Combos.PvP
                 FrontlinersMarch = 3138,
                 FrontlinersForte = 3140,
                 Repertoire = 3137,
-                EncoreofLightReady = 4312, // Added Encore of Light buff
+                EncoreofLightReady = 4312,
                 BlastArrowReady = 3142;
         }
 
@@ -34,13 +34,11 @@ namespace XIVSlothCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                // Check if Encore of Light is ready and prioritize it
                 if (HasEffect(Buffs.EncoreofLightReady))
                 {
                     return OriginalHook(EncoreofLight);
                 }
 
-                // Handle GCD: PowerfulShot and related actions
                 if (actionID == PowerfulShot)
                 {
                     if (HasEffect(Buffs.BlastArrowReady))
@@ -52,15 +50,13 @@ namespace XIVSlothCombo.Combos.PvP
                     if (!GetCooldown(ApexArrow).IsCooldown)
                         return OriginalHook(ApexArrow);
 
-                    return OriginalHook(PowerfulShot);
-                }
+                    var harmonicCooldown = GetCooldown(HarmonicArrow);
+                    if (!harmonicCooldown.IsCooldown && harmonicCooldown.RemainingCharges == 4)
+                    {
+                        return OriginalHook(HarmonicArrow);
+                    }
 
-                
-                var harmonicCooldown = GetCooldown(HarmonicArrow);
-               
-                if (!harmonicCooldown.IsCooldown && harmonicCooldown.RemainingCharges == 4)
-                {
-                    return OriginalHook(HarmonicArrow);
+                    return OriginalHook(PowerfulShot);
                 }
 
                 if (IsEnabled(CustomComboPreset.BRDPvP_SilentNocturne) && !GetCooldown(SilentNocturne).IsCooldown)
@@ -68,7 +64,6 @@ namespace XIVSlothCombo.Combos.PvP
                     return OriginalHook(SilentNocturne);
                 }
 
-                
                 return actionID;
             }
         }
