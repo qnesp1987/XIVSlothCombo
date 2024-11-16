@@ -13,6 +13,7 @@ namespace XIVSlothCombo.Combos.PvP
             AeolianEdge = 29502,
             FumaShuriken = 29505,
             Mug = 29509,
+			Dokumori = 41451,
             ThreeMudra = 29507,
             Bunshin = 29511,
             Shukuchi = 29513,
@@ -82,8 +83,8 @@ namespace XIVSlothCombo.Combos.PvP
 
                     if (canWeave)
                     {
-                        if (InMeleeRange() && !GetCooldown(Mug).IsCooldown)
-                            return OriginalHook(Mug);
+                        if (InMeleeRange() && !GetCooldown(Dokumori).IsCooldown)
+                            return OriginalHook(Dokumori);
 
                         if (!GetCooldown(Bunshin).IsCooldown)
                             return OriginalHook(Bunshin);
@@ -142,8 +143,8 @@ namespace XIVSlothCombo.Combos.PvP
 
                     if (canWeave)
                     {
-                        if (InMeleeRange() && !GetCooldown(Mug).IsCooldown)
-                            return OriginalHook(Mug);
+                        if (InMeleeRange() && !GetCooldown(Dokumori).IsCooldown)
+                            return OriginalHook(Dokumori);
 
                         if (!GetCooldown(Bunshin).IsCooldown)
                             return OriginalHook(Bunshin);
