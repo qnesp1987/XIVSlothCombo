@@ -42,7 +42,7 @@ namespace XIVSlothCombo.Combos.PvP
 
                 if (actionID == PowerfulShot)
                 {
-                    var canWeave = CanWeave(actionID, 0.5);
+                    var canWeave = CanWeave(actionID, 1.0);
 
                     if (canWeave)
                     {
