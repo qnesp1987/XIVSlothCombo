@@ -59,9 +59,12 @@ namespace XIVSlothCombo.Combos.PvP
                     return OriginalHook(PowerfulShot);
                 }
 
-                if (IsEnabled(CustomComboPreset.BRDPvP_SilentNocturne) && !GetCooldown(SilentNocturne).IsCooldown)
+                if (actionID == RepellingShot || actionID == WardensPaean)
                 {
-                    return OriginalHook(SilentNocturne);
+                    if (IsEnabled(CustomComboPreset.BRDPvP_SilentNocturne) && !GetCooldown(SilentNocturne).IsCooldown)
+                    {
+                        return OriginalHook(SilentNocturne);
+                    }
                 }
 
                 return actionID;
